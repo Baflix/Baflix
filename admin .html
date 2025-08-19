@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baflix - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #e50914; --dark: #141414; --light-dark: #222; --text: #fff; --text-secondary: #aaa; --sidebar: #111; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background: var(--dark); color: var(--text); }
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); display: flex; align-items: center; justify-content: center; z-index: 2000; flex-direction: column; }
+        .login-box { background: var(--light-dark); padding: 40px; border-radius: 8px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .login-box h2 { margin-bottom: 20px; font-size: 1.5rem; color: var(--text); }
+        #login-error { color: var(--primary); margin-bottom: 15px; min-height: 20px; font-weight: bold; }
+        .main-container { display: flex; }
+        .sidebar { width: 250px; background: var(--sidebar); height: 100vh; position: fixed; padding: 20px 0; overflow-y: auto; }
+        .logo h2 { font-size: 1.8rem; text-align: center; margin-bottom: 20px; background: linear-gradient(to right, #e50914, #f5f5f1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .nav-menu { list-style: none; }
+        .nav-link { display: flex; align-items: center; padding: 12px 20px; color: var(--text-secondary); text-decoration: none; cursor: pointer; transition: background 0.2s, color 0.2s;}
+        .nav-link:hover, .nav-link.active { background: var(--light-dark); color: var(--text); }
+        .nav-link i { margin-right: 10px; width: 20px; text-align: center; }
+        #logout-btn { position: absolute; bottom: 10px; left: 20px; width: calc(100% - 40px); background: #333 !important; }
+        .main-content { flex: 1; margin-left: 250px; padding: 20px; }
+        .page { display: none; } .page.active { display: block; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .content-section { background: var(--light-dark); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
+        .btn { padding: 10px 15px; background: var(--primary); color: var(--text); border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { background: #b81d24; }
+        .btn-secondary { background: #555; margin-left: 10px;}
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .stat-card { background: var(--dark); padding: 25px; border-radius: 8px; display: flex; align-items: center; gap: 20px; }
+        .stat-card i { font-size: 2rem; color: var(--primary); }
+        .stat-card .info h3 { font-size: 1.8rem; }
+        .stat-card .info p { color: var(--text-secondary); font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--dark); vertical-align: middle; }
+        .action-btn { background: none; border: none; cursor: pointer; padding: 5px; font-size: 1rem; margin: 0 4px; }
+        .edit-btn, .message-btn { color: #0af; } .delete-btn { color: #f44; } .toggle-block-btn { color: #f90; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1001; }
+        .modal-content { background: var(--light-dark); padding: 30px; border-radius: 8px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;}
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: var(--text-secondary); }
+        .form-control { width: 100%; padding: 10px; background: var(--dark); border: 1px solid #444; border-radius: 4px; color: var(--text); }
+        textarea.form-control { min-height: 80px; resize: vertical; }
+        .download-link-group { display: flex; gap: 10px; margin-bottom: 10px; align-items: center;}
+        .download-link-group input { flex: 1; }
+        .remove-link-btn { background: #800; color: #fff; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; height: 100%;}
+    </style>
+</head>
+<body>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Admin Panel Login</h2>
+            <form id="login-form">
+                <div class="form-group"><input type="email" id="admin-email" class="form-control" placeholder="Enter Email" required></div>
+                <div class="form-group"><input type="password" id="admin-password" class="form-control" placeholder="Enter Password" required></div>
+                <p id="login-error"></p>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-container" style="display: none;">
+        <aside class="sidebar">
+            <div class="logo"><h2>Baflix Admin</h2></div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link active" data-target="dashboard-page"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li class="nav-item"><a class="nav-link" data-target="movies-page"><i class="fas fa-film"></i><span>Movies</span></a></li>
+                <li class="nav-item"><a class="nav-link" data-target="telegram-users-page"><i class="fab fa-telegram-plane"></i><span>Telegram Users</span></a></li>
+                <li class="nav-item"><a class="nav-link" data-target="filters-page"><i class="fas fa-filter"></i><span>Filters</span></a></li>
+                <li class="nav-item"><a class="nav-link" data-target="settings-page"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            </ul>
+            <button id="logout-btn" class="btn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></button>
+        </aside>
+        <main class="main-content">
+             <div id="dashboard-page" class="page active">
+                <div class="stats-container">
+                    <div class="stat-card"> <i class="fab fa-telegram-plane"></i> <div class="info"> <h3 id="total-telegram-users">0</h3> <p>Telegram Users</p> </div> </div>
+                    <div class="stat-card"> <i class="fas fa-eye"></i> <div class="info"> <h3 id="total-visits">0</h3> <p>Total Visits</p> </div> </div>
+                    <div class="stat-card"> <i class="fas fa-download"></i> <div class="info"> <h3 id="total-downloads">0</h3> <p>Total Downloads</p> </div> </div>
+                    <div class="stat-card"> <i class="fas fa-film"></i> <div class="info"> <h3 id="total-movies">0</h3> <p>Total Movies</p> </div> </div>
+                </div>
+            </div>
+
+            <div id="movies-page" class="page">
+                <div class="content-section">
+                    <div class="section-header"><h2>Manage Movies</h2><button class="btn" id="add-movie-btn">Add New Movie</button></div>
+                    <div class="form-group"><input type="text" id="movie-search-bar" class="form-control" placeholder="Search movies by title..."></div>
+                    <table><thead><tr><th>Title</th><th>Category</th><th>Downloads</th><th>Actions</th></tr></thead><tbody id="movie-table-body"></tbody></table>
+                </div>
+            </div>
+
+            <div id="telegram-users-page" class="page">
+                <div class="content-section"><div class="section-header"><h2>Manage Telegram Users</h2></div><table><thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Actions</th></tr></thead><tbody id="telegram-users-table-body"></tbody></table></div>
+            </div>
+
+            <div id="filters-page" class="page"><div class="content-section"><div class="section-header"><h2>Manage Filters</h2><button class="btn" id="add-filter-btn">Add New Filter</button></div><table><thead><tr><th>Filter Name</th><th>Actions</th></tr></thead><tbody id="filter-table-body"></tbody></table></div></div>
+            <div id="settings-page" class="page"><div class="content-section"><div class="section-header"><h2>Manage Social Links</h2><button class="btn" id="add-social-btn">Add New Link</button></div><table><thead><tr><th>Icon Preview</th><th>URL</th><th>Actions</th></tr></thead><tbody id="social-table-body"></tbody></table></div></div>
+        </main>
+    </div>
+
+    <div id="movie-modal" class="modal"><div class="modal-content"><h2>Add/Edit Movie</h2><form id="movie-form"><input type="hidden" id="movie-id"><div class="form-group"><label>Title</label><input type="text" id="movie-title" class="form-control" required></div><div class="form-group"><label>Poster URL</label><input type="url" id="movie-poster" class="form-control" required></div><div class="form-group"><label>Category</label><select id="movie-category" class="form-control" required></select></div><div class="form-group"><label>Genres</label><input type="text" id="movie-genres" class="form-control" placeholder="e.g., Action, Drama"></div><div class="form-group"><label>Description</label><textarea id="movie-description" class="form-control"></textarea></div><div class="form-group"><label>Year / Date</label><input type="text" id="movie-year" class="form-control" required></div><div class="form-group"><label>Rating</label><input type="text" id="movie-rating" class="form-control" placeholder="e.g. 8.5" required></div><div class="form-group"><label>Status</label><select id="movie-status" class="form-control"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><hr style="border-color: #444; margin: 20px 0;"><div class="section-header" style="margin-bottom: 10px;"><h4>Download Links</h4><button type="button" class="btn" id="add-download-link-btn">Add Link</button></div><div id="download-links-container"></div><hr style="border-color: #444; margin: 20px 0;"><div><button type="submit" class="btn">Save Movie</button><button type="button" class="btn btn-secondary" onclick="closeModal('movie-modal')">Cancel</button></div></form></div></div>
+    <div id="filter-modal" class="modal"><div class="modal-content"><h2>Add/Edit Filter</h2><form id="filter-form"><input type="hidden" id="filter-id"><div class="form-group"><label>Filter Name</label><input type="text" id="filter-name" class="form-control" required></div><div><button type="submit" class="btn">Save</button><button type="button" class="btn btn-secondary" onclick="closeModal('filter-modal')">Cancel</button></div></form></div></div>
+    <div id="social-modal" class="modal"><div class="modal-content"><h2>Add/Edit Social Link</h2><form id="social-form"><input type="hidden" id="social-id"><div class="form-group"><label>Icon Image URL</label><input type="url" id="social-image-url" class="form-control" required></div><div class="form-group"><label>Target URL</label><input type="url" id="social-url" class="form-control" required></div><div><button type="submit" class="btn">Save</button><button type="button" class="btn btn-secondary" onclick="closeModal('social-modal')">Cancel</button></div></form></div></div>
+    <div id="send-message-modal" class="modal"><div class="modal-content"><h2>Send Message</h2><form id="send-message-form"><input type="hidden" id="message-user-id"><div class="form-group"><label>Message to <b id="message-user-name" style="color: var(--text);"></b></label><textarea id="message-content" class="form-control" rows="5" required placeholder="Type your message here..."></textarea></div><div><button type="submit" class="btn">Send Message</button><button type="button" class="btn btn-secondary" onclick="closeModal('send-message-modal')">Cancel</button></div></form></div></div>
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU",
+            authDomain: "baflix-app.firebaseapp.com",
+            projectId: "baflix-app",
+            storageBucket: "baflix-app.firebasestorage.app",
+            messagingSenderId: "221693630977",
+            appId: "1:221693630977:web:620d115d11b8e3af677e00",
+            measurementId: "G-6F2YJDH490"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        const loginOverlay = document.getElementById('login-overlay');
+        const mainContainer = document.querySelector('.main-container');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loginOverlay.style.display = 'none';
+                mainContainer.style.display = 'flex';
+                initializeApp();
+            } else {
+                loginOverlay.style.display = 'flex';
+                mainContainer.style.display = 'none';
+            }
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            loginError.textContent = '';
+
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => {
+                    console.error('Login Failed:', error);
+                    loginError.textContent = error.message;
+                });
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            auth.signOut();
+        });
+        
+        function initializeApp() {
+            const openModal = (modalId) => document.getElementById(modalId).style.display = 'flex';
+            const closeModal = (modalId) => document.getElementById(modalId).style.display = 'none';
+            window.closeModal = closeModal;
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector('.nav-link.active').classList.remove('active'); link.classList.add('active'); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(link.dataset.target).classList.add('active'); });
+            });
+
+            const refreshAllData = async () => {
+                try {
+                    const moviesSnap = await db.collection('movies').get();
+                    const usersSnap = await db.collection('telegramUsers').get();
+                    const visitsSnap = await db.collection('visits').get();
+                    const downloadsSnap = await db.collection('downloads').get();
+
+                    document.getElementById('total-movies').textContent = moviesSnap.size;
+                    document.getElementById('total-telegram-users').textContent = usersSnap.size;
+                    document.getElementById('total-visits').textContent = visitsSnap.size;
+                    document.getElementById('total-downloads').textContent = downloadsSnap.size;
+                    
+                    const moviesDB = moviesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const telegramUsersDB = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const filtersSnap = await db.collection('filters').get();
+                    const filtersDB = filtersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const socialLinksSnap = await db.collection('socialLinks').get();
+                    const socialLinksDB = socialLinksSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const downloadsDB = downloadsSnap.docs.map(doc => doc.data());
+
+                    renderMovieTable(moviesDB, downloadsDB);
+                    renderTelegramUsersTable(telegramUsersDB);
+                    renderFilterTable(filtersDB);
+                    renderSocialTable(socialLinksDB);
+                    
+                } catch (error) {
+                    console.error("Error refreshing data: ", error);
+                    alert("Could not fetch data from Firebase. Check security rules and network.");
+                }
+            };
+            
+             const getDownloadCount = (movieId, downloadsDB) => {
+                 return downloadsDB.filter(d => d.movieId == movieId).length;
+            }
+
+            const renderTelegramUsersTable = (telegramUsersDB) => {
+                const tableBody = document.getElementById('telegram-users-table-body');
+                tableBody.innerHTML = '';
+                telegramUsersDB.forEach(user => {
+                    const row = tableBody.insertRow();
+                    const fullName = `${user.firstName} ${user.lastName}`.trim();
+                    const username = user.username ? `@${user.username}` : 'N/A';
+                    const status = user.status === 'active' ? `<span style="color: #28a745;">Active</span>` : `<span style="color: #f44;">Blocked</span>`;
+                    const blockIcon = user.status === 'active' ? 'fa-ban' : 'fa-check-circle';
+                    row.innerHTML = `<td>${fullName}</td><td>${username}</td><td>${status}</td><td><button class="action-btn message-btn" data-id="${user.id}" data-name="${fullName}"><i class="fas fa-paper-plane"></i></button><button class="action-btn toggle-block-btn" data-id="${user.id}"><i class="fas ${blockIcon}"></i></button><button class="action-btn delete-btn" data-id="${user.id}"><i class="fas fa-trash"></i></button></td>`;
+                });
+            };
+
+            const renderMovieTable = (moviesDB, downloadsDB) => {
+                const movieTableBody = document.getElementById('movie-table-body');
+                movieTableBody.innerHTML = '';
+                moviesDB.forEach(movie => { const row = movieTableBody.insertRow(); row.innerHTML = `<td>${movie.title}</td><td>${movie.category}</td><td>${getDownloadCount(movie.id, downloadsDB)}</td><td><button class="action-btn edit-btn" data-id="${movie.id}"><i class="fas fa-edit"></i></button><button class="action-btn delete-btn" data-id="${movie.id}"><i class="fas fa-trash"></i></button></td>`; });
+            };
+            
+            const renderFilterTable = (filtersDB) => {
+                const filterTableBody = document.getElementById('filter-table-body');
+                filterTableBody.innerHTML = '';
+                filtersDB.forEach(filter => { const row = filterTableBody.insertRow(); row.innerHTML = `<td>${filter.name}</td><td><button class="action-btn edit-btn" data-id="${filter.id}"><i class="fas fa-edit"></i></button><button class="action-btn delete-btn" data-id="${filter.id}"><i class="fas fa-trash"></i></button></td>`; });
+            };
+
+            const renderSocialTable = (socialLinksDB) => {
+                const socialTableBody = document.getElementById('social-table-body');
+                socialTableBody.innerHTML = '';
+                socialLinksDB.forEach(link => { const row = socialTableBody.insertRow(); row.innerHTML = `<td><img src="${link.imageUrl}" style="width:24px;height:24px;background:#fff;border-radius:4px;"></td><td>${link.url}</td><td><button class="action-btn edit-btn" data-id="${link.id}"><i class="fas fa-edit"></i></button><button class="action-btn delete-btn" data-id="${link.id}"><i class="fas fa-trash"></i></button></td>`; });
+            };
+
+             document.getElementById('telegram-users-table-body').addEventListener('click', async e => {
+                const btn = e.target.closest('.action-btn');
+                if (!btn) return;
+                const userId = btn.dataset.id;
+                const userRef = db.collection('telegramUsers').doc(String(userId));
+
+                if (btn.classList.contains('delete-btn')) {
+                    if (confirm('Are you sure you want to delete this user? This cannot be undone.')) {
+                        await userRef.delete();
+                        refreshAllData();
+                    }
+                } else if (btn.classList.contains('toggle-block-btn')) {
+                    const userDoc = await userRef.get();
+                    if (userDoc.exists) {
+                        const newStatus = userDoc.data().status === 'active' ? 'blocked' : 'active';
+                        await userRef.update({ status: newStatus });
+                        alert(`User has been ${newStatus}.`);
+                        refreshAllData();
+                    }
+                } else if (btn.classList.contains('message-btn')) {
+                    document.getElementById('message-user-id').value = userId;
+                    document.getElementById('message-user-name').textContent = btn.dataset.name;
+                    openModal('send-message-modal');
+                }
+            });
+
+            document.getElementById('send-message-form').addEventListener('submit', e => {
+                e.preventDefault();
+                alert("This feature requires a backend (like Firebase Cloud Functions) to connect to the Telegram Bot API. This is a placeholder.");
+                closeModal('send-message-modal');
+            });
+
+            const populateCategoryDropdown = async (selectedCategory = '') => {
+                const select = document.getElementById('movie-category');
+                const snapshot = await db.collection('filters').get();
+                const filtersDB = snapshot.docs.map(doc => doc.data());
+                select.innerHTML = (filtersDB.length === 0) ? '<option value="">Please add a filter first</option>' : ''; 
+                filtersDB.forEach(filter => { const option = document.createElement('option'); option.value = option.textContent = filter.name; if (filter.name === selectedCategory) option.selected = true; select.appendChild(option); }); 
+            };
+            const downloadLinksContainer = document.getElementById('download-links-container');
+            const addDownloadLinkField = (name = '', url = '') => { const div = document.createElement('div'); div.className = 'download-link-group'; div.innerHTML = `<input type="text" class="form-control download-link-name" placeholder="Link Name (e.g., 720p)" value="${name}" required><input type="url" class="form-control download-link-url" placeholder="Download URL" value="${url}" required><button type="button" class="remove-link-btn">&times;</button>`; downloadLinksContainer.appendChild(div); div.querySelector('.remove-link-btn').addEventListener('click', () => div.remove()); };
+            document.getElementById('add-download-link-btn').addEventListener('click', () => addDownloadLinkField());
+            document.getElementById('add-movie-btn').addEventListener('click', () => { document.getElementById('movie-form').reset(); downloadLinksContainer.innerHTML = ''; document.getElementById('movie-id').value = ''; populateCategoryDropdown(); addDownloadLinkField(); openModal('movie-modal'); });
+            
+            document.getElementById('movie-form').addEventListener('submit', async e => { 
+                e.preventDefault(); 
+                const id = document.getElementById('movie-id').value;
+                const downloadLinks = []; 
+                document.querySelectorAll('.download-link-group').forEach(group => { const name = group.querySelector('.download-link-name').value; const url = group.querySelector('.download-link-url').value; if(name && url) downloadLinks.push({ name, url }); }); 
+                const data = { title: document.getElementById('movie-title').value, posterUrl: document.getElementById('movie-poster').value, category: document.getElementById('movie-category').value, genres: document.getElementById('movie-genres').value, description: document.getElementById('movie-description').value, year: document.getElementById('movie-year').value, rating: document.getElementById('movie-rating').value, status: document.getElementById('movie-status').value, downloadLinks }; 
+                
+                // --- শুধুমাত্র এই অংশটি পরিবর্তন করা হয়েছে ---
+                if (id) {
+                    await db.collection('movies').doc(id).update(data);
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('movies').add(data);
+                }
+                refreshAllData(); 
+                closeModal('movie-modal'); 
+            });
+
+            document.getElementById('movie-table-body').addEventListener('click', async e => { 
+                const btn = e.target.closest('.action-btn'); if (!btn) return; 
+                const id = btn.dataset.id; 
+                if (btn.classList.contains('edit-btn')) { 
+                    const doc = await db.collection('movies').doc(id).get();
+                    if(!doc.exists) return;
+                    const movie = doc.data();
+                    document.getElementById('movie-form').reset(); 
+                    downloadLinksContainer.innerHTML = ''; 
+                    populateCategoryDropdown(movie.category); 
+                    Object.keys(movie).forEach(key => { const el = document.getElementById(`movie-${key.replace('Url', '')}`); if(el) el.value = movie[key];}); 
+                    document.getElementById('movie-poster').value = movie.posterUrl; 
+                    document.getElementById('movie-id').value = id; 
+                    if(movie.downloadLinks) movie.downloadLinks.forEach(link => addDownloadLinkField(link.name, link.url)); 
+                    openModal('movie-modal'); 
+                } else if (btn.classList.contains('delete-btn')) { 
+                    if (confirm('Delete movie?')) { 
+                        await db.collection('movies').doc(id).delete();
+                        refreshAllData(); 
+                    } 
+                } 
+            });
+            
+            document.getElementById('add-filter-btn').addEventListener('click', () => { document.getElementById('filter-form').reset(); document.getElementById('filter-id').value = ''; openModal('filter-modal'); });
+            document.getElementById('filter-form').addEventListener('submit', async e => { e.preventDefault(); const id = document.getElementById('filter-id').value; const name = document.getElementById('filter-name').value; if (id) await db.collection('filters').doc(id).update({name}); else await db.collection('filters').add({name}); refreshAllData(); closeModal('filter-modal'); });
+            document.getElementById('filter-table-body').addEventListener('click', async e => { const btn = e.target.closest('.action-btn'); if (!btn) return; const id = btn.dataset.id; if (btn.classList.contains('edit-btn')) { const doc = await db.collection('filters').doc(id).get(); document.getElementById('filter-id').value = id; document.getElementById('filter-name').value = doc.data().name; openModal('filter-modal'); } else if (btn.classList.contains('delete-btn')) { if (confirm('Delete filter?')) { await db.collection('filters').doc(id).delete(); refreshAllData(); } } });
+            document.getElementById('add-social-btn').addEventListener('click', () => { document.getElementById('social-form').reset(); document.getElementById('social-id').value = ''; openModal('social-modal'); });
+            document.getElementById('social-form').addEventListener('submit', async e => { e.preventDefault(); const id = document.getElementById('social-id').value; const data = { imageUrl: document.getElementById('social-image-url').value, url: document.getElementById('social-url').value }; if (id) await db.collection('socialLinks').doc(id).update(data); else await db.collection('socialLinks').add(data); refreshAllData(); closeModal('social-modal'); });
+            document.getElementById('social-table-body').addEventListener('click', async e => { const btn = e.target.closest('.action-btn'); if (!btn) return; const id = btn.dataset.id; if (btn.classList.contains('edit-btn')) { const doc = await db.collection('socialLinks').doc(id).get(); document.getElementById('social-id').value = id; document.getElementById('social-image-url').value = doc.data().imageUrl; document.getElementById('social-url').value = doc.data().url; openModal('social-modal'); } else if (btn.classList.contains('delete-btn')) { if (confirm('Delete link?')) { await db.collection('socialLinks').doc(id).delete(); refreshAllData(); } } });
+
+            refreshAllData();
+        }
+    </script>
+</body>
+</html>

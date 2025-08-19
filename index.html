@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baflix - Premium Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root { --primary: #e50914; --secondary: #b81d24; --dark: #141414; --light-dark: #222; --text: #fff; --text-secondary: #aaa; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background: linear-gradient(135deg, #0f0f0f, #1a1a1a); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+        header { padding: 20px; text-align: center; }
+        .logo { font-size: 3rem; font-weight: 700; background: linear-gradient(to right, #e50914, #f5f5f1); -webkit-background-clip: text; background-clip: text; color: transparent; animation: flicker 1.5s infinite alternate; margin-bottom: 15px; }
+        @keyframes flicker { 0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 40px var(--primary), 0 0 80px var(--primary); } 20%, 24%, 55% { text-shadow: none; } }
+        .social-icons { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .social-icons a { display: inline-block; transition: transform 0.3s; }
+        .social-icons img { width: 28px; height: 28px; object-fit: contain; filter: grayscale(1); transition: filter 0.3s; }
+        .social-icons a:hover img { filter: grayscale(0); }
+        .search-container { display: flex; justify-content: center; margin: 0 auto 20px; max-width: 600px; padding: 0 20px; }
+        .search-bar { width: 100%; padding: 12px 20px; border: none; border-radius: 25px 0 0 25px; background: var(--light-dark); color: var(--text); font-size: 1rem; }
+        .search-btn { padding: 12px 20px; border: none; border-radius: 0 25px 25px 0; background: var(--primary); color: var(--text); cursor: pointer; }
+        .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 0 20px; }
+        .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s; }
+        .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
+        .movie-card { background: var(--light-dark); border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+        .movie-poster img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+        .movie-info { padding: 10px; }
+        .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+        .movie-genres, .movie-rating, .movie-year { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        .movie-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); }
+        #skeleton-loader { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
+        .skeleton-card { background-color: var(--light-dark); border-radius: 8px; }
+        .skeleton-poster { width: 100%; aspect-ratio: 2/3; background-color: #333; }
+        .skeleton-info { padding: 10px; }
+        .skeleton-line { height: 12px; background-color: #333; border-radius: 4px; margin-bottom: 8px; }
+        .shimmer { position: relative; overflow: hidden; }
+        .shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 100% { left: 100%; } }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1002; }
+        .modal-content { background: var(--light-dark); width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 2; }
+        .modal-body { display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
+        .modal-header { display: flex; flex-direction: column; gap: 20px; padding: 25px; background-color: #1a1a1a; }
+        .modal-poster img { width: 150px; border-radius: 5px; }
+        .modal-details { flex: 1; }
+        .modal-title { font-size: 2.2rem; margin-bottom: 10px; }
+        .modal-meta { color: var(--text-secondary); margin-bottom: 8px; font-size: 1rem; }
+        .modal-description { padding: 25px; font-size: 1rem; line-height: 1.7; }
+        .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
+        .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; }
+        .download-btn:hover { background: #218838; }
+        @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="logo">Baflix</h1>
+        <div class="social-icons"></div>
+    </header>
+    <div class="search-container">
+        <input type="text" placeholder="Search movies by title..." class="search-bar">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="filter-container"></div>
+    <div id="skeleton-loader"></div>
+    <main class="movie-grid" style="display: none;"></main>
+    <div id="no-movies-message" style="text-align: center; color: var(--text-secondary); margin-top: 50px; display: none;">
+        <p>No movies found. Please add content from the admin panel.</p>
+    </div>
+
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+            <div class="modal-body">
+                <div class="modal-header">
+                    <div class="modal-poster"><img id="modal-poster-img" src="" alt="Poster"></div>
+                    <div class="modal-details">
+                        <h2 id="modal-title"></h2>
+                        <p id="modal-genres" class="modal-meta"></p>
+                        <p id="modal-rating" class="modal-meta"></p>
+                        <p id="modal-year" class="modal-meta"></p>
+                    </div>
+                </div>
+                <div id="modal-description" class="modal-description"></div>
+                <div id="modal-downloads" class="modal-downloads"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU",
+            authDomain: "baflix-app.firebaseapp.com",
+            projectId: "baflix-app",
+            storageBucket: "baflix-app.firebasestorage.app",
+            messagingSenderId: "221693630977",
+            appId: "1:221693630977:web:620d115d11b8e3af677e00",
+            measurementId: "G-6F2YJDH490"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const socialIconsContainer = document.querySelector('.social-icons');
+            const movieGrid = document.querySelector('.movie-grid');
+            const filterContainer = document.querySelector('.filter-container');
+            const searchBar = document.querySelector('.search-bar');
+            const searchBtn = document.querySelector('.search-btn');
+            const skeletonLoader = document.getElementById('skeleton-loader');
+            const detailsModal = document.getElementById('details-modal');
+
+            let allMovies = [];
+
+            const registerTelegramUser = async () => {
+                try {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    const user = tg.initDataUnsafe.user;
+
+                    if (user && user.id) {
+                        const userRef = db.collection('telegramUsers').doc(String(user.id));
+                        const userDoc = await userRef.get();
+
+                        if (userDoc.exists && userDoc.data().status === 'blocked') {
+                            document.body.innerHTML = `<div style="text-align:center; padding-top: 50px;"><h1>You are blocked</h1><p>You cannot access this content.</p></div>`;
+                            return;
+                        }
+                        
+                        if (!userDoc.exists) {
+                            const newUser = {
+                                id: user.id,
+                                firstName: user.first_name,
+                                lastName: user.last_name || '',
+                                username: user.username || '',
+                                status: 'active',
+                                joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            };
+                            await userRef.set(newUser);
+                        }
+                        
+                        initializeApp();
+                    } else {
+                         initializeApp();
+                    }
+                } catch (error) {
+                    console.log('Not running inside Telegram or user data is not available.');
+                    initializeApp();
+                }
+            };
+
+            const trackVisit = () => {
+                db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            };
+            
+            const trackDownload = (movieId) => {
+                db.collection('downloads').add({ 
+                    movieId: movieId, 
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+                });
+            };
+
+            const renderSkeletonLoader = () => {
+                skeletonLoader.innerHTML = '';
+                for (let i = 0; i < 12; i++) {
+                    const card = document.createElement('div');
+                    card.className = 'skeleton-card shimmer';
+                    card.innerHTML = `<div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div></div>`;
+                    skeletonLoader.appendChild(card);
+                }
+            };
+
+            const openDetailsModal = (movie) => {
+                document.getElementById('modal-poster-img').src = movie.posterUrl;
+                document.getElementById('modal-title').textContent = movie.title;
+                document.getElementById('modal-genres').textContent = movie.genres || 'N/A';
+                document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10`;
+                document.getElementById('modal-year').textContent = movie.year;
+                document.getElementById('modal-description').textContent = movie.description || 'No description available.';
+                
+                const downloadsContainer = document.getElementById('modal-downloads');
+                downloadsContainer.innerHTML = '';
+                if (movie.downloadLinks && movie.downloadLinks.length > 0) {
+                    movie.downloadLinks.forEach(link => {
+                        const a = document.createElement('a');
+                        a.href = link.url;
+                        a.textContent = link.name;
+                        a.className = 'download-btn';
+                        a.target = '_blank';
+                        a.addEventListener('click', () => trackDownload(movie.id));
+                        downloadsContainer.appendChild(a);
+                    });
+                }
+                detailsModal.style.display = 'flex';
+            };
+
+            const closeDetailsModal = () => detailsModal.style.display = 'none';
+
+            const renderSocialLinks = async () => {
+                const snapshot = await db.collection('socialLinks').get();
+                const socialLinksDB = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                socialIconsContainer.innerHTML = '';
+                socialLinksDB.forEach(link => {
+                    const a = document.createElement('a');
+                    a.href = link.url; a.target = '_blank';
+                    a.innerHTML = `<img src="${link.imageUrl}" alt="Social Icon">`;
+                    socialIconsContainer.appendChild(a);
+                });
+            };
+            
+            const renderMovies = (moviesToRender) => {
+                movieGrid.innerHTML = '';
+                const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
+                document.getElementById('no-movies-message').style.display = activeMovies.length === 0 ? 'block' : 'none';
+                activeMovies.forEach(movie => {
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.dataset.movieId = movie.id;
+                    movieCard.innerHTML = `
+                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">${movie.title}</h3>
+                            <p class="movie-genres">${movie.genres || ''}</p>
+                            <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10</p>
+                            <p class="movie-year">${movie.year}</p>
+                        </div>`;
+                    movieGrid.appendChild(movieCard);
+                });
+            };
+
+            const setupFilters = async () => {
+                const snapshot = await db.collection('filters').get();
+                const filtersDB = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                filterContainer.innerHTML = '';
+                const allBtn = document.createElement('div');
+                allBtn.className = 'filter active'; allBtn.textContent = 'All';
+                allBtn.addEventListener('click', () => {
+                    document.querySelector('.filter.active')?.classList.remove('active');
+                    allBtn.classList.add('active');
+                    renderMovies(allMovies);
+                });
+                filterContainer.appendChild(allBtn);
+                filtersDB.forEach(filter => {
+                    const filterBtn = document.createElement('div');
+                    filterBtn.className = 'filter'; filterBtn.textContent = filter.name;
+                    filterBtn.addEventListener('click', () => {
+                        document.querySelector('.filter.active')?.classList.remove('active');
+                        filterBtn.classList.add('active');
+                        renderMovies(allMovies.filter(m => m.category === filter.name));
+                    });
+                    filterContainer.appendChild(filterBtn);
+                });
+            };
+            
+            const performSearch = () => {
+                const searchTerm = searchBar.value.toLowerCase().trim();
+                renderMovies(allMovies.filter(movie => movie.title.toLowerCase().includes(searchTerm)));
+            };
+
+            searchBtn.addEventListener('click', performSearch);
+            searchBar.addEventListener('keyup', (e) => { if (e.key === 'Enter') performSearch(); });
+            document.getElementById('modal-close-btn').addEventListener('click', closeDetailsModal);
+            detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeDetailsModal(); });
+            movieGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.movie-card');
+                if (card) {
+                    const movie = allMovies.find(m => m.id == card.dataset.movieId);
+                    if (movie) openDetailsModal(movie);
+                }
+            });
+            
+            const initializeApp = async () => {
+                trackVisit();
+                renderSkeletonLoader();
+
+                try {
+                    // --- শুধুমাত্র এই লাইনটি পরিবর্তন করা হয়েছে ---
+                    const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
+                    allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    await renderSocialLinks();
+                    await setupFilters();
+                    renderMovies(allMovies);
+
+                    skeletonLoader.style.display = 'none';
+                    movieGrid.style.display = 'grid';
+
+                } catch (error) {
+                    console.error("Error fetching data from Firebase: ", error);
+                    document.getElementById('no-movies-message').innerHTML = '<p>Could not load data. Please try again later.</p>';
+                    document.getElementById('no-movies-message').style.display = 'block';
+                    skeletonLoader.style.display = 'none';
+                }
+            };
+            
+            registerTelegramUser();
+        });
+    </script>
+</body>
+</html>
