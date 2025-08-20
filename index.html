@@ -25,14 +25,40 @@
         .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
         .movie-card { background: var(--light-dark); border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
-        .movie-poster img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+
+        /* --- START: সকল ডিভাইসের জন্য সামঞ্জস্যপূর্ণ স্টাইল --- */
+        .movie-poster {
+            position: relative;
+            height: 0;
+            padding-top: 150%; /* 2:3 অনুপাত নিশ্চিত করে */
+            background-color: #333;
+        }
+        .movie-poster img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* --- END: পরিবর্তন শেষ --- */
+
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
         .movie-genres, .movie-rating, .movie-year { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
         .movie-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); }
         #skeleton-loader { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
         .skeleton-card { background-color: var(--light-dark); border-radius: 8px; }
-        .skeleton-poster { width: 100%; aspect-ratio: 2/3; background-color: #333; }
+
+        /* --- START: সকল ডিভাইসের জন্য সামঞ্জস্যপূর্ণ স্টাইল --- */
+        .skeleton-poster {
+            width: 100%;
+            padding-top: 150%; /* 2:3 অনুপাত নিশ্চিত করে */
+            background-color: #333;
+        }
+        /* --- END: পরিবর্তন শেষ --- */
+
         .skeleton-info { padding: 10px; }
         .skeleton-line { height: 12px; background-color: #333; border-radius: 4px; margin-bottom: 8px; }
         .shimmer { position: relative; overflow: hidden; }
@@ -51,7 +77,19 @@
         .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
         .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; }
         .download-btn:hover { background: #218838; }
-        @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } }
+        
+        @media (min-width: 600px) {
+            .modal-header { flex-direction: row; }
+            .modal-poster img { width: 180px; }
+        }
+        /* ছোট স্ক্রিনের জন্য অতিরিক্ত স্টাইল */
+        @media (max-width: 360px) {
+            .movie-grid, #skeleton-loader {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 15px;
+            }
+            .logo { font-size: 2.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -223,7 +261,7 @@
                     movieCard.className = 'movie-card';
                     movieCard.dataset.movieId = movie.id;
                     movieCard.innerHTML = `
-                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.onerror=null;this.parentElement.style.backgroundColor='#222';this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
                         <div class="movie-info">
                             <h3 class="movie-title">${movie.title}</h3>
                             <p class="movie-genres">${movie.genres || ''}</p>
@@ -281,7 +319,6 @@
                 renderSkeletonLoader();
 
                 try {
-                    // --- শুধুমাত্র এই লাইনটি পরিবর্তন করা হয়েছে ---
                     const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
                     allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
