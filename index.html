@@ -25,45 +25,22 @@
         .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
         .movie-card { background: var(--light-dark); border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
-
-        /* --- START: সকল ডিভাইসের জন্য সামঞ্জস্যপূর্ণ স্টাইল --- */
-        .movie-poster {
-            position: relative;
-            height: 0;
-            padding-top: 150%; /* 2:3 অনুপাত নিশ্চিত করে */
-            background-color: #333;
-        }
-        .movie-poster img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        /* --- END: পরিবর্তন শেষ --- */
-
+        .movie-poster img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
         .movie-genres, .movie-rating, .movie-year { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-        .movie-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); }
         #skeleton-loader { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
         .skeleton-card { background-color: var(--light-dark); border-radius: 8px; }
-
-        /* --- START: সকল ডিভাইসের জন্য সামঞ্জস্যপূর্ণ স্টাইল --- */
-        .skeleton-poster {
-            width: 100%;
-            padding-top: 150%; /* 2:3 অনুপাত নিশ্চিত করে */
-            background-color: #333;
-        }
-        /* --- END: পরিবর্তন শেষ --- */
-
+        .skeleton-poster { width: 100%; aspect-ratio: 2/3; background-color: #333; }
         .skeleton-info { padding: 10px; }
         .skeleton-line { height: 12px; background-color: #333; border-radius: 4px; margin-bottom: 8px; }
         .shimmer { position: relative; overflow: hidden; }
         .shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { left: 100%; } }
+        #load-more-container { text-align: center; padding: 20px; }
+        #load-more-btn { padding: 12px 30px; background: var(--primary); color: var(--text); border: none; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.3s; }
+        #load-more-btn:hover { background: var(--secondary); }
+        #load-more-btn:disabled { background: #555; cursor: not-allowed; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1002; }
         .modal-content { background: var(--light-dark); width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 2; }
@@ -77,19 +54,7 @@
         .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
         .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; }
         .download-btn:hover { background: #218838; }
-        
-        @media (min-width: 600px) {
-            .modal-header { flex-direction: row; }
-            .modal-poster img { width: 180px; }
-        }
-        /* ছোট স্ক্রিনের জন্য অতিরিক্ত স্টাইল */
-        @media (max-width: 360px) {
-            .movie-grid, #skeleton-loader {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 15px;
-            }
-            .logo { font-size: 2.5rem; }
-        }
+        @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } }
     </style>
 </head>
 <body>
@@ -104,6 +69,9 @@
     <div class="filter-container"></div>
     <div id="skeleton-loader"></div>
     <main class="movie-grid" style="display: none;"></main>
+    <div id="load-more-container" style="display: none;">
+        <button id="load-more-btn">Load More</button>
+    </div>
     <div id="no-movies-message" style="text-align: center; color: var(--text-secondary); margin-top: 50px; display: none;">
         <p>No movies found. Please add content from the admin panel.</p>
     </div>
@@ -146,15 +114,22 @@
         const db = firebase.firestore();
 
         document.addEventListener('DOMContentLoaded', () => {
-            const socialIconsContainer = document.querySelector('.social-icons');
             const movieGrid = document.querySelector('.movie-grid');
+            const skeletonLoader = document.getElementById('skeleton-loader');
+            const detailsModal = document.getElementById('details-modal');
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const loadMoreContainer = document.getElementById('load-more-container');
+            const noMoviesMessage = document.getElementById('no-movies-message');
+            const socialIconsContainer = document.querySelector('.social-icons');
             const filterContainer = document.querySelector('.filter-container');
             const searchBar = document.querySelector('.search-bar');
             const searchBtn = document.querySelector('.search-btn');
-            const skeletonLoader = document.getElementById('skeleton-loader');
-            const detailsModal = document.getElementById('details-modal');
 
             let allMovies = [];
+            let lastVisible = null;
+            let isLoading = false;
+            const MOVIES_PER_PAGE = 16;
+            let currentFilter = 'All';
 
             const registerTelegramUser = async () => {
                 try {
@@ -172,17 +147,15 @@
                         }
                         
                         if (!userDoc.exists) {
-                            const newUser = {
+                            await userRef.set({
                                 id: user.id,
                                 firstName: user.first_name,
                                 lastName: user.last_name || '',
                                 username: user.username || '',
                                 status: 'active',
                                 joinedAt: firebase.firestore.FieldValue.serverTimestamp()
-                            };
-                            await userRef.set(newUser);
+                            });
                         }
-                        
                         initializeApp();
                     } else {
                          initializeApp();
@@ -193,27 +166,22 @@
                 }
             };
 
-            const trackVisit = () => {
-                db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-            };
-            
-            const trackDownload = (movieId) => {
-                db.collection('downloads').add({ 
-                    movieId: movieId, 
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp() 
-                });
-            };
+            const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            const trackDownload = (movieId) => db.collection('downloads').add({ movieId, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
 
             const renderSkeletonLoader = () => {
                 skeletonLoader.innerHTML = '';
-                for (let i = 0; i < 12; i++) {
+                for (let i = 0; i < 8; i++) {
                     const card = document.createElement('div');
                     card.className = 'skeleton-card shimmer';
                     card.innerHTML = `<div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div></div>`;
                     skeletonLoader.appendChild(card);
                 }
+                 skeletonLoader.style.display = 'grid';
+                 movieGrid.style.display = 'none';
+                 loadMoreContainer.style.display = 'none';
             };
-
+            
             const openDetailsModal = (movie) => {
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
@@ -227,41 +195,39 @@
                 if (movie.downloadLinks && movie.downloadLinks.length > 0) {
                     movie.downloadLinks.forEach(link => {
                         const a = document.createElement('a');
-                        a.href = link.url;
-                        a.textContent = link.name;
-                        a.className = 'download-btn';
-                        a.target = '_blank';
+                        a.href = link.url; a.textContent = link.name; a.className = 'download-btn'; a.target = '_blank';
                         a.addEventListener('click', () => trackDownload(movie.id));
+                        a.addEventListener('contextmenu', (e) => e.preventDefault());
                         downloadsContainer.appendChild(a);
                     });
                 }
                 detailsModal.style.display = 'flex';
             };
-
+            
             const closeDetailsModal = () => detailsModal.style.display = 'none';
-
+            
             const renderSocialLinks = async () => {
                 const snapshot = await db.collection('socialLinks').get();
-                const socialLinksDB = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                socialIconsContainer.innerHTML = '';
-                socialLinksDB.forEach(link => {
-                    const a = document.createElement('a');
-                    a.href = link.url; a.target = '_blank';
-                    a.innerHTML = `<img src="${link.imageUrl}" alt="Social Icon">`;
-                    socialIconsContainer.appendChild(a);
-                });
+                socialIconsContainer.innerHTML = snapshot.docs.map(doc => {
+                    const link = doc.data();
+                    return `<a href="${link.url}" target="_blank"><img src="${link.imageUrl}" alt="Social Icon"></a>`;
+                }).join('');
             };
-            
-            const renderMovies = (moviesToRender) => {
-                movieGrid.innerHTML = '';
-                const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
-                document.getElementById('no-movies-message').style.display = activeMovies.length === 0 ? 'block' : 'none';
+
+            const appendMovies = (moviesToAppend) => {
+                const activeMovies = moviesToAppend.filter(movie => movie.status === 'active');
+                if (movieGrid.innerHTML === '' && activeMovies.length === 0) {
+                     noMoviesMessage.style.display = 'block';
+                } else {
+                     noMoviesMessage.style.display = 'none';
+                }
+
                 activeMovies.forEach(movie => {
                     const movieCard = document.createElement('div');
                     movieCard.className = 'movie-card';
                     movieCard.dataset.movieId = movie.id;
                     movieCard.innerHTML = `
-                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.onerror=null;this.parentElement.style.backgroundColor='#222';this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
                         <div class="movie-info">
                             <h3 class="movie-title">${movie.title}</h3>
                             <p class="movie-genres">${movie.genres || ''}</p>
@@ -271,9 +237,69 @@
                     movieGrid.appendChild(movieCard);
                 });
             };
+            
+             const renderMovies = (moviesToRender) => {
+                movieGrid.innerHTML = '';
+                appendMovies(moviesToRender);
+            };
 
+            const fetchMovies = async (loadMore = false) => {
+                if (isLoading) return;
+                isLoading = true;
+                
+                if(loadMore) {
+                    loadMoreBtn.disabled = true;
+                    loadMoreBtn.textContent = 'Loading...';
+                } else {
+                    renderSkeletonLoader();
+                }
+
+                try {
+                    let query = db.collection('movies').orderBy('createdAt', 'desc').limit(MOVIES_PER_PAGE);
+
+                    if(loadMore && lastVisible) {
+                        query = query.startAfter(lastVisible);
+                    }
+
+                    const moviesSnapshot = await query.get();
+                    const newMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    lastVisible = moviesSnapshot.docs[moviesSnapshot.docs.length - 1];
+
+                    if (!loadMore) {
+                        allMovies = [];
+                        movieGrid.innerHTML = '';
+                    }
+
+                    allMovies.push(...newMovies);
+                    appendMovies(newMovies);
+
+                    skeletonLoader.style.display = 'none';
+                    movieGrid.style.display = 'grid';
+
+                    if (newMovies.length < MOVIES_PER_PAGE || !lastVisible) {
+                        loadMoreContainer.style.display = 'none';
+                    } else {
+                        loadMoreContainer.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error("Error fetching movies: ", error);
+                    noMoviesMessage.innerHTML = '<p>Could not load data. Please try again later.</p>';
+                    noMoviesMessage.style.display = 'block';
+                    skeletonLoader.style.display = 'none';
+                } finally {
+                    isLoading = false;
+                    if(loadMore) {
+                       loadMoreBtn.disabled = false;
+                       loadMoreBtn.textContent = 'Load More';
+                    }
+                }
+            };
+            
+            // --- ফিল্টার সেটাপ ফাংশন (আপডেট করা হয়েছে) ---
             const setupFilters = async () => {
-                const snapshot = await db.collection('filters').get();
+                const snapshot = await db.collection('filters').orderBy('name').get();
                 const filtersDB = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 filterContainer.innerHTML = '';
@@ -282,28 +308,54 @@
                 allBtn.addEventListener('click', () => {
                     document.querySelector('.filter.active')?.classList.remove('active');
                     allBtn.classList.add('active');
+                    currentFilter = 'All';
                     renderMovies(allMovies);
+                    if (lastVisible && allMovies.length >= MOVIES_PER_PAGE) {
+                        loadMoreContainer.style.display = 'block';
+                    }
                 });
                 filterContainer.appendChild(allBtn);
+
                 filtersDB.forEach(filter => {
                     const filterBtn = document.createElement('div');
                     filterBtn.className = 'filter'; filterBtn.textContent = filter.name;
                     filterBtn.addEventListener('click', () => {
                         document.querySelector('.filter.active')?.classList.remove('active');
                         filterBtn.classList.add('active');
-                        renderMovies(allMovies.filter(m => m.category === filter.name));
+                        currentFilter = filter.name;
+                        
+                        // *** এই লাইনটি পরিবর্তন করা হয়েছে ***
+                        // এখন এটি 'category' ফিল্ডের সাথে সরাসরি মিলাবে
+                        const filteredMovies = allMovies.filter(m => m.category === filter.name);
+                        
+                        renderMovies(filteredMovies);
+                        loadMoreContainer.style.display = 'none';
                     });
                     filterContainer.appendChild(filterBtn);
                 });
             };
-            
+
             const performSearch = () => {
                 const searchTerm = searchBar.value.toLowerCase().trim();
                 renderMovies(allMovies.filter(movie => movie.title.toLowerCase().includes(searchTerm)));
+                if (searchTerm) {
+                    loadMoreContainer.style.display = 'none';
+                } else {
+                    if (currentFilter === 'All' && lastVisible && allMovies.length >= MOVIES_PER_PAGE) {
+                        loadMoreContainer.style.display = 'block';
+                    }
+                }
             };
 
             searchBtn.addEventListener('click', performSearch);
-            searchBar.addEventListener('keyup', (e) => { if (e.key === 'Enter') performSearch(); });
+            searchBar.addEventListener('keyup', (e) => { 
+                if (e.key === 'Enter') {
+                    performSearch(); 
+                } else if (searchBar.value.trim() === '') {
+                    performSearch();
+                }
+            });
+
             document.getElementById('modal-close-btn').addEventListener('click', closeDetailsModal);
             detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeDetailsModal(); });
             movieGrid.addEventListener('click', (e) => {
@@ -313,28 +365,13 @@
                     if (movie) openDetailsModal(movie);
                 }
             });
-            
+            loadMoreBtn.addEventListener('click', () => fetchMovies(true));
+
             const initializeApp = async () => {
                 trackVisit();
-                renderSkeletonLoader();
-
-                try {
-                    const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
-                    allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                    await renderSocialLinks();
-                    await setupFilters();
-                    renderMovies(allMovies);
-
-                    skeletonLoader.style.display = 'none';
-                    movieGrid.style.display = 'grid';
-
-                } catch (error) {
-                    console.error("Error fetching data from Firebase: ", error);
-                    document.getElementById('no-movies-message').innerHTML = '<p>Could not load data. Please try again later.</p>';
-                    document.getElementById('no-movies-message').style.display = 'block';
-                    skeletonLoader.style.display = 'none';
-                }
+                await renderSocialLinks();
+                await fetchMovies();
+                await setupFilters();
             };
             
             registerTelegramUser();
