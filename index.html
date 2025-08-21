@@ -39,13 +39,31 @@
         .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
         .movie-card { background: var(--light-dark); border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
-        .movie-poster img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+        
+        /* পোস্টার বিকৃতির চূড়ান্ত সমাধান (সব ডিভাইসের জন্য) */
+        .movie-poster, .foryou-poster {
+            position: relative;
+            padding-bottom: 150%; /* 2:3 অনুপাত নিশ্চিত করে */
+            height: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+        .movie-poster img, .foryou-poster img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* ছবিকে বিকৃত না করে কন্টেইনারে ফিট করে */
+            display: block;
+        }
+        
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
         .movie-genres, .movie-rating, .movie-year { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
         #skeleton-loader { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
         .skeleton-card { background-color: var(--light-dark); border-radius: 8px; }
-        .skeleton-poster { width: 100%; aspect-ratio: 2/3; background-color: #333; }
+        .skeleton-poster { width: 100%; padding-bottom: 150%; background-color: #333; }
         .skeleton-info { padding: 10px; }
         .skeleton-line { height: 12px; background-color: #333; border-radius: 4px; margin-bottom: 8px; }
         .shimmer { position: relative; overflow: hidden; }
@@ -72,7 +90,6 @@
         .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
         .trailer-btn:hover { background: var(--secondary); }
         
-        /* === "For You" সেকশনের জন্য নতুন CSS কোড === */
         .foryou-container {
             max-width: 1200px;
             margin: 0 auto 25px auto;
@@ -87,15 +104,15 @@
             display: flex;
             gap: 15px;
             overflow-x: auto;
-            padding-bottom: 15px; /* for scroll shadow */
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+            padding-bottom: 15px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .foryou-slider::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, and Opera */
+            display: none;
         }
         .foryou-movie-card {
-            flex: 0 0 130px; /* কার্ডের প্রস্থ নির্ধারণ করা */
+            flex: 0 0 130px;
             background: var(--light-dark);
             border-radius: 8px;
             overflow: hidden;
@@ -104,12 +121,6 @@
         }
         .foryou-movie-card:hover {
             transform: scale(1.05);
-        }
-        .foryou-movie-card img {
-            width: 100%;
-            aspect-ratio: 2/3;
-            object-fit: cover;
-            display: block;
         }
         .foryou-movie-card .foryou-title {
             font-size: 0.8rem;
@@ -128,16 +139,13 @@
         <div class="social-icons"></div>
     </header>
     <div class="search-container">
-        <input type="text" placeholder="Search movies by title..." class="search-bar">
+        <input type="text" placeholder="Search by title, genre, year..." class="search-bar">
         <button class="search-btn"><i class="fas fa-search"></i></button>
     </div>
 
-    <!-- === "For You" সেকশনের জন্য নতুন HTML কোড === -->
     <div id="foryou-section" class="foryou-container" style="display: none;">
         <h2>For You</h2>
-        <div id="foryou-slider" class="foryou-slider">
-            <!-- Top downloaded movies will be dynamically inserted here -->
-        </div>
+        <div id="foryou-slider" class="foryou-slider"></div>
     </div>
 
     <div class="filter-container"></div>
@@ -170,7 +178,6 @@
         </div>
     </div>
 
-    <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
@@ -199,7 +206,6 @@
             const filterContainer = document.querySelector('.filter-container');
             const searchBar = document.querySelector('.search-bar');
             const searchBtn = document.querySelector('.search-btn');
-            // === নতুন এলিমেন্ট ===
             const foryouSection = document.getElementById('foryou-section');
             const foryouSlider = document.getElementById('foryou-slider');
 
@@ -305,7 +311,9 @@
                     movieCard.className = 'movie-card';
                     movieCard.dataset.movieId = movie.id;
                     movieCard.innerHTML = `
-                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                        <div class="movie-poster">
+                            <img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'">
+                        </div>
                         <div class="movie-info">
                             <h3 class="movie-title">${movie.title}</h3>
                             <p class="movie-genres">${movie.genres || ''}</p>
@@ -361,7 +369,6 @@
                 }
             };
             
-            // === "For You" সেকশন রেন্ডার করার জন্য নতুন ফাংশন ===
             const renderForYouSection = async () => {
                 try {
                     const downloadsSnapshot = await db.collection('downloads').get();
@@ -369,29 +376,28 @@
 
                     if (downloads.length === 0 || allMovies.length === 0) return;
 
-                    // প্রতিটি মুভির ডাউনলোড সংখ্যা গণনা করা
                     const downloadCounts = downloads.reduce((acc, download) => {
                         acc[download.movieId] = (acc[download.movieId] || 0) + 1;
                         return acc;
                     }, {});
 
-                    // মুভিগুলোকে ডাউনলোড সংখ্যা অনুযায়ী সাজানো
                     const sortedMovieIds = Object.keys(downloadCounts).sort((a, b) => downloadCounts[b] - downloadCounts[a]);
                     
-                    // সেরা ১০টি মুভি নেওয়া
                     const top10MovieIds = sortedMovieIds.slice(0, 10);
                     
-                    const topMovies = top10MovieIds.map(id => allMovies.find(movie => movie.id === id)).filter(Boolean); // .filter(Boolean) to remove undefined if a movie was deleted
+                    const topMovies = top10MovieIds.map(id => allMovies.find(movie => movie.id === id)).filter(Boolean);
 
                     if (topMovies.length === 0) return;
 
-                    foryouSlider.innerHTML = ''; // আগের কন্টেন্ট মুছে ফেলা
+                    foryouSlider.innerHTML = '';
                     topMovies.forEach(movie => {
                         const card = document.createElement('div');
                         card.className = 'foryou-movie-card';
                         card.dataset.movieId = movie.id;
                         card.innerHTML = `
-                            <img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/130x195/222/fff?text=Error'">
+                            <div class="foryou-poster">
+                                <img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.parentElement.style.display='none';">
+                            </div>
                             <div class="foryou-title">${movie.title}</div>
                         `;
                         foryouSlider.appendChild(card);
@@ -428,8 +434,10 @@
                         document.querySelector('.filter.active')?.classList.remove('active');
                         filterBtn.classList.add('active');
                         currentFilter = filter.name;
-                        const filteredMovies = allMovies.filter(m => m.category === filter.name);
-                        noMoviesMessage.innerHTML = '<p>No movies found. Please add content from the admin panel.</p>';
+                        
+                        const filteredMovies = allMovies.filter(m => m.categories && m.categories.includes(filter.name));
+                        
+                        noMoviesMessage.innerHTML = '<p>No movies found in this category.</p>';
                         renderMovies(filteredMovies);
                         loadMoreContainer.style.display = 'none';
                     });
@@ -439,31 +447,37 @@
 
             const performSearch = () => {
                 const searchTerm = searchBar.value.toLowerCase().trim();
-                const filteredMovies = allMovies.filter(movie => movie.title.toLowerCase().includes(searchTerm));
+                
+                const filteredMovies = allMovies.filter(movie => {
+                    const titleMatch = (movie.title || '').toLowerCase().includes(searchTerm);
+                    const genreMatch = (movie.genres || '').toLowerCase().includes(searchTerm);
+                    const yearMatch = (movie.year || '').toString().includes(searchTerm);
+                    const ratingMatch = (movie.rating || '').toString().includes(searchTerm);
+                    
+                    return titleMatch || genreMatch || yearMatch || ratingMatch;
+                });
+
                 if (filteredMovies.length === 0 && searchTerm) {
                     noMoviesMessage.innerHTML = '<p>Sorry, the movie you searched for was not found.</p><p style="margin-top: 10px; font-size: 0.9rem;">You can request the admin to add your favorite movie.</p>';
                 } else {
                     noMoviesMessage.innerHTML = '<p>No movies found. Please add content from the admin panel.</p>';
                 }
+
                 renderMovies(filteredMovies);
+
                 if (searchTerm) {
                     loadMoreContainer.style.display = 'none';
                 } else if (currentFilter === 'All' && lastVisible && allMovies.length >= MOVIES_PER_PAGE) {
                     loadMoreContainer.style.display = 'block';
                 }
             };
-
+            
             searchBtn.addEventListener('click', performSearch);
-            searchBar.addEventListener('keyup', (e) => { 
-                if (e.key === 'Enter' || searchBar.value.trim() === '') {
-                    performSearch(); 
-                }
-            });
+            searchBar.addEventListener('input', performSearch);
 
             document.getElementById('modal-close-btn').addEventListener('click', closeDetailsModal);
             detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeDetailsModal(); });
             
-            // "For You" সেকশন এবং প্রধান গ্রিডের জন্য ইভেন্ট হ্যান্ডলিং
             const handleMovieClick = (e, container) => {
                 const card = e.target.closest(container);
                 if (card) {
@@ -481,7 +495,6 @@
                 await renderSocialLinks();
                 await fetchMovies();
                 await setupFilters();
-                // === "For You" সেকশন রেন্ডার করার জন্য ফাংশন কল ===
                 await renderForYouSection();
             };
             
