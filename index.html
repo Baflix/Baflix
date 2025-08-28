@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Baflix - Premium Streaming</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default,es6,fetch"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --primary: #e50914; --secondary: #b81d24; --dark: #141414; --light-dark: #222; --text: #fff; --text-secondary: #aaa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
-        body { background: linear-gradient(135deg, #0f0f0f, #1a1a1a); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a); 
+            color: var(--text); 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            -webkit-text-size-adjust: 100%; /* Prevent font scaling on iOS */
+        }
         header { padding: 20px; text-align: center; }
         .logo {
             font-size: 3rem;
@@ -79,8 +85,16 @@
         .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s; }
         .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
 
-        /* Default Grid View */
-        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
+        /* --- আপডেট করা গ্রিড ভিউ --- */
+        .movie-grid { 
+            display: grid; 
+            /* ছোট ডিভাইসের জন্য কার্ডের সর্বনিম্ন আকার এবং গ্যাপ কমানো হয়েছে */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 15px; 
+            padding: 0 15px 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
         .movie-card { background: var(--light-dark); border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
         .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -88,7 +102,7 @@
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
         .movie-genres, .movie-rating, .movie-year { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
         
-        /* --- NEW CSS for Search Result List View --- */
+        /* --- সার্চ রেজাল্টের জন্য লিস্ট ভিউ --- */
         .movie-grid.list-view {
             display: block;
             max-width: 800px; 
@@ -157,12 +171,19 @@
         .movie-grid.list-view .movie-year {
             display: none;
         }
-        /* --- End of New CSS --- */
-
+        
         .foryou-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
         .foryou-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        #skeleton-loader { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 0 20px 20px; max-width: 1200px; margin: 0 auto; }
+        /* --- আপডেট করা স্কেলিটন লোডার --- */
+        #skeleton-loader { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 15px; 
+            padding: 0 15px 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
         .skeleton-card { background-color: var(--light-dark); border-radius: 8px; }
         .skeleton-poster { width: 100%; aspect-ratio: 2/3; background-color: #333; }
         .skeleton-info { padding: 10px; }
@@ -171,6 +192,7 @@
         .shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); -webkit-animation: shimmer 1.5s infinite; animation: shimmer 1.5s infinite; }
         @-webkit-keyframes shimmer { 100% { left: 100%; } }
         @keyframes shimmer { 100% { left: 100%; } }
+        
         #load-more-container { text-align: center; padding: 20px; }
         #load-more-btn { padding: 12px 30px; background: var(--primary); color: var(--text); border: none; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.3s; }
         #load-more-btn:hover { background: var(--secondary); }
@@ -210,6 +232,7 @@
     </style>
 </head>
 <body>
+    <!-- HTML Body অপরিবর্তিত আছে -->
     <header>
         <h1 class="logo">Baflix</h1>
         <div class="social-icons"></div>
@@ -323,37 +346,61 @@
             let isLoading = false;
             let currentFilter = 'All';
 
+            // START: UPDATED FUNCTION
             const registerTelegramUser = async () => {
                 try {
                     const tg = window.Telegram.WebApp;
                     tg.ready();
+                    tg.expand();
+                    
                     const user = tg.initDataUnsafe.user;
                     if (user && user.id) {
                         const userRef = db.collection('telegramUsers').doc(String(user.id));
                         const userDoc = await userRef.get();
+
+                        // প্রথমে ব্যবহারকারী ব্লকড কিনা তা পরীক্ষা করুন
                         if (userDoc.exists && userDoc.data().status === 'blocked') {
                             document.body.innerHTML = `<div style="text-align:center; padding-top: 50px; color: white;"><h1>You are blocked</h1><p>You cannot access this content.</p></div>`;
-                            return;
+                            return; // ব্যবহারকারী ব্লকড হলে অ্যাপ লোড করা বন্ধ করুন
                         }
+
+                        // Firestore-এ পাঠানোর জন্য ব্যবহারকারীর ডেটা প্রস্তুত করুন
+                        const userData = {
+                            id: user.id,
+                            firstName: user.first_name,
+                            lastName: user.last_name || '',
+                            username: user.username || '',
+                            profilePicUrl: user.photo_url || '', // নতুন: প্রোফাইল ছবির URL যোগ করা হয়েছে
+                            status: 'active' // ডিফল্ট স্ট্যাটাস
+                        };
+
+                        // যদি নতুন ব্যবহারকারী হয়, তবে joinedAt সময় যোগ করুন
                         if (!userDoc.exists) {
-                            await userRef.set({ id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '', status: 'active', joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                            userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
                         }
+
+                        // set এবং merge:true ব্যবহার করে ডেটা তৈরি বা আপডেট করুন
+                        // এটি পুরনো ব্যবহারকারীদের তথ্য মুছে না ফেলে নতুন তথ্য যোগ করবে (যেমন প্রোফাইল ছবি)
+                        await userRef.set(userData, { merge: true });
+                        
                         initializeApp();
                     } else {
-                         initializeApp();
+                         initializeApp(); // যদি টেলিগ্রামের বাইরে থেকে খোলা হয়
                     }
                 } catch (error) {
                     console.log('Not running inside Telegram or user data is not available.');
-                    initializeApp();
+                    initializeApp(); // কোনো ত্রুটি হলেও অ্যাপ শুরু করুন
                 }
             };
+            // END: UPDATED FUNCTION
 
             const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
             const trackDownload = (movieId) => db.collection('downloads').add({ movieId, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
             
             const renderSkeletonLoader = () => {
                 skeletonLoader.innerHTML = '';
-                for (let i = 0; i < 8; i++) {
+                // ছোট ডিভাইসে যেন লোডারটি সুন্দর দেখায়, তাই সংখ্যা কমানো হয়েছে
+                for (let i = 0; i < 10; i++) {
                     const card = document.createElement('div');
                     card.className = 'skeleton-card shimmer';
                     card.innerHTML = `<div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div></div>`;
@@ -452,8 +499,13 @@
                         noMoviesMessage.querySelector('p').textContent = "No movies found. Please add content from the admin panel.";
                     }
                     noMoviesMessage.style.display = 'block';
+                    movieGrid.style.display = 'none';
                 } else {
                     noMoviesMessage.style.display = 'none';
+                    movieGrid.style.display = 'grid'; 
+                    if(movieGrid.classList.contains('list-view')) {
+                         movieGrid.style.display = 'block';
+                    }
                 }
                 
                 appendMovies(activeMovies);
@@ -494,9 +546,8 @@
                     const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
                     allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     
-                    performSearch();
-
                     skeletonLoader.style.display = 'none';
+                    performSearch();
                     
                 } catch (error) {
                     console.error("Error fetching movies: ", error);
@@ -584,9 +635,8 @@
 
                 try {
                     const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    const user = tg.initDataUnsafe.user;
-                    if (user && user.id) {
+                    if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                        const user = tg.initDataUnsafe.user;
                         requestData.telegramUser = {
                             id: user.id,
                             firstName: user.first_name,
