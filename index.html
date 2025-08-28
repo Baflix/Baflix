@@ -85,10 +85,8 @@
         .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s; }
         .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
 
-        /* --- আপডেট করা গ্রিড ভিউ --- */
         .movie-grid { 
             display: grid; 
-            /* ছোট ডিভাইসের জন্য কার্ডের সর্বনিম্ন আকার এবং গ্যাপ কমানো হয়েছে */
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
             gap: 15px; 
             padding: 0 15px 20px; 
@@ -100,9 +98,16 @@
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-        .movie-genres, .movie-rating, .movie-year { font-size: 0.7rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        /* GENRES, RATING, এবং YEAR এর জন্য স্টাইল */
+        .movie-genres, .movie-rating, .movie-year { 
+            font-size: 0.7rem; 
+            color: var(--text-secondary); 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-bottom: 4px; 
+        }
         
-        /* --- সার্চ রেজাল্টের জন্য লিস্ট ভিউ --- */
         .movie-grid.list-view {
             display: block;
             max-width: 800px; 
@@ -168,14 +173,14 @@
             width: fit-content;
         }
         .movie-grid.list-view .movie-genres,
-        .movie-grid.list-view .movie-year {
+        .movie-grid.list-view .movie-year,
+        .movie-grid.list-view .movie-downloads {
             display: none;
         }
         
         .foryou-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
         .foryou-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        /* --- আপডেট করা স্কেলিটন লোডার --- */
         #skeleton-loader { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
@@ -232,7 +237,6 @@
     </style>
 </head>
 <body>
-    <!-- HTML Body অপরিবর্তিত আছে -->
     <header>
         <h1 class="logo">Baflix</h1>
         <div class="social-icons"></div>
@@ -273,6 +277,7 @@
                         <p id="modal-genres" class="modal-meta"></p>
                         <p id="modal-rating" class="modal-meta"></p>
                         <p id="modal-year" class="modal-meta"></p>
+                        <!-- আপডেট: ডাউনলোড কাউন্ট দেখানোর p ট্যাগটি সরানো হয়েছে -->
                         <div id="modal-trailer-container" style="margin-top: 15px;"></div>
                     </div>
                 </div>
@@ -345,8 +350,7 @@
             let allMovies = [];
             let isLoading = false;
             let currentFilter = 'All';
-
-            // START: UPDATED FUNCTION
+            
             const registerTelegramUser = async () => {
                 try {
                     const tg = window.Telegram.WebApp;
@@ -358,48 +362,52 @@
                         const userRef = db.collection('telegramUsers').doc(String(user.id));
                         const userDoc = await userRef.get();
 
-                        // প্রথমে ব্যবহারকারী ব্লকড কিনা তা পরীক্ষা করুন
                         if (userDoc.exists && userDoc.data().status === 'blocked') {
                             document.body.innerHTML = `<div style="text-align:center; padding-top: 50px; color: white;"><h1>You are blocked</h1><p>You cannot access this content.</p></div>`;
-                            return; // ব্যবহারকারী ব্লকড হলে অ্যাপ লোড করা বন্ধ করুন
+                            return; 
                         }
 
-                        // Firestore-এ পাঠানোর জন্য ব্যবহারকারীর ডেটা প্রস্তুত করুন
                         const userData = {
                             id: user.id,
                             firstName: user.first_name,
                             lastName: user.last_name || '',
                             username: user.username || '',
-                            profilePicUrl: user.photo_url || '', // নতুন: প্রোফাইল ছবির URL যোগ করা হয়েছে
-                            status: 'active' // ডিফল্ট স্ট্যাটাস
+                            profilePicUrl: user.photo_url || '',
+                            status: 'active'
                         };
 
-                        // যদি নতুন ব্যবহারকারী হয়, তবে joinedAt সময় যোগ করুন
                         if (!userDoc.exists) {
                             userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
                         }
 
-                        // set এবং merge:true ব্যবহার করে ডেটা তৈরি বা আপডেট করুন
-                        // এটি পুরনো ব্যবহারকারীদের তথ্য মুছে না ফেলে নতুন তথ্য যোগ করবে (যেমন প্রোফাইল ছবি)
                         await userRef.set(userData, { merge: true });
                         
                         initializeApp();
                     } else {
-                         initializeApp(); // যদি টেলিগ্রামের বাইরে থেকে খোলা হয়
+                         initializeApp();
                     }
                 } catch (error) {
                     console.log('Not running inside Telegram or user data is not available.');
-                    initializeApp(); // কোনো ত্রুটি হলেও অ্যাপ শুরু করুন
+                    initializeApp();
                 }
             };
-            // END: UPDATED FUNCTION
 
             const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-            const trackDownload = (movieId) => db.collection('downloads').add({ movieId, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
             
+            const incrementDownloadCount = async (movieId) => {
+                if (!movieId) return;
+                const movieRef = db.collection('movies').doc(movieId);
+                try {
+                    await movieRef.update({
+                        downloadCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                } catch (error) {
+                    console.error("Error incrementing download count:", error);
+                }
+            };
+
             const renderSkeletonLoader = () => {
                 skeletonLoader.innerHTML = '';
-                // ছোট ডিভাইসে যেন লোডারটি সুন্দর দেখায়, তাই সংখ্যা কমানো হয়েছে
                 for (let i = 0; i < 10; i++) {
                     const card = document.createElement('div');
                     card.className = 'skeleton-card shimmer';
@@ -416,11 +424,14 @@
                 document.getElementById('modal-genres').textContent = movie.genres || 'N/A';
                 document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10`;
                 document.getElementById('modal-year').textContent = movie.year;
+                // আপডেট: মোডাল থেকে ডাউনলোড সংখ্যা দেখানোর লাইনটি সরানো হয়েছে
                 document.getElementById('modal-description').textContent = movie.description || 'No description available.';
+                
                 const trailerContainer = document.getElementById('modal-trailer-container');
                 const downloadsContainer = document.getElementById('modal-downloads');
                 trailerContainer.innerHTML = '';
                 downloadsContainer.innerHTML = '';
+
                 if (movie.trailerUrl) {
                     const trailerBtn = document.createElement('a');
                     trailerBtn.href = movie.trailerUrl;
@@ -429,6 +440,7 @@
                     trailerBtn.innerHTML = `<i class="fas fa-play"></i> Movie Trailer`;
                     trailerContainer.appendChild(trailerBtn);
                 }
+
                 if (movie.downloadLinks && movie.downloadLinks.length > 0) {
                     movie.downloadLinks.forEach(link => {
                         const button = document.createElement('div');
@@ -436,7 +448,7 @@
                         button.className = 'download-btn';
                         button.dataset.url = link.url;
                         button.addEventListener('click', () => {
-                            trackDownload(movie.id);
+                            incrementDownloadCount(movie.id); 
                             window.open(button.dataset.url, '_blank');
                         });
                         button.addEventListener('contextmenu', (e) => e.preventDefault());
