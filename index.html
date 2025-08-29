@@ -16,7 +16,7 @@
             color: var(--text); 
             min-height: 100vh; 
             overflow-x: hidden; 
-            -webkit-text-size-adjust: 100%; /* Prevent font scaling on iOS */
+            -webkit-text-size-adjust: 100%;
         }
         header { padding: 20px; text-align: center; }
         .logo {
@@ -98,7 +98,6 @@
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-        /* GENRES, RATING, এবং YEAR এর জন্য স্টাইল */
         .movie-genres, .movie-rating, .movie-year { 
             font-size: 0.7rem; 
             color: var(--text-secondary); 
@@ -108,79 +107,24 @@
             margin-bottom: 4px; 
         }
         
-        .movie-grid.list-view {
-            display: block;
-            max-width: 800px; 
-        }
-        .movie-grid.list-view .movie-card {
-            display: flex;
-            gap: 15px;
-            background-color: transparent;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 20px;
-            border-radius: 0;
-            overflow: visible;
-        }
-        .movie-grid.list-view .movie-card:last-child {
-            border-bottom: none;
-        }
-        .movie-grid.list-view .movie-poster {
-            flex: 0 0 100px;
-            height: 150px;
-            aspect-ratio: auto;
-            position: relative;
-            border-radius: 5px;
-        }
-        .movie-grid.list-view .movie-poster::after {
-            content: 'MOVIE';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: #28a745;
-            color: #fff;
-            padding: 2px 6px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            border-radius: 3px;
-        }
-        .movie-grid.list-view .movie-info {
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow: hidden;
-        }
-        .movie-grid.list-view .movie-title {
-            font-size: 1.1rem;
-            white-space: normal;
-        }
+        .movie-grid.list-view { display: block; max-width: 800px; }
+        .movie-grid.list-view .movie-card { display: flex; gap: 15px; background-color: transparent; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 20px; border-radius: 0; overflow: visible; }
+        .movie-grid.list-view .movie-card:last-child { border-bottom: none; }
+        .movie-grid.list-view .movie-poster { flex: 0 0 100px; height: 150px; aspect-ratio: auto; position: relative; border-radius: 5px; }
+        .movie-grid.list-view .movie-info { padding: 0; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+        .movie-grid.list-view .movie-title { font-size: 1.1rem; white-space: normal; }
+        
         .movie-grid.list-view .movie-description-snippet {
             font-size: 0.85rem;
             color: var(--text-secondary);
             line-height: 1.5;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 3; /* টেক্সট ৩ লাইনে সীমাবদ্ধ থাকবে */
             -webkit-box-orient: vertical;  
             overflow: hidden;
-        }
-        .movie-grid.list-view .movie-rating {
-            background: #333;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            width: fit-content;
-        }
-        .movie-grid.list-view .movie-genres,
-        .movie-grid.list-view .movie-year,
-        .movie-grid.list-view .movie-downloads {
-            display: none;
+            overflow-wrap: break-word; /* লম্বা শব্দ ভেঙে দেওয়ার জন্য এই লাইনটি যোগ করা হয়েছে */
         }
         
-        .foryou-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
-        .foryou-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
         #skeleton-loader { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
@@ -198,10 +142,6 @@
         @-webkit-keyframes shimmer { 100% { left: 100%; } }
         @keyframes shimmer { 100% { left: 100%; } }
         
-        #load-more-container { text-align: center; padding: 20px; }
-        #load-more-btn { padding: 12px 30px; background: var(--primary); color: var(--text); border: none; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.3s; }
-        #load-more-btn:hover { background: var(--secondary); }
-        #load-more-btn:disabled { background: #555; cursor: not-allowed; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1002; }
         .modal-content { background: var(--light-dark); width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; position: relative; overflow: hidden; border-radius: 8px; }
         .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 2; line-height: 1; }
@@ -214,25 +154,12 @@
         .modal-description { padding: 25px; font-size: 1rem; line-height: 1.7; }
         .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
         .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
-        .download-btn:hover { background: #218838; }
         .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
-        .trailer-btn:hover { background: var(--secondary); }
-        .request-modal-content .modal-header { background: none; padding-bottom: 0; }
         .request-modal-content h2 { text-align: center; margin-bottom: 20px; font-size: 1.5rem; }
         .request-modal-content form { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
         .request-modal-content .form-group label { display: block; margin-bottom: 5px; color: var(--text-secondary); }
         .request-modal-content .form-control { width: 100%; padding: 12px; background: var(--dark); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 1rem; }
         .request-modal-content .submit-btn { padding: 12px; background: var(--primary); color: var(--text); border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
-        .request-modal-content .submit-btn:hover { background: var(--secondary); }
-
-        .foryou-container { max-width: 1200px; margin: 0 auto 25px auto; padding: 0 20px; }
-        .foryou-container h2 { font-size: 1.5rem; margin-bottom: 15px; color: var(--text); }
-        .foryou-slider { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; -ms-overflow-style: none; scrollbar-width: none; }
-        .foryou-slider::-webkit-scrollbar { display: none; }
-        .foryou-movie-card { flex: 0 0 130px; background: var(--light-dark); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
-        .foryou-movie-card:hover { transform: scale(1.05); }
-        .foryou-movie-card .foryou-title { font-size: 0.8rem; padding: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
 </head>
@@ -245,22 +172,26 @@
     <div class="search-container-wrapper">
         <button id="movie-request-btn" class="request-btn"><i class="fas fa-plus-circle"></i> Movie Request</button>
         <div class="search-container">
-            <input type="text" placeholder="Search by title, genre, year..." class="search-bar">
-            <button class="search-btn"><i class="fas fa-search"></i></button>
+            <input type="text" id="search-bar" class="search-bar" placeholder="Search by title, genre, year...">
+            <button id="search-btn" class="search-btn"><i class="fas fa-search"></i></button>
         </div>
     </div>
 
-    <div id="foryou-section" class="foryou-container" style="display: none;">
-        <h2>For You</h2>
-        <div id="foryou-slider" class="foryou-slider"></div>
-    </div>
-
     <div class="filter-container"></div>
-    <div id="skeleton-loader"></div>
-    <main class="movie-grid"></main>
-    <div id="load-more-container" style="display: none;">
-        <button id="load-more-btn">Load More</button>
-    </div>
+    
+    <main>
+        <div class="movie-grid" style="display: none;"></div>
+        <div id="skeleton-loader">
+            <script>
+                let skeletonHTML = '';
+                for (let i = 0; i < 12; i++) {
+                    skeletonHTML += `<div class="skeleton-card shimmer"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div></div></div>`;
+                }
+                document.getElementById('skeleton-loader').innerHTML = skeletonHTML;
+            </script>
+        </div>
+    </main>
+
     <div id="no-movies-message" style="text-align: center; color: var(--text-secondary); margin-top: 50px; display: none;">
         <p>No movies found. Please add content from the admin panel.</p>
     </div>
@@ -277,7 +208,6 @@
                         <p id="modal-genres" class="modal-meta"></p>
                         <p id="modal-rating" class="modal-meta"></p>
                         <p id="modal-year" class="modal-meta"></p>
-                        <!-- আপডেট: ডাউনলোড কাউন্ট দেখানোর p ট্যাগটি সরানো হয়েছে -->
                         <div id="modal-trailer-container" style="margin-top: 15px;"></div>
                     </div>
                 </div>
@@ -292,9 +222,7 @@
         <div class="modal-content request-modal-content">
              <button class="modal-close-btn" data-target="request-modal">&times;</button>
              <div class="modal-body">
-                 <div class="modal-header">
-                     <h2>Request a Movie</h2>
-                 </div>
+                 <div class="modal-header"><h2>Request a Movie</h2></div>
                  <form id="movie-request-form">
                      <div class="form-group">
                          <label for="request-user-name">Enter Your Name *</label>
@@ -324,8 +252,7 @@
             projectId: "baflix-app",
             storageBucket: "baflix-app.firebasestorage.app",
             messagingSenderId: "221693630977",
-            appId: "1:221693630977:web:620d115d11b8e3af677e00",
-            measurementId: "G-6F2YJDH490"
+            appId: "1:221693630977:web:620d115d11b8e3af677e00"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -336,64 +263,55 @@
             const skeletonLoader = document.getElementById('skeleton-loader');
             const detailsModal = document.getElementById('details-modal');
             const requestModal = document.getElementById('request-modal');
-            const loadMoreContainer = document.getElementById('load-more-container');
             const noMoviesMessage = document.getElementById('no-movies-message');
             const socialIconsContainer = document.querySelector('.social-icons');
             const filterContainer = document.querySelector('.filter-container');
-            const searchBar = document.querySelector('.search-bar');
-            const searchBtn = document.querySelector('.search-btn');
-            const foryouSection = document.getElementById('foryou-section');
-            const foryouSlider = document.getElementById('foryou-slider');
+            const searchBar = document.getElementById('search-bar');
+            const searchBtn = document.getElementById('search-btn');
             const movieRequestBtn = document.getElementById('movie-request-btn');
             const movieRequestForm = document.getElementById('movie-request-form');
 
             let allMovies = [];
-            let isLoading = false;
+            let isFetchingMore = false;
             let currentFilter = 'All';
-            
+            let lastVisible = null;
+            const MOVIES_PER_PAGE = 16;
+
+            const initializeApp = async () => {
+                trackVisit();
+                await Promise.all([
+                    renderSocialLinks(),
+                    setupFilters(),
+                    fetchInitialMovies()
+                ]);
+            };
+
             const registerTelegramUser = async () => {
                 try {
                     const tg = window.Telegram.WebApp;
                     tg.ready();
                     tg.expand();
-                    
                     const user = tg.initDataUnsafe.user;
                     if (user && user.id) {
                         const userRef = db.collection('telegramUsers').doc(String(user.id));
                         const userDoc = await userRef.get();
-
                         if (userDoc.exists && userDoc.data().status === 'blocked') {
                             document.body.innerHTML = `<div style="text-align:center; padding-top: 50px; color: white;"><h1>You are blocked</h1><p>You cannot access this content.</p></div>`;
-                            return; 
+                            return;
                         }
-
-                        const userData = {
-                            id: user.id,
-                            firstName: user.first_name,
-                            lastName: user.last_name || '',
-                            username: user.username || '',
-                            profilePicUrl: user.photo_url || '',
-                            status: 'active'
-                        };
-
-                        if (!userDoc.exists) {
-                            userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
-                        }
-
+                        const userData = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '', status: 'active' };
+                        if (!userDoc.exists) userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
                         await userRef.set(userData, { merge: true });
-                        
-                        initializeApp();
-                    } else {
-                         initializeApp();
                     }
                 } catch (error) {
                     console.log('Not running inside Telegram or user data is not available.');
+                } finally {
                     initializeApp();
                 }
             };
 
-            const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-            
+            const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() }).catch(err => console.error("Visit tracking failed:", err));
+
             const incrementDownloadCount = async (movieId) => {
                 if (!movieId) return;
                 const movieRef = db.collection('movies').doc(movieId);
@@ -406,16 +324,154 @@
                 }
             };
 
-            const renderSkeletonLoader = () => {
-                skeletonLoader.innerHTML = '';
-                for (let i = 0; i < 10; i++) {
-                    const card = document.createElement('div');
-                    card.className = 'skeleton-card shimmer';
-                    card.innerHTML = `<div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div></div>`;
-                    skeletonLoader.appendChild(card);
+            const fetchInitialMovies = async () => {
+                try {
+                    const query = db.collection('movies').orderBy('createdAt', 'desc').limit(MOVIES_PER_PAGE);
+                    const snapshot = await query.get();
+                    skeletonLoader.style.display = 'none';
+                    if (snapshot.empty) {
+                        noMoviesMessage.style.display = 'block';
+                        movieGrid.style.display = 'none';
+                    } else {
+                        movieGrid.style.display = 'grid';
+                        lastVisible = snapshot.docs[snapshot.docs.length - 1];
+                        const newMovies = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        allMovies = newMovies;
+                        appendMovies(newMovies.filter(m => m.status === 'active'));
+                    }
+                } catch (error) {
+                    console.error("Error fetching initial movies:", error);
+                    skeletonLoader.style.display = 'none';
+                    noMoviesMessage.innerHTML = '<p>Could not load data. Please try again later.</p>';
+                    noMoviesMessage.style.display = 'block';
                 }
-                skeletonLoader.style.display = 'grid';
+            };
+
+            const loadMoreMovies = async () => {
+                if (isFetchingMore || !lastVisible) return;
+                isFetchingMore = true;
+                try {
+                    const query = db.collection('movies').orderBy('createdAt', 'desc').startAfter(lastVisible).limit(MOVIES_PER_PAGE);
+                    const snapshot = await query.get();
+                    if (!snapshot.empty) {
+                        lastVisible = snapshot.docs[snapshot.docs.length - 1];
+                        const newMovies = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        allMovies.push(...newMovies);
+                        appendMovies(newMovies.filter(m => m.status === 'active'));
+                    } else {
+                        lastVisible = null;
+                    }
+                } catch (error) {
+                    console.error("Error loading more movies:", error);
+                } finally {
+                    isFetchingMore = false;
+                }
+            };
+
+            const fetchAllMoviesAndFilter = async () => {
                 movieGrid.style.display = 'none';
+                noMoviesMessage.style.display = 'none';
+                skeletonLoader.style.display = 'grid';
+                try {
+                    const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
+                    allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    skeletonLoader.style.display = 'none';
+                    const searchTerm = searchBar.value.toLowerCase().trim();
+                    let filteredMovies = allMovies;
+                    if (currentFilter !== 'All') {
+                        filteredMovies = filteredMovies.filter(movie => movie.categories && movie.categories.includes(currentFilter));
+                    }
+                    if (searchTerm) {
+                        filteredMovies = filteredMovies.filter(movie =>
+                            movie.title.toLowerCase().includes(searchTerm) ||
+                            (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
+                            String(movie.year).includes(searchTerm)
+                        );
+                    }
+                    movieGrid.classList.add('list-view');
+                    renderMovies(filteredMovies);
+                } catch (error) {
+                    console.error("Error fetching movies for search:", error);
+                    skeletonLoader.style.display = 'none';
+                }
+            };
+
+            const performSearch = () => {
+                const isSearchOrFilterActive = searchBar.value.trim() !== '' || currentFilter !== 'All';
+                if (isSearchOrFilterActive) {
+                    fetchAllMoviesAndFilter();
+                } else {
+                    movieGrid.innerHTML = '';
+                    movieGrid.classList.remove('list-view');
+                    allMovies = [];
+                    lastVisible = null;
+                    fetchInitialMovies();
+                }
+            };
+            
+            const appendMovies = (moviesToAppend) => {
+                const isListView = movieGrid.classList.contains('list-view');
+                moviesToAppend.forEach(movie => {
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.dataset.movieId = movie.id;
+
+                    if (isListView) {
+                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.style.display='none'"></div><div class="movie-info"><h3 class="movie-title">${movie.title} (${movie.year || 'N/A'})</h3><p class="movie-rating">IMDb ${movie.rating}</p><p class="movie-description-snippet">${movie.description || 'No description available.'}</p></div>`;
+                    } else {
+                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div><div class="movie-info"><h3 class="movie-title">${movie.title}</h3><p class="movie-genres">${movie.genres || ''}</p><p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10</p><p class="movie-year">${movie.year}</p></div>`;
+                    }
+                    movieGrid.appendChild(movieCard);
+                });
+            };
+
+            const renderMovies = (moviesToRender) => {
+                movieGrid.innerHTML = ''; 
+                const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
+                if (activeMovies.length === 0) {
+                    noMoviesMessage.querySelector('p').textContent = "The movie you are looking for is not available. You can request it from the admin.";
+                    noMoviesMessage.style.display = 'block';
+                    movieGrid.style.display = 'none';
+                } else {
+                    noMoviesMessage.style.display = 'none';
+                    movieGrid.style.display = movieGrid.classList.contains('list-view') ? 'block' : 'grid';
+                    appendMovies(activeMovies);
+                }
+            };
+
+            const renderSocialLinks = async () => {
+                try {
+                    const snapshot = await db.collection('socialLinks').get();
+                    socialIconsContainer.innerHTML = snapshot.docs.map(doc => `<a href="${doc.data().url}" target="_blank"><img src="${doc.data().imageUrl}" alt="Social Icon"></a>`).join('');
+                } catch (error) { console.error("Error setting up social links:", error); }
+            };
+
+            const setupFilters = async () => {
+                 try {
+                    const filtersSnapshot = await db.collection('filters').orderBy('name').get();
+                    const filters = filtersSnapshot.docs.map(doc => doc.data().name);
+                    filterContainer.innerHTML = '';
+                    const allFilter = document.createElement('div');
+                    allFilter.className = 'filter active';
+                    allFilter.textContent = 'All';
+                    allFilter.dataset.filter = 'All';
+                    filterContainer.appendChild(allFilter);
+                    filters.forEach(name => {
+                        const filterEl = document.createElement('div');
+                        filterEl.className = 'filter';
+                        filterEl.textContent = name;
+                        filterEl.dataset.filter = name;
+                        filterContainer.appendChild(filterEl);
+                    });
+                    filterContainer.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('filter')) {
+                            document.querySelector('.filter.active').classList.remove('active');
+                            e.target.classList.add('active');
+                            currentFilter = e.target.dataset.filter;
+                            performSearch();
+                        }
+                    });
+                } catch (error) { console.error("Error setting up filters:", error); }
             };
 
             const openDetailsModal = (movie) => {
@@ -424,7 +480,6 @@
                 document.getElementById('modal-genres').textContent = movie.genres || 'N/A';
                 document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10`;
                 document.getElementById('modal-year').textContent = movie.year;
-                // আপডেট: মোডাল থেকে ডাউনলোড সংখ্যা দেখানোর লাইনটি সরানো হয়েছে
                 document.getElementById('modal-description').textContent = movie.description || 'No description available.';
                 
                 const trailerContainer = document.getElementById('modal-trailer-container');
@@ -459,184 +514,44 @@
             };
 
             const closeModal = (modal) => modal.style.display = 'none';
-
-            const renderSocialLinks = async () => {
-                const snapshot = await db.collection('socialLinks').get();
-                socialIconsContainer.innerHTML = snapshot.docs.map(doc => `<a href="${doc.data().url}" target="_blank"><img src="${doc.data().imageUrl}" alt="Social Icon"></a>`).join('');
-            };
             
-            const appendMovies = (moviesToAppend) => {
-                const isListView = movieGrid.classList.contains('list-view');
-
-                moviesToAppend.forEach(movie => {
-                    const movieCard = document.createElement('div');
-                    movieCard.className = 'movie-card';
-                    movieCard.dataset.movieId = movie.id;
-
-                    if (isListView) {
-                        movieCard.innerHTML = `
-                            <div class="movie-poster">
-                                <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.style.display='none'">
-                            </div>
-                            <div class="movie-info">
-                                <h3 class="movie-title">${movie.title} (${movie.year || 'N/A'})</h3>
-                                <p class="movie-rating">IMDb ${movie.rating}</p>
-                                <p class="movie-description-snippet">${movie.description || 'No description available.'}</p>
-                            </div>`;
-                    } else {
-                        movieCard.innerHTML = `
-                            <div class="movie-poster">
-                                <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'">
-                            </div>
-                            <div class="movie-info">
-                                <h3 class="movie-title">${movie.title}</h3>
-                                <p class="movie-genres">${movie.genres || ''}</p>
-                                <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10</p>
-                                <p class="movie-year">${movie.year}</p>
-                            </div>`;
-                    }
-                    movieGrid.appendChild(movieCard);
-                });
-            };
-
-            const renderMovies = (moviesToRender) => {
-                movieGrid.innerHTML = ''; 
-                const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
-
-                if (activeMovies.length === 0) {
-                    const isSearchingOrFiltering = searchBar.value.trim() !== '' || currentFilter !== 'All';
-                    if (isSearchingOrFiltering) {
-                        noMoviesMessage.querySelector('p').textContent = "The movie you are looking for is not available. You can request it from the admin. To make a request, press the 'Movie Request' button.";
-                    } else {
-                        noMoviesMessage.querySelector('p').textContent = "No movies found. Please add content from the admin panel.";
-                    }
-                    noMoviesMessage.style.display = 'block';
-                    movieGrid.style.display = 'none';
-                } else {
-                    noMoviesMessage.style.display = 'none';
-                    movieGrid.style.display = 'grid'; 
-                    if(movieGrid.classList.contains('list-view')) {
-                         movieGrid.style.display = 'block';
-                    }
-                }
-                
-                appendMovies(activeMovies);
-            };
-            
-            const performSearch = () => {
-                const searchTerm = searchBar.value.toLowerCase().trim();
-                let filteredMovies = allMovies;
-
-                if (currentFilter !== 'All') {
-                    filteredMovies = filteredMovies.filter(movie => movie.categories && movie.categories.includes(currentFilter));
-                }
-                if (searchTerm) {
-                    filteredMovies = filteredMovies.filter(movie =>
-                        movie.title.toLowerCase().includes(searchTerm) ||
-                        (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
-                        String(movie.year).toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                const isSearchingOrFiltering = searchTerm !== '' || currentFilter !== 'All';
-                if (isSearchingOrFiltering) {
-                    movieGrid.classList.add('list-view');
-                    movieGrid.style.display = 'block';
-                } else {
-                    movieGrid.classList.remove('list-view');
-                    movieGrid.style.display = 'grid';
-                }
-                
-                renderMovies(filteredMovies);
-            };
-
-            const fetchMovies = async () => {
-                if (isLoading) return;
-                isLoading = true;
-                renderSkeletonLoader();
-                try {
-                    const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
-                    allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    
-                    skeletonLoader.style.display = 'none';
-                    performSearch();
-                    
-                } catch (error) {
-                    console.error("Error fetching movies: ", error);
-                    noMoviesMessage.innerHTML = '<p>Could not load data. Please try again later.</p>';
-                    noMoviesMessage.style.display = 'block';
-                    skeletonLoader.style.display = 'none';
-                } finally {
-                    isLoading = false;
-                }
-            };
-            
-            const setupFilters = async () => {
-                 try {
-                    const filtersSnapshot = await db.collection('filters').orderBy('name').get();
-                    const filters = filtersSnapshot.docs.map(doc => doc.data().name);
-
-                    filterContainer.innerHTML = '';
-                    const allFilter = document.createElement('div');
-                    allFilter.className = 'filter active';
-                    allFilter.textContent = 'All';
-                    allFilter.dataset.filter = 'All';
-                    filterContainer.appendChild(allFilter);
-
-                    filters.forEach(name => {
-                        const filterEl = document.createElement('div');
-                        filterEl.className = 'filter';
-                        filterEl.textContent = name;
-                        filterEl.dataset.filter = name;
-                        filterContainer.appendChild(filterEl);
-                    });
-
-                    filterContainer.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('filter')) {
-                            document.querySelector('.filter.active').classList.remove('active');
-                            e.target.classList.add('active');
-                            currentFilter = e.target.dataset.filter;
-                            performSearch();
-                        }
-                    });
-                } catch (error) {
-                    console.error("Error setting up filters: ", error);
-                }
-            };
-            
-            const handleMovieClick = (e) => {
+            // --- Event Listeners ---
+            searchBtn.addEventListener('click', performSearch);
+            searchBar.addEventListener('input', performSearch);
+            movieGrid.addEventListener('click', (e) => {
                 const card = e.target.closest('.movie-card');
                  if (card && card.dataset.movieId) {
                     const movie = allMovies.find(m => m.id == card.dataset.movieId);
-                    if (movie) {
-                        openDetailsModal(movie);
-                    }
+                    if (movie) openDetailsModal(movie);
                 }
-            };
-            
-            searchBtn.addEventListener('click', performSearch);
-            searchBar.addEventListener('input', performSearch);
-            movieGrid.addEventListener('click', handleMovieClick);
+            });
 
+            window.addEventListener('scroll', () => {
+                const isSearchOrFilterActive = searchBar.value.trim() !== '' || currentFilter !== 'All';
+                if (isSearchOrFilterActive) return;
+                const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+                if (clientHeight + scrollTop >= scrollHeight - 300) {
+                    loadMoreMovies();
+                }
+            });
+            
             document.querySelectorAll('.modal-close-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const modal = document.getElementById(btn.dataset.target);
                     if(modal) closeModal(modal);
                 });
             });
+
             detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeModal(detailsModal); });
             requestModal.addEventListener('click', (e) => { if (e.target === requestModal) closeModal(requestModal); });
 
-            movieRequestBtn.addEventListener('click', () => {
-                requestModal.style.display = 'flex';
-            });
+            movieRequestBtn.addEventListener('click', () => requestModal.style.display = 'flex');
             
             movieRequestForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const submitBtn = e.target.querySelector('button[type="submit"]');
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Sending...';
-
                 const requestData = {
                     userName: document.getElementById('request-user-name').value,
                     movieName: document.getElementById('request-movie-name').value,
@@ -644,17 +559,11 @@
                     status: 'pending',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-
                 try {
                     const tg = window.Telegram.WebApp;
                     if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
                         const user = tg.initDataUnsafe.user;
-                        requestData.telegramUser = {
-                            id: user.id,
-                            firstName: user.first_name,
-                            lastName: user.last_name || '',
-                            username: user.username || ''
-                        };
+                        requestData.telegramUser = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '' };
                     }
                     await db.collection('movieRequests').add(requestData);
                     alert('Your movie request has been sent successfully!');
@@ -668,14 +577,7 @@
                     submitBtn.textContent = 'Send Request';
                 }
             });
-
-            const initializeApp = async () => {
-                trackVisit();
-                await renderSocialLinks();
-                await setupFilters();
-                await fetchMovies();
-            };
-
+            
             registerTelegramUser();
         });
     </script>
