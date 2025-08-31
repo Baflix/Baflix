@@ -11,11 +11,11 @@
     <style>
         :root { --primary: #e50914; --secondary: #b81d24; --dark: #141414; --light-dark: #222; --text: #fff; --text-secondary: #aaa; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: linear-gradient(135deg, #0f0f0f, #1a1a1a); 
-            color: var(--text); 
-            min-height: 100vh; 
-            overflow-x: hidden; 
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
             -webkit-text-size-adjust: 100%;
         }
         header { padding: 20px; text-align: center; }
@@ -37,12 +37,12 @@
         .social-icons a { display: inline-block; transition: transform 0.3s; }
         .social-icons img { width: 28px; height: 28px; object-fit: contain; filter: grayscale(1); transition: filter 0.3s; }
         .social-icons a:hover img { filter: grayscale(0); }
-        
-        .search-container-wrapper { 
+
+        .search-container-wrapper {
             position: relative;
             max-width: 600px;
             margin: 0 auto 20px;
-            padding: 50px 20px 0; 
+            padding: 50px 20px 0;
         }
         .request-btn {
             position: absolute;
@@ -59,79 +59,106 @@
             font-size: 0.9rem;
             white-space: nowrap;
         }
-        .search-container { 
-            display: flex; 
-            flex-grow: 1; 
+        .search-container {
+            display: flex;
+            flex-grow: 1;
         }
-        .search-bar { 
-            width: 100%; 
-            padding: 12px 20px; 
-            border: none; 
-            border-radius: 25px 0 0 25px; 
-            background: var(--light-dark); 
-            color: var(--text); 
-            font-size: 1rem; 
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px 0 0 25px;
+            background: var(--light-dark);
+            color: var(--text);
+            font-size: 1rem;
         }
-        .search-btn { 
-            padding: 12px 20px; 
-            border: none; 
-            border-radius: 0 25px 25px 0; 
-            background: var(--primary); 
-            color: var(--text); 
-            cursor: pointer; 
+        .search-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            background: var(--primary);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .controls-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+
+        #sort-by {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: var(--light-dark);
+            color: var(--text);
+            border: 1px solid #444;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%23aaa'%3E%3Cpath%20d='M7%2010l5%205%205-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1.2em;
+            padding-right: 30px;
         }
         
-        .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 0 20px; }
+        .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
         .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s; }
         .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
 
-        .movie-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-            gap: 15px; 
-            padding: 0 15px 20px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 0 15px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .movie-card { background: var(--light-dark); border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
         .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-        .movie-genres, .movie-rating, .movie-year { 
-            font-size: 0.7rem; 
-            color: var(--text-secondary); 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            margin-bottom: 4px; 
+        .movie-genres, .movie-rating, .movie-year, .movie-language {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
         }
-        
+
         .movie-grid.list-view { display: block; max-width: 800px; }
         .movie-grid.list-view .movie-card { display: flex; gap: 15px; background-color: transparent; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 20px; border-radius: 0; overflow: visible; }
         .movie-grid.list-view .movie-card:last-child { border-bottom: none; }
         .movie-grid.list-view .movie-poster { flex: 0 0 100px; height: 150px; aspect-ratio: auto; position: relative; border-radius: 5px; }
         .movie-grid.list-view .movie-info { padding: 0; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
         .movie-grid.list-view .movie-title { font-size: 1.1rem; white-space: normal; }
-        
+
         .movie-grid.list-view .movie-description-snippet {
             font-size: 0.85rem;
             color: var(--text-secondary);
             line-height: 1.5;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* টেক্সট ৩ লাইনে সীমাবদ্ধ থাকবে */
-            -webkit-box-orient: vertical;  
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            overflow-wrap: break-word; /* লম্বা শব্দ ভেঙে দেওয়ার জন্য এই লাইনটি যোগ করা হয়েছে */
+            overflow-wrap: break-word;
         }
-        
-        #skeleton-loader { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-            gap: 15px; 
-            padding: 0 15px 20px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
+
+        #skeleton-loader {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 0 15px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .skeleton-card { background-color: var(--light-dark); border-radius: 8px; }
         .skeleton-poster { width: 100%; aspect-ratio: 2/3; background-color: #333; }
@@ -141,7 +168,7 @@
         .shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); -webkit-animation: shimmer 1.5s infinite; animation: shimmer 1.5s infinite; }
         @-webkit-keyframes shimmer { 100% { left: 100%; } }
         @keyframes shimmer { 100% { left: 100%; } }
-        
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1002; }
         .modal-content { background: var(--light-dark); width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; position: relative; overflow: hidden; border-radius: 8px; }
         .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 2; line-height: 1; }
@@ -177,8 +204,16 @@
         </div>
     </div>
 
-    <div class="filter-container"></div>
-    
+    <div class="controls-container">
+        <select id="sort-by">
+            <option value="createdAt_desc">Latest</option>
+            <option value="createdAt_asc">Oldest</option>
+            <option value="rating_desc">Top Rated</option>
+            <option value="rating_asc">Lowest Rated</option>
+        </select>
+        <div class="filter-container"></div>
+    </div>
+
     <main>
         <div class="movie-grid" style="display: none;"></div>
         <div id="skeleton-loader">
@@ -208,6 +243,7 @@
                         <p id="modal-genres" class="modal-meta"></p>
                         <p id="modal-rating" class="modal-meta"></p>
                         <p id="modal-year" class="modal-meta"></p>
+                        <p id="modal-language" class="modal-meta"></p>
                         <div id="modal-trailer-container" style="margin-top: 15px;"></div>
                     </div>
                 </div>
@@ -216,7 +252,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Movie Request Modal -->
     <div id="request-modal" class="modal-overlay">
         <div class="modal-content request-modal-content">
@@ -247,12 +283,12 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU",
-            authDomain: "baflix-app.firebaseapp.com",
-            projectId: "baflix-app",
-            storageBucket: "baflix-app.firebasestorage.app",
-            messagingSenderId: "221693630977",
-            appId: "1:221693630977:web:620d115d11b8e3af677e00"
+            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU", // আপনার Firebase apiKey ব্যবহার করুন
+            authDomain: "baflix-app.firebaseapp.com", // আপনার Firebase authDomain ব্যবহার করুন
+            projectId: "baflix-app", // আপনার Firebase projectId ব্যবহার করুন
+            storageBucket: "baflix-app.firebasestorage.app", // আপনার Firebase storageBucket ব্যবহার করুন
+            messagingSenderId: "221693630977", // আপনার Firebase messagingSenderId ব্যবহার করুন
+            appId: "1:221693630977:web:620d115d11b8e3af677e00" // আপনার Firebase appId ব্যবহার করুন
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -270,20 +306,22 @@
             const searchBtn = document.getElementById('search-btn');
             const movieRequestBtn = document.getElementById('movie-request-btn');
             const movieRequestForm = document.getElementById('movie-request-form');
+            const sortBySelect = document.getElementById('sort-by');
 
-            let allMovies = [];
+            let currentlyLoadedMovies = [];
             let isFetchingMore = false;
             let currentFilter = 'All';
+            let currentSort = 'createdAt_desc';
             let lastVisible = null;
-            const MOVIES_PER_PAGE = 16;
+            const MOVIES_PER_PAGE = 20;
 
             const initializeApp = async () => {
                 trackVisit();
                 await Promise.all([
                     renderSocialLinks(),
-                    setupFilters(),
-                    fetchInitialMovies()
+                    setupFilters()
                 ]);
+                await fetchAndRenderMovies(true);
             };
 
             const registerTelegramUser = async () => {
@@ -324,88 +362,98 @@
                 }
             };
 
-            const fetchInitialMovies = async () => {
+            const fetchAndRenderMovies = async (isInitial = false) => {
+                if (isFetchingMore) return;
+                isFetchingMore = true;
+
+                if (isInitial) {
+                    movieGrid.innerHTML = '';
+                    lastVisible = null;
+                    currentlyLoadedMovies = [];
+                    movieGrid.style.display = 'none';
+                    noMoviesMessage.style.display = 'none';
+                    skeletonLoader.style.display = 'grid';
+                    movieGrid.classList.remove('list-view');
+                }
+
                 try {
-                    const query = db.collection('movies').orderBy('createdAt', 'desc').limit(MOVIES_PER_PAGE);
+                    const [sortField, sortDirection] = currentSort.split('_');
+                    
+                    let query = db.collection('movies');
+
+                    if (currentFilter !== 'All') {
+                        query = query.where('categories', 'array-contains', currentFilter);
+                    }
+
+                    query = query.orderBy(sortField, sortDirection);
+                    
+                    if (!isInitial && lastVisible) {
+                        query = query.startAfter(lastVisible);
+                    }
+                    
+                    query = query.limit(MOVIES_PER_PAGE);
+
                     const snapshot = await query.get();
                     skeletonLoader.style.display = 'none';
+
                     if (snapshot.empty) {
-                        noMoviesMessage.style.display = 'block';
-                        movieGrid.style.display = 'none';
+                        if (isInitial) {
+                            noMoviesMessage.querySelector('p').textContent = `No movies found for "${currentFilter}". You can request a movie.`;
+                            noMoviesMessage.style.display = 'block';
+                            movieGrid.style.display = 'none';
+                        }
+                        lastVisible = null; 
                     } else {
                         movieGrid.style.display = 'grid';
                         lastVisible = snapshot.docs[snapshot.docs.length - 1];
                         const newMovies = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        allMovies = newMovies;
+                        currentlyLoadedMovies.push(...newMovies);
                         appendMovies(newMovies.filter(m => m.status === 'active'));
                     }
                 } catch (error) {
-                    console.error("Error fetching initial movies:", error);
+                    console.error("Error fetching movies:", error);
                     skeletonLoader.style.display = 'none';
-                    noMoviesMessage.innerHTML = '<p>Could not load data. Please try again later.</p>';
+                    noMoviesMessage.innerHTML = `<p>Could not load data. Please check your internet connection or try again later. If the problem persists, the developer may need to create a composite index in Firebase. Check the browser console for an index creation link.</p>`;
                     noMoviesMessage.style.display = 'block';
-                }
-            };
-
-            const loadMoreMovies = async () => {
-                if (isFetchingMore || !lastVisible) return;
-                isFetchingMore = true;
-                try {
-                    const query = db.collection('movies').orderBy('createdAt', 'desc').startAfter(lastVisible).limit(MOVIES_PER_PAGE);
-                    const snapshot = await query.get();
-                    if (!snapshot.empty) {
-                        lastVisible = snapshot.docs[snapshot.docs.length - 1];
-                        const newMovies = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        allMovies.push(...newMovies);
-                        appendMovies(newMovies.filter(m => m.status === 'active'));
-                    } else {
-                        lastVisible = null;
-                    }
-                } catch (error) {
-                    console.error("Error loading more movies:", error);
                 } finally {
                     isFetchingMore = false;
                 }
             };
+            
+            const performSearch = async () => {
+                const searchTerm = searchBar.value.toLowerCase().trim();
+                if (!searchTerm) {
+                    fetchAndRenderMovies(true);
+                    return;
+                }
 
-            const fetchAllMoviesAndFilter = async () => {
                 movieGrid.style.display = 'none';
                 noMoviesMessage.style.display = 'none';
                 skeletonLoader.style.display = 'grid';
                 try {
-                    const moviesSnapshot = await db.collection('movies').orderBy('createdAt', 'desc').get();
-                    allMovies = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // Search fetches all active documents and filters client-side
+                    const moviesSnapshot = await db.collection('movies').where('status', '==', 'active').get();
+                    let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     skeletonLoader.style.display = 'none';
-                    const searchTerm = searchBar.value.toLowerCase().trim();
-                    let filteredMovies = allMovies;
+                    
+                    let filteredMovies = allMoviesForSearch;
+                    
                     if (currentFilter !== 'All') {
                         filteredMovies = filteredMovies.filter(movie => movie.categories && movie.categories.includes(currentFilter));
                     }
-                    if (searchTerm) {
-                        filteredMovies = filteredMovies.filter(movie =>
-                            movie.title.toLowerCase().includes(searchTerm) ||
-                            (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
-                            String(movie.year).includes(searchTerm)
-                        );
-                    }
+
+                    filteredMovies = filteredMovies.filter(movie =>
+                        movie.title.toLowerCase().includes(searchTerm) ||
+                        (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
+                        String(movie.year).includes(searchTerm)
+                    );
+                    
+                    currentlyLoadedMovies = filteredMovies;
                     movieGrid.classList.add('list-view');
                     renderMovies(filteredMovies);
                 } catch (error) {
                     console.error("Error fetching movies for search:", error);
                     skeletonLoader.style.display = 'none';
-                }
-            };
-
-            const performSearch = () => {
-                const isSearchOrFilterActive = searchBar.value.trim() !== '' || currentFilter !== 'All';
-                if (isSearchOrFilterActive) {
-                    fetchAllMoviesAndFilter();
-                } else {
-                    movieGrid.innerHTML = '';
-                    movieGrid.classList.remove('list-view');
-                    allMovies = [];
-                    lastVisible = null;
-                    fetchInitialMovies();
                 }
             };
             
@@ -417,16 +465,16 @@
                     movieCard.dataset.movieId = movie.id;
 
                     if (isListView) {
-                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.style.display='none'"></div><div class="movie-info"><h3 class="movie-title">${movie.title} (${movie.year || 'N/A'})</h3><p class="movie-rating">IMDb ${movie.rating}</p><p class="movie-description-snippet">${movie.description || 'No description available.'}</p></div>`;
+                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.style.display='none'"></div><div class="movie-info"><h3 class="movie-title">${movie.title} (${movie.year || 'N/A'})</h3><p class="movie-rating">IMDb ${movie.rating || 'N/A'}</p><p class="movie-description-snippet">${movie.description || 'No description available.'}</p></div>`;
                     } else {
-                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div><div class="movie-info"><h3 class="movie-title">${movie.title}</h3><p class="movie-genres">${movie.genres || ''}</p><p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10</p><p class="movie-year">${movie.year}</p></div>`;
+                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div><div class="movie-info"><h3 class="movie-title">${movie.title}</h3><p class="movie-genres">${movie.genres || ''}</p><p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p><p class="movie-year">${movie.year || 'N/A'}</p><p class="movie-language">${movie.language || 'N/A'}</p></div>`;
                     }
                     movieGrid.appendChild(movieCard);
                 });
             };
 
             const renderMovies = (moviesToRender) => {
-                movieGrid.innerHTML = ''; 
+                movieGrid.innerHTML = '';
                 const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
                 if (activeMovies.length === 0) {
                     noMoviesMessage.querySelector('p').textContent = "The movie you are looking for is not available. You can request it from the admin.";
@@ -463,14 +511,6 @@
                         filterEl.dataset.filter = name;
                         filterContainer.appendChild(filterEl);
                     });
-                    filterContainer.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('filter')) {
-                            document.querySelector('.filter.active').classList.remove('active');
-                            e.target.classList.add('active');
-                            currentFilter = e.target.dataset.filter;
-                            performSearch();
-                        }
-                    });
                 } catch (error) { console.error("Error setting up filters:", error); }
             };
 
@@ -478,10 +518,11 @@
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
                 document.getElementById('modal-genres').textContent = movie.genres || 'N/A';
-                document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star" style="color:gold;"></i> ${movie.rating}/10`;
-                document.getElementById('modal-year').textContent = movie.year;
+                document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10`;
+                document.getElementById('modal-year').textContent = movie.year || 'N/A';
+                document.getElementById('modal-language').textContent = `Language: ${movie.language || 'N/A'}`;
                 document.getElementById('modal-description').textContent = movie.description || 'No description available.';
-                
+
                 const trailerContainer = document.getElementById('modal-trailer-container');
                 const downloadsContainer = document.getElementById('modal-downloads');
                 trailerContainer.innerHTML = '';
@@ -503,7 +544,7 @@
                         button.className = 'download-btn';
                         button.dataset.url = link.url;
                         button.addEventListener('click', () => {
-                            incrementDownloadCount(movie.id); 
+                            incrementDownloadCount(movie.id);
                             window.open(button.dataset.url, '_blank');
                         });
                         button.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -514,27 +555,50 @@
             };
 
             const closeModal = (modal) => modal.style.display = 'none';
-            
+
             // --- Event Listeners ---
             searchBtn.addEventListener('click', performSearch);
-            searchBar.addEventListener('input', performSearch);
+            searchBar.addEventListener('keyup', (e) => { if (e.key === 'Enter') performSearch(); });
+            searchBar.addEventListener('input', () => { 
+                if (searchBar.value.trim() === '') {
+                    fetchAndRenderMovies(true);
+                }
+            });
+
+            filterContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter')) {
+                    document.querySelector('.filter.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    const newFilter = e.target.dataset.filter;
+                    if (newFilter !== currentFilter) {
+                        currentFilter = newFilter;
+                        searchBar.value = '';
+                        fetchAndRenderMovies(true);
+                    }
+                }
+            });
+
+            sortBySelect.addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                fetchAndRenderMovies(true);
+            });
+
             movieGrid.addEventListener('click', (e) => {
                 const card = e.target.closest('.movie-card');
                  if (card && card.dataset.movieId) {
-                    const movie = allMovies.find(m => m.id == card.dataset.movieId);
+                    const movie = currentlyLoadedMovies.find(m => m.id == card.dataset.movieId);
                     if (movie) openDetailsModal(movie);
                 }
             });
 
             window.addEventListener('scroll', () => {
-                const isSearchOrFilterActive = searchBar.value.trim() !== '' || currentFilter !== 'All';
-                if (isSearchOrFilterActive) return;
+                if (movieGrid.classList.contains('list-view') || isFetchingMore || !lastVisible) return;
                 const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
                 if (clientHeight + scrollTop >= scrollHeight - 300) {
-                    loadMoreMovies();
+                    fetchAndRenderMovies(false);
                 }
             });
-            
+
             document.querySelectorAll('.modal-close-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const modal = document.getElementById(btn.dataset.target);
@@ -546,7 +610,7 @@
             requestModal.addEventListener('click', (e) => { if (e.target === requestModal) closeModal(requestModal); });
 
             movieRequestBtn.addEventListener('click', () => requestModal.style.display = 'flex');
-            
+
             movieRequestForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -577,7 +641,7 @@
                     submitBtn.textContent = 'Send Request';
                 }
             });
-            
+
             registerTelegramUser();
         });
     </script>
