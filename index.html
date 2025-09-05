@@ -182,6 +182,11 @@
         .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
         .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
         .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
+        
+        .modal-actions { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; margin: 0 25px; padding-top: 25px; }
+        .action-btn { background: #007bff; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; }
+        .action-btn.copy { background: #6c757d; }
+
         .request-modal-content h2 { text-align: center; margin-bottom: 20px; font-size: 1.5rem; }
         .request-modal-content form { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
         .request-modal-content .form-group label { display: block; margin-bottom: 5px; color: var(--text-secondary); }
@@ -248,6 +253,7 @@
                     </div>
                 </div>
                 <div id="modal-description" class="modal-description"></div>
+                <div id="modal-actions" class="modal-actions"></div>
                 <div id="modal-downloads" class="modal-downloads"></div>
             </div>
         </div>
@@ -314,39 +320,8 @@
             let currentSort = 'createdAt_desc';
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
-
-            const initializeApp = async () => {
-                trackVisit();
-                await Promise.all([
-                    renderSocialLinks(),
-                    setupFilters()
-                ]);
-                await fetchAndRenderMovies(true);
-            };
-
-            const registerTelegramUser = async () => {
-                try {
-                    const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
-                    const user = tg.initDataUnsafe.user;
-                    if (user && user.id) {
-                        const userRef = db.collection('telegramUsers').doc(String(user.id));
-                        const userDoc = await userRef.get();
-                        if (userDoc.exists && userDoc.data().status === 'blocked') {
-                            document.body.innerHTML = `<div style="text-align:center; padding-top: 50px; color: white;"><h1>You are blocked</h1><p>You cannot access this content.</p></div>`;
-                            return;
-                        }
-                        const userData = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '', status: 'active' };
-                        if (!userDoc.exists) userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
-                        await userRef.set(userData, { merge: true });
-                    }
-                } catch (error) {
-                    console.log('Not running inside Telegram or user data is not available.');
-                } finally {
-                    initializeApp();
-                }
-            };
+            
+            // --- Function Definitions Start ---
 
             const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() }).catch(err => console.error("Visit tracking failed:", err));
 
@@ -378,7 +353,6 @@
 
                 try {
                     const [sortField, sortDirection] = currentSort.split('_');
-                    
                     let query = db.collection('movies');
 
                     if (currentFilter !== 'All') {
@@ -431,7 +405,6 @@
                 noMoviesMessage.style.display = 'none';
                 skeletonLoader.style.display = 'grid';
                 try {
-                    // Search fetches all active documents and filters client-side
                     const moviesSnapshot = await db.collection('movies').where('status', '==', 'active').get();
                     let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     skeletonLoader.style.display = 'none';
@@ -514,6 +487,55 @@
                 } catch (error) { console.error("Error setting up filters:", error); }
             };
 
+            // <<< START: NEW HELPER FUNCTION FOR COPY FALLBACK >>>
+            const copyToClipboard = (text, button) => {
+                const showSuccess = () => {
+                    button.innerHTML = `<i class="fas fa-check"></i> Copied!`;
+                    setTimeout(() => {
+                        button.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
+                    }, 2000);
+                };
+
+                // Modern clipboard API (preferred)
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(showSuccess).catch(err => {
+                        console.warn("Clipboard API failed, using fallback.", err);
+                        fallbackCopy(text, button); // Fallback on error
+                    });
+                } else {
+                    // Fallback for older browsers or insecure contexts
+                    fallbackCopy(text, button);
+                }
+            };
+
+            const fallbackCopy = (text, button) => {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed'; // Avoid scrolling
+                textArea.style.top = '-9999px';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                         button.innerHTML = `<i class="fas fa-check"></i> Copied!`;
+                         setTimeout(() => {
+                             button.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
+                         }, 2000);
+                    } else {
+                        console.error("Fallback copy command failed");
+                        alert('Could not copy link.');
+                    }
+                } catch (err) {
+                    console.error("Error during fallback copy:", err);
+                    alert('Could not copy link.');
+                }
+                document.body.removeChild(textArea);
+            };
+            // <<< END: NEW HELPER FUNCTION FOR COPY FALLBACK >>>
+
             const openDetailsModal = (movie) => {
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
@@ -525,8 +547,11 @@
 
                 const trailerContainer = document.getElementById('modal-trailer-container');
                 const downloadsContainer = document.getElementById('modal-downloads');
+                const actionsContainer = document.getElementById('modal-actions');
+                
                 trailerContainer.innerHTML = '';
                 downloadsContainer.innerHTML = '';
+                actionsContainer.innerHTML = '';
 
                 if (movie.trailerUrl) {
                     const trailerBtn = document.createElement('a');
@@ -536,6 +561,28 @@
                     trailerBtn.innerHTML = `<i class="fas fa-play"></i> Movie Trailer`;
                     trailerContainer.appendChild(trailerBtn);
                 }
+                
+                const botUsername = "Baflix_Bot"; 
+                const deepLink = `https://t.me/${botUsername}?startapp=movie_${movie.id}`;
+
+                const shareBtn = document.createElement('button');
+                shareBtn.className = 'action-btn';
+                shareBtn.innerHTML = `<i class="fas fa-share-alt"></i> Share`;
+                shareBtn.onclick = () => {
+                    const shareText = `Check out "${movie.title}" on Baflix!`;
+                    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(deepLink)}&text=${encodeURIComponent(shareText)}`;
+                    window.open(telegramShareUrl, '_blank');
+                };
+                actionsContainer.appendChild(shareBtn);
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'action-btn copy';
+                copyBtn.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
+                // <<< UPDATED: Use the new robust copy function >>>
+                copyBtn.onclick = (e) => {
+                    copyToClipboard(deepLink, e.currentTarget);
+                };
+                actionsContainer.appendChild(copyBtn);
 
                 if (movie.downloadLinks && movie.downloadLinks.length > 0) {
                     movie.downloadLinks.forEach(link => {
@@ -556,7 +603,10 @@
 
             const closeModal = (modal) => modal.style.display = 'none';
 
-            // --- Event Listeners ---
+            // --- Function Definitions End ---
+
+            // --- Event Listeners and App Initialization ---
+
             searchBtn.addEventListener('click', performSearch);
             searchBar.addEventListener('keyup', (e) => { if (e.key === 'Enter') performSearch(); });
             searchBar.addEventListener('input', () => { 
@@ -642,7 +692,69 @@
                 }
             });
 
-            registerTelegramUser();
+            // --- Main App Initializer Function ---
+            const initializeApp = async (tg) => {
+                if (tg) {
+                    tg.expand();
+                    try {
+                        const user = tg.initDataUnsafe.user;
+                        if (user && user.id) {
+                            const userRef = db.collection('telegramUsers').doc(String(user.id));
+                            const userDoc = await userRef.get();
+                            if (userDoc.exists && userDoc.data().status === 'blocked') {
+                                document.body.innerHTML = `<div style="text-align:center; padding-top: 50px; color: white;"><h1>You are blocked</h1><p>You cannot access this content.</p></div>`;
+                                return;
+                            }
+                            const userData = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '', status: 'active' };
+                            if (!userDoc.exists) userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
+                            await userRef.set(userData, { merge: true });
+                        }
+                    } catch (error) {
+                        console.log('Could not register Telegram user:', error);
+                    }
+                }
+
+                trackVisit();
+                await Promise.all([
+                    renderSocialLinks(),
+                    setupFilters()
+                ]);
+
+                if (tg) {
+                    const startParam = tg.initDataUnsafe?.start_param;
+                    if (startParam && startParam.startsWith('movie_')) {
+                        const movieId = startParam.split('_')[1];
+                        try {
+                            const movieDoc = await db.collection('movies').doc(movieId).get();
+                            if (movieDoc.exists) {
+                                const movieData = { id: movieDoc.id, ...movieDoc.data() };
+                                currentlyLoadedMovies.push(movieData);
+                                openDetailsModal(movieData);
+                            }
+                        } catch (e) {
+                            console.error("Failed to fetch deep-linked movie:", e);
+                        }
+                    }
+                }
+
+                await fetchAndRenderMovies(true);
+            };
+
+            // --- Start the App ---
+            try {
+                const tg = window.Telegram.WebApp;
+                if (tg.initData) {
+                    tg.ready(() => {
+                        initializeApp(tg);
+                    });
+                } else {
+                     // Fallback for non-Telegram environment
+                    initializeApp(null);
+                }
+            } catch (error) {
+                console.log('Not running in Telegram. Initializing app without Telegram features...');
+                initializeApp(null);
+            }
         });
     </script>
 </body>
