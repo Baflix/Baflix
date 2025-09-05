@@ -172,7 +172,13 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1002; }
         .modal-content { background: var(--light-dark); width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; position: relative; overflow: hidden; border-radius: 8px; }
         .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 2; line-height: 1; }
-        .modal-body { display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex: 1; /* Changed from height: 100% */
+            min-height: 0; /* Added for better flexbox scrolling */
+        }
         .modal-header { display: flex; flex-direction: column; gap: 20px; padding: 25px; background-color: #1a1a1a; }
         .modal-poster img { width: 150px; border-radius: 5px; }
         .modal-details { flex: 1; }
@@ -487,6 +493,7 @@
                 } catch (error) { console.error("Error setting up filters:", error); }
             };
 
+            // <<< START: NEW HELPER FUNCTION FOR COPY FALLBACK >>>
             const copyToClipboard = (text, button) => {
                 const showSuccess = () => {
                     button.innerHTML = `<i class="fas fa-check"></i> Copied!`;
@@ -494,11 +501,15 @@
                         button.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
                     }, 2000);
                 };
+
+                // Modern clipboard API (preferred)
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(text).then(showSuccess).catch(err => {
-                        fallbackCopy(text, button);
+                        console.warn("Clipboard API failed, using fallback.", err);
+                        fallbackCopy(text, button); // Fallback on error
                     });
                 } else {
+                    // Fallback for older browsers or insecure contexts
                     fallbackCopy(text, button);
                 }
             };
@@ -506,7 +517,7 @@
             const fallbackCopy = (text, button) => {
                 const textArea = document.createElement('textarea');
                 textArea.value = text;
-                textArea.style.position = 'fixed';
+                textArea.style.position = 'fixed'; // Avoid scrolling
                 textArea.style.top = '-9999px';
                 textArea.style.left = '-9999px';
                 document.body.appendChild(textArea);
@@ -520,17 +531,17 @@
                              button.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
                          }, 2000);
                     } else {
-                       alert('Could not copy link.');
+                        console.error("Fallback copy command failed");
+                        alert('Could not copy link.');
                     }
                 } catch (err) {
+                    console.error("Error during fallback copy:", err);
                     alert('Could not copy link.');
                 }
                 document.body.removeChild(textArea);
             };
+            // <<< END: NEW HELPER FUNCTION FOR COPY FALLBACK >>>
 
-            // ####################################################################
-            // ### START: কোড পরিবর্তন এখানে করা হয়েছে ###
-            // ####################################################################
             const openDetailsModal = (movie) => {
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
@@ -550,56 +561,32 @@
 
                 if (movie.trailerUrl) {
                     const trailerBtn = document.createElement('a');
+                    trailerBtn.href = movie.trailerUrl;
                     trailerBtn.className = 'trailer-btn';
+                    trailerBtn.target = '_blank';
                     trailerBtn.innerHTML = `<i class="fas fa-play"></i> Movie Trailer`;
-                    trailerBtn.onclick = () => {
-                        // টেলিগ্রামের নিজস্ব ফাংশন ব্যবহার করে লিংক খোলা হচ্ছে
-                        if (window.Telegram && window.Telegram.WebApp) {
-                            window.Telegram.WebApp.openLink(movie.trailerUrl);
-                        } else {
-                            window.open(movie.trailerUrl, '_blank');
-                        }
-                    };
                     trailerContainer.appendChild(trailerBtn);
                 }
                 
                 const botUsername = "Baflix_Bot"; 
                 const deepLink = `https://t.me/${botUsername}?startapp=movie_${movie.id}`;
 
-                // --- শেয়ার বাটন সমাধান ---
                 const shareBtn = document.createElement('button');
                 shareBtn.className = 'action-btn';
                 shareBtn.innerHTML = `<i class="fas fa-share-alt"></i> Share`;
                 shareBtn.onclick = () => {
                     const shareText = `Check out "${movie.title}" on Baflix!`;
                     const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(deepLink)}&text=${encodeURIComponent(shareText)}`;
-                    
-                    // window.open এর পরিবর্তে Telegram.WebApp.openTelegramLink ব্যবহার করা হয়েছে
-                    if (window.Telegram && window.Telegram.WebApp) {
-                        window.Telegram.WebApp.openTelegramLink(telegramShareUrl);
-                    } else {
-                        // টেলিগ্রামের বাইরে সাধারণ ব্রাউজারের জন্য ফলব্যাক
-                        window.open(telegramShareUrl, '_blank');
-                    }
+                    window.open(telegramShareUrl, '_blank');
                 };
                 actionsContainer.appendChild(shareBtn);
                 
-                // --- কপি লিংক বাটন সমাধান ---
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'action-btn copy';
                 copyBtn.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
-                copyBtn.onclick = () => {
-                    // ক্লিপবোর্ড এপিআই এর পরিবর্তে Telegram.WebApp.showPopup ব্যবহার করা হয়েছে
-                    if (window.Telegram && window.Telegram.WebApp) {
-                        window.Telegram.WebApp.showPopup({
-                            title: 'Copy Movie Link',
-                            message: 'লিংকটি কপি করতে এর উপর চেপে ধরুন:\n\n' + deepLink,
-                            buttons: [{ type: 'ok', text: 'Close' }]
-                        });
-                    } else {
-                        // টেলিগ্রামের বাইরে সাধারণ ব্রাউজারের জন্য আগের কপি ফাংশনটি ফলব্যাক হিসেবে কাজ করবে
-                        copyToClipboard(deepLink, copyBtn);
-                    }
+                // <<< UPDATED: Use the new robust copy function >>>
+                copyBtn.onclick = (e) => {
+                    copyToClipboard(deepLink, e.currentTarget);
                 };
                 actionsContainer.appendChild(copyBtn);
 
@@ -611,12 +598,7 @@
                         button.dataset.url = link.url;
                         button.addEventListener('click', () => {
                             incrementDownloadCount(movie.id);
-                             // এখানেও window.open এর পরিবর্তে Telegram.WebApp.openLink ব্যবহার করা নিরাপদ
-                            if (window.Telegram && window.Telegram.WebApp) {
-                                window.Telegram.WebApp.openLink(button.dataset.url, {try_instant_view: true});
-                            } else {
-                                window.open(button.dataset.url, '_blank');
-                            }
+                            window.open(button.dataset.url, '_blank');
                         });
                         button.addEventListener('contextmenu', (e) => e.preventDefault());
                         downloadsContainer.appendChild(button);
@@ -624,9 +606,6 @@
                 }
                 detailsModal.style.display = 'flex';
             };
-            // ####################################################################
-            // ### END: কোড পরিবর্তন এখানে শেষ হয়েছে ###
-            // ####################################################################
 
             const closeModal = (modal) => modal.style.display = 'none';
 
