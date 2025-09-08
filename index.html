@@ -63,6 +63,10 @@
             display: flex;
             flex-grow: 1;
         }
+        #search-form {
+            display: flex;
+            width: 100%;
+        }
         .search-bar {
             width: 100%;
             padding: 12px 20px;
@@ -109,8 +113,8 @@
         }
         
         .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
-        .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s; }
-        .filter.active, .filter:hover { background: var(--primary); font-weight: bold; }
+        .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s, transform 0.2s; }
+        .filter.active { background: var(--primary); font-weight: bold; }
 
         .movie-grid {
             display: grid;
@@ -169,8 +173,43 @@
         @-webkit-keyframes shimmer { 100% { left: 100%; } }
         @keyframes shimmer { 100% { left: 100%; } }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1002; }
-        .modal-content { background: var(--light-dark); width: 100%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; position: relative; overflow: hidden; border-radius: 8px; }
+        /* --- Updated Modal Styles for Animation --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex; /* Changed from none */
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--light-dark);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        
         .modal-close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 2; line-height: 1; }
         .modal-body { display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
         .modal-header { display: flex; flex-direction: column; gap: 20px; padding: 25px; background-color: #1a1a1a; }
@@ -181,7 +220,7 @@
         .modal-description { padding: 25px; font-size: 1rem; line-height: 1.7; }
         .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
         .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
-        .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
+        .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;}
         
         .modal-actions { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; margin: 0 25px; padding-top: 25px; }
         .action-btn { background: #007bff; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; }
@@ -192,6 +231,37 @@
         .request-modal-content .form-group label { display: block; margin-bottom: 5px; color: var(--text-secondary); }
         .request-modal-content .form-control { width: 100%; padding: 12px; background: var(--dark); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 1rem; }
         .request-modal-content .submit-btn { padding: 12px; background: var(--primary); color: var(--text); border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
+        
+        /* Trailer Modal Styles */
+        #trailer-modal .modal-content { max-width: 800px; background: #000; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* --- NEW: Animations for Professional Feel --- */
+        .social-icons a:hover {
+            transform: scale(1.15) rotate(5deg);
+        }
+        .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by {
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        background-color 0.3s ease, 
+                        box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        .request-btn:hover, .search-btn:hover, .download-btn:hover, .trailer-btn:hover, .action-btn:hover, .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .filter:not(.active):hover {
+            background-color: var(--secondary);
+            transform: scale(1.05) translateY(-2px);
+        }
+        .request-btn:active, .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active, .submit-btn:active {
+            transform: scale(0.97) translateY(0);
+            box-shadow: none;
+            transition-duration: 0.1s;
+        }
+
+        
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
 </head>
@@ -204,8 +274,10 @@
     <div class="search-container-wrapper">
         <button id="movie-request-btn" class="request-btn"><i class="fas fa-plus-circle"></i> Movie Request</button>
         <div class="search-container">
-            <input type="text" id="search-bar" class="search-bar" placeholder="Search by title, genre, year...">
-            <button id="search-btn" class="search-btn"><i class="fas fa-search"></i></button>
+            <form id="search-form">
+                <input type="search" id="search-bar" class="search-bar" placeholder="Search by title, genre, year..." enterkeyhint="search">
+                <button type="submit" id="search-btn" class="search-btn"><i class="fas fa-search"></i></button>
+            </form>
         </div>
     </div>
 
@@ -284,6 +356,17 @@
         </div>
     </div>
 
+    <!-- Trailer Modal -->
+    <div id="trailer-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" data-target="trailer-modal">&times;</button>
+            <div class="video-container">
+                <iframe id="youtube-trailer-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
@@ -305,11 +388,13 @@
             const skeletonLoader = document.getElementById('skeleton-loader');
             const detailsModal = document.getElementById('details-modal');
             const requestModal = document.getElementById('request-modal');
+            const trailerModal = document.getElementById('trailer-modal');
+            const youtubeTrailerIframe = document.getElementById('youtube-trailer-iframe');
             const noMoviesMessage = document.getElementById('no-movies-message');
             const socialIconsContainer = document.querySelector('.social-icons');
             const filterContainer = document.querySelector('.filter-container');
             const searchBar = document.getElementById('search-bar');
-            const searchBtn = document.getElementById('search-btn');
+            const searchForm = document.getElementById('search-form');
             const movieRequestBtn = document.getElementById('movie-request-btn');
             const movieRequestForm = document.getElementById('movie-request-form');
             const sortBySelect = document.getElementById('sort-by');
@@ -531,6 +616,24 @@
                 }
                 document.body.removeChild(textArea);
             };
+            
+            const getYoutubeVideoId = (url) => {
+                let videoId = null;
+                try {
+                    const urlObj = new URL(url);
+                    if (urlObj.hostname === 'youtu.be') {
+                        videoId = urlObj.pathname.slice(1);
+                    } else if (urlObj.hostname.includes('youtube.com')) {
+                        videoId = urlObj.searchParams.get('v');
+                    }
+                } catch (e) {
+                    // Fallback for invalid URLs
+                    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+                    const match = url.match(regex);
+                    if (match) videoId = match[1];
+                }
+                return videoId;
+            };
 
             const openDetailsModal = (movie) => {
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
@@ -550,11 +653,18 @@
                 actionsContainer.innerHTML = '';
 
                 if (movie.trailerUrl) {
-                    const trailerBtn = document.createElement('a');
-                    trailerBtn.href = movie.trailerUrl;
+                    const trailerBtn = document.createElement('button');
                     trailerBtn.className = 'trailer-btn';
-                    trailerBtn.target = '_blank';
                     trailerBtn.innerHTML = `<i class="fas fa-play"></i> Movie Trailer`;
+                    trailerBtn.onclick = () => {
+                        const videoId = getYoutubeVideoId(movie.trailerUrl);
+                        if (videoId) {
+                            youtubeTrailerIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&fs=0&rel=0`;
+                            trailerModal.classList.add('visible');
+                        } else {
+                            alert("Invalid trailer link.");
+                        }
+                    };
                     trailerContainer.appendChild(trailerBtn);
                 }
                 
@@ -593,17 +703,27 @@
                         downloadsContainer.appendChild(button);
                     });
                 }
-                detailsModal.style.display = 'flex';
+                detailsModal.classList.add('visible');
             };
 
-            const closeModal = (modal) => modal.style.display = 'none';
-
+            const closeModal = (modal) => {
+                modal.classList.remove('visible');
+                if (modal.id === 'trailer-modal') {
+                    youtubeTrailerIframe.src = '';
+                }
+            };
+            
             // --- Function Definitions End ---
 
             // --- Event Listeners and App Initialization ---
 
-            searchBtn.addEventListener('click', performSearch);
-            searchBar.addEventListener('keyup', (e) => { if (e.key === 'Enter') performSearch(); });
+            // Updated search event listener
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                performSearch();
+                searchBar.blur(); // Hides keyboard after search
+            });
+
             searchBar.addEventListener('input', () => { 
                 if (searchBar.value.trim() === '') {
                     fetchAndRenderMovies(true);
@@ -650,11 +770,15 @@
                     if(modal) closeModal(modal);
                 });
             });
+            
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                     if (e.target === modal) closeModal(modal);
+                });
+            });
 
-            detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeModal(detailsModal); });
-            requestModal.addEventListener('click', (e) => { if (e.target === requestModal) closeModal(requestModal); });
 
-            movieRequestBtn.addEventListener('click', () => requestModal.style.display = 'flex');
+            movieRequestBtn.addEventListener('click', () => requestModal.classList.add('visible'));
 
             movieRequestForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
