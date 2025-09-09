@@ -403,10 +403,9 @@
                 const now = new Date().getTime();
                 const distance = unblockTimestamp - now;
 
-                if (distance < 0) {
+                if (distance < 1000) {
                     clearInterval(interval);
-                    countdownElement.innerHTML = "UNBLOCKED";
-                    document.getElementById('block-reason-text').textContent = "Your block period has ended.";
+                    window.location.reload();
                     return;
                 }
 
@@ -674,7 +673,20 @@
                 }
                 return videoId;
             };
+             
+            let tg = null;
+            let backButton = null;
 
+            function updateBackButton() {
+                if (!backButton) return;
+                const visibleModal = document.querySelector('.modal-overlay.visible');
+                if (visibleModal) {
+                    backButton.show();
+                } else {
+                    backButton.hide();
+                }
+            }
+            
             const openDetailsModal = (movie) => {
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
@@ -701,6 +713,7 @@
                         if (videoId) {
                             youtubeTrailerIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&fs=0&rel=0`;
                             trailerModal.classList.add('visible');
+                            updateBackButton();
                         } else {
                             alert("Invalid trailer link.");
                         }
@@ -744,13 +757,23 @@
                     });
                 }
                 detailsModal.classList.add('visible');
+                updateBackButton();
             };
 
-            const closeModal = (modal) => {
+            const closeModal = (modalOrId) => {
+                 let modal;
+                if (typeof modalOrId === 'string') {
+                    modal = document.getElementById(modalOrId);
+                } else {
+                    modal = modalOrId;
+                }
+                if (!modal) return;
+                
                 modal.classList.remove('visible');
                 if (modal.id === 'trailer-modal') {
                     youtubeTrailerIframe.src = '';
                 }
+                updateBackButton();
             };
             
             // --- Function Definitions End ---
@@ -818,7 +841,11 @@
             });
 
 
-            movieRequestBtn.addEventListener('click', () => requestModal.classList.add('visible'));
+            movieRequestBtn.addEventListener('click', () => {
+                requestModal.classList.add('visible');
+                updateBackButton();
+            });
+
 
             movieRequestForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -852,21 +879,34 @@
             });
 
             // --- Main App Initializer Function ---
-            const initializeApp = async (tg) => {
-                if (tg) {
+            const initializeApp = async (tgInstance) => {
+                if (tgInstance) {
+                    tg = tgInstance;
                     tg.expand();
+                    
+                    backButton = tg.BackButton;
+                    backButton.onClick(() => {
+                        const visibleModal = document.querySelector('.modal-overlay.visible');
+                        if (visibleModal) {
+                            closeModal(visibleModal);
+                        }
+                    });
+                    backButton.hide();
+
                     try {
                         const user = tg.initDataUnsafe.user;
                         if (user && user.id) {
                             const userRef = db.collection('telegramUsers').doc(String(user.id));
                             const userDoc = await userRef.get();
-                             if (userDoc.exists && userDoc.data().status === 'blocked') {
+
+                            if (userDoc.exists && userDoc.data().status === 'blocked') {
                                 const data = userDoc.data();
-                                let blockPageHTML = '';
-                                if (data.unblockAt && data.unblockAt.toMillis() > Date.now()) {
-                                    // Temporary Block
-                                    const unblockDate = new Date(data.unblockAt.toMillis()).toLocaleString();
-                                    blockPageHTML = `
+                                const unblockTime = data.unblockAt ? data.unblockAt.toMillis() : null;
+
+                                if (unblockTime && unblockTime > Date.now()) {
+                                    // --- TEMPORARY BLOCK IS ACTIVE ---
+                                    const unblockDate = new Date(unblockTime).toLocaleString();
+                                    const blockPageHTML = `
                                         <div class="block-page-container">
                                             <i class="fas fa-ban block-icon"></i>
                                             <h1>You Are Temporarily Blocked</h1>
@@ -876,26 +916,34 @@
                                                 <h2 id="countdown-timer">--:--:--</h2>
                                             </div>
                                             <p class="unblock-info">You will be automatically unblocked on ${unblockDate}.</p>
-                                            <p class="reload-message">Please reload the page after the timer ends.</p>
-                                        </div>
-                                    `;
+                                        </div>`;
                                     document.body.innerHTML = blockPageHTML;
-                                    startCountdown(data.unblockAt.toMillis());
-                                } else {
-                                    // Permanent Block
-                                    blockPageHTML = `
+                                    startCountdown(unblockTime);
+                                    return; // Stop further app execution
+                                } else if (unblockTime && unblockTime <= Date.now()) {
+                                    // --- TEMPORARY BLOCK HAS EXPIRED ---
+                                    await userRef.update({
+                                        status: 'active',
+                                        unblockAt: firebase.firestore.FieldValue.delete()
+                                    });
+                                } else if (!unblockTime) { 
+                                    // --- PERMANENT BLOCK ---
+                                    const blockPageHTML = `
                                         <div class="block-page-container">
                                             <i class="fas fa-ban block-icon"></i>
                                             <h1>Your Account is Blocked</h1>
                                             <p class="block-reason">Your access has been permanently restricted. If you believe this is a mistake, please contact support.</p>
-                                        </div>
-                                    `;
+                                        </div>`;
                                     document.body.innerHTML = blockPageHTML;
+                                    return; // Stop further app execution
                                 }
-                                return; // Stop app initialization
                             }
+
+                            // --- USER IS ACTIVE OR HAS JUST BEEN UNBLOCKED ---
                             const userData = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '', status: 'active' };
-                            if (!userDoc.exists) userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
+                            if (!userDoc.exists) {
+                                userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
+                            }
                             await userRef.set(userData, { merge: true });
                         }
                     } catch (error) {
@@ -931,9 +979,9 @@
 
             // --- Start the App (FIXED CODE) ---
             try {
-                const tg = window.Telegram.WebApp;
-                if (tg && tg.initData) {
-                    initializeApp(tg);
+                const webApp = window.Telegram.WebApp;
+                if (webApp && webApp.initData) {
+                    initializeApp(webApp);
                 } else {
                     console.log('Not running in Telegram or initData is missing. Initializing in standalone mode.');
                     initializeApp(null);
