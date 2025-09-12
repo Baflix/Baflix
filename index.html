@@ -9,7 +9,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default,es6,fetch"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #e50914; --secondary: #b81d24; --dark: #141414; --light-dark: #222; --text: #fff; --text-secondary: #aaa; }
+        :root { --primary: #e50914; --secondary: #b81d24; --dark: #141414; --light-dark: #222; --text: #fff; --text-secondary: #aaa; --green: #28a745; --dark-green: #218838; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; -webkit-tap-highlight-color: transparent; }
         body {
             background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
@@ -85,6 +85,36 @@
             cursor: pointer;
         }
 
+        .category-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 20px;
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 20px;
+            background: var(--green);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .category-btn:hover {
+             background-color: var(--dark-green);
+            transform: scale(1.05) translateY(-2px);
+        }
+         .category-btn.active {
+            background: var(--dark-green);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+
         .controls-container {
             display: flex;
             justify-content: center;
@@ -129,7 +159,7 @@
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-        .movie-genres, .movie-rating, .movie-year, .movie-language {
+        .movie-series-info, .movie-genres, .movie-rating, .movie-year, .movie-language {
             font-size: 0.7rem;
             color: var(--text-secondary);
             white-space: nowrap;
@@ -137,6 +167,8 @@
             text-overflow: ellipsis;
             margin-bottom: 4px;
         }
+        .movie-series-info { font-weight: bold; color: var(--green); }
+
 
         .movie-grid.list-view { display: block; max-width: 800px; }
         .movie-grid.list-view .movie-card { display: flex; gap: 15px; background-color: transparent; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 20px; border-radius: 0; overflow: visible; }
@@ -173,7 +205,6 @@
         @-webkit-keyframes shimmer { 100% { left: 100%; } }
         @keyframes shimmer { 100% { left: 100%; } }
 
-        /* --- Updated Modal Styles for Animation --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -181,7 +212,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.85);
-            display: flex; /* Changed from none */
+            display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1002;
@@ -217,9 +248,10 @@
         .modal-details { flex: 1; }
         .modal-title { font-size: 2.2rem; margin-bottom: 10px; }
         .modal-meta { color: var(--text-secondary); margin-bottom: 8px; font-size: 1rem; }
+        #modal-series-info { font-weight: bold; color: var(--green); }
         .modal-description { padding: 25px; font-size: 1rem; line-height: 1.7; }
-        .modal-downloads { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; }
-        .download-btn { background: #28a745; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+        .modal-downloads { padding: 0 25px 25px; }
+        .download-btn { background: var(--green); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: inline-block; margin: 5px; }
         .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;}
         
         .modal-actions { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; margin: 0 25px; padding-top: 25px; }
@@ -232,12 +264,10 @@
         .request-modal-content .form-control { width: 100%; padding: 12px; background: var(--dark); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 1rem; }
         .request-modal-content .submit-btn { padding: 12px; background: var(--primary); color: var(--text); border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
         
-        /* Trailer Modal Styles */
         #trailer-modal .modal-content { max-width: 800px; background: #000; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* Block Page Styles */
         .block-page-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 20px; color: var(--text); }
         .block-icon { font-size: 5rem; color: var(--primary); margin-bottom: 20px; }
         .block-page-container h1 { font-size: 2.5rem; margin-bottom: 10px; }
@@ -246,14 +276,11 @@
         .countdown-container p { font-size: 1rem; color: var(--text-secondary); }
         #countdown-timer { font-size: 3rem; font-weight: bold; letter-spacing: 4px; }
         .unblock-info { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px; }
-        .reload-message { font-size: 0.9rem; color: #aaa; }
-
-
-        /* --- NEW: Animations for Professional Feel --- */
+        
         .social-icons a:hover {
             transform: scale(1.15) rotate(5deg);
         }
-        .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by {
+        .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by, .category-btn {
             transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
                         background-color 0.3s ease, 
                         box-shadow 0.3s ease;
@@ -267,12 +294,103 @@
             background-color: var(--secondary);
             transform: scale(1.05) translateY(-2px);
         }
-        .request-btn:active, .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active, .submit-btn:active {
+        .request-btn:active, .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active, .submit-btn:active, .category-btn:active {
             transform: scale(0.97) translateY(0);
             box-shadow: none;
             transition-duration: 0.1s;
         }
 
+        /* ---------- কোড আপডেট শুরু ---------- */
+        .season-accordion {
+            margin-bottom: 5px;
+        }
+        .season-accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border: 1px solid #4a627a;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .season-accordion-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            background: linear-gradient(145deg, #34495e, #4a627a);
+        }
+        .season-accordion-header h4 {
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: bold;
+            margin: 0;
+        }
+        .season-accordion-header .fas {
+            transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        .season-accordion.active .season-accordion-header {
+            background: linear-gradient(145deg, #3a506b, #4a627a);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .season-accordion.active .season-accordion-header .fas {
+            transform: rotate(180deg);
+            color: var(--text);
+        }
+        .season-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        padding 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        opacity 0.2s ease-out;
+            background-color: rgba(0,0,0,0.2);
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            padding: 0 15px;
+            opacity: 0;
+        }
+        .season-accordion.active .season-accordion-content {
+            max-height: 2000px;
+            padding: 20px 15px 5px;
+            opacity: 1;
+            transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        padding 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        opacity 0.4s ease-in 0.1s;
+        }
+        .episode-container {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #383838;
+            opacity: 0;
+            transform: translateY(-15px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .episode-container:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .season-accordion.active .episode-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .season-accordion.active .episode-container:nth-child(1) { transition-delay: 0.1s; }
+        .season-accordion.active .episode-container:nth-child(2) { transition-delay: 0.15s; }
+        .season-accordion.active .episode-container:nth-child(3) { transition-delay: 0.2s; }
+        .season-accordion.active .episode-container:nth-child(4) { transition-delay: 0.25s; }
+        .season-accordion.active .episode-container:nth-child(5) { transition-delay: 0.3s; }
+        .season-accordion.active .episode-container:nth-child(n+6) { transition-delay: 0.35s; }
+        .episode-title {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        /* ---------- কোড আপডেট শেষ ---------- */
         
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
@@ -284,13 +402,21 @@
     </header>
 
     <div class="search-container-wrapper">
-        <button id="movie-request-btn" class="request-btn"><i class="fas fa-plus-circle"></i> Movie Request</button>
+        <button id="movie-request-btn" class="request-btn"><i class="fas fa-plus-circle"></i> Content Request</button>
         <div class="search-container">
             <form id="search-form">
                 <input type="search" id="search-bar" class="search-bar" placeholder="Search by title, genre, year..." enterkeyhint="search">
                 <button type="submit" id="search-btn" class="search-btn"><i class="fas fa-search"></i></button>
             </form>
         </div>
+    </div>
+
+    <div class="category-buttons">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="movie">Movies</button>
+        <button class="category-btn" data-category="web-series">Web Series</button>
+        <button class="category-btn" data-category="drama">Drama</button>
+        <button class="category-btn" data-category="anime-series">Anime Series</button>
     </div>
 
     <div class="controls-container">
@@ -317,7 +443,7 @@
     </main>
 
     <div id="no-movies-message" style="text-align: center; color: var(--text-secondary); margin-top: 50px; display: none;">
-        <p>No movies found. Please add content from the admin panel.</p>
+        <p>No content found. Please add content from the admin panel.</p>
     </div>
 
     <!-- Details Modal -->
@@ -329,6 +455,7 @@
                     <div class="modal-poster"><img id="modal-poster-img" src="" alt="Poster"></div>
                     <div class="modal-details">
                         <h2 id="modal-title"></h2>
+                        <p id="modal-series-info" class="modal-meta"></p>
                         <p id="modal-genres" class="modal-meta"></p>
                         <p id="modal-rating" class="modal-meta"></p>
                         <p id="modal-year" class="modal-meta"></p>
@@ -348,18 +475,18 @@
         <div class="modal-content request-modal-content">
              <button class="modal-close-btn" data-target="request-modal">&times;</button>
              <div class="modal-body">
-                 <div class="modal-header"><h2>Request a Movie</h2></div>
+                 <div class="modal-header"><h2>Request Content</h2></div>
                  <form id="movie-request-form">
                      <div class="form-group">
                          <label for="request-user-name">Enter Your Name *</label>
                          <input type="text" id="request-user-name" class="form-control" required>
                      </div>
                      <div class="form-group">
-                         <label for="request-movie-name">Enter Your Movie Name *</label>
+                         <label for="request-movie-name">Enter Content Name *</label>
                          <input type="text" id="request-movie-name" class="form-control" required>
                      </div>
                      <div class="form-group">
-                         <label for="request-trailer-url">Enter YouTube Movie Trailer (Optional)</label>
+                         <label for="request-trailer-url">Enter YouTube Trailer (Optional)</label>
                          <input type="url" id="request-trailer-url" class="form-control" placeholder="https://youtube.com/...">
                      </div>
                      <button type="submit" class="submit-btn">Send Request</button>
@@ -384,12 +511,12 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU", // আপনার Firebase apiKey ব্যবহার করুন
-            authDomain: "baflix-app.firebaseapp.com", // আপনার Firebase authDomain ব্যবহার করুন
-            projectId: "baflix-app", // আপনার Firebase projectId ব্যবহার করুন
-            storageBucket: "baflix-app.firebasestorage.app", // আপনার Firebase storageBucket ব্যবহার করুন
-            messagingSenderId: "221693630977", // আপনার Firebase messagingSenderId ব্যবহার করুন
-            appId: "1:221693630977:web:620d115d11b8e3af677e00" // আপনার Firebase appId ব্যবহার করুন
+            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU",
+            authDomain: "baflix-app.firebaseapp.com",
+            projectId: "baflix-app",
+            storageBucket: "baflix-app.firebasestorage.app",
+            messagingSenderId: "221693630977",
+            appId: "1:221693630977:web:620d115d11b8e3af677e00"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -398,26 +525,21 @@
         function startCountdown(unblockTimestamp) {
             const countdownElement = document.getElementById('countdown-timer');
             if (!countdownElement) return;
-
             const interval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = unblockTimestamp - now;
-
                 if (distance < 1000) {
                     clearInterval(interval);
                     window.location.reload();
                     return;
                 }
-
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
                 let timerString = '';
                 if (days > 0) timerString += `${days}d `;
                 timerString += `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                
                 countdownElement.innerHTML = timerString;
             }, 1000);
         }
@@ -437,16 +559,16 @@
             const movieRequestBtn = document.getElementById('movie-request-btn');
             const movieRequestForm = document.getElementById('movie-request-form');
             const sortBySelect = document.getElementById('sort-by');
+            const categoryButtonsContainer = document.querySelector('.category-buttons');
 
             let currentlyLoadedMovies = [];
             let isFetchingMore = false;
+            let currentCategory = 'all';
             let currentFilter = 'All';
             let currentSort = 'createdAt_desc';
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
             
-            // --- Function Definitions Start ---
-
             const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() }).catch(err => console.error("Visit tracking failed:", err));
 
             const incrementDownloadCount = async (movieId) => {
@@ -479,10 +601,13 @@
                     const [sortField, sortDirection] = currentSort.split('_');
                     let query = db.collection('movies');
 
+                    if (currentCategory !== 'all') {
+                        query = query.where('type', '==', currentCategory);
+                    }
                     if (currentFilter !== 'All') {
                         query = query.where('categories', 'array-contains', currentFilter);
                     }
-
+                    
                     query = query.orderBy(sortField, sortDirection);
                     
                     if (!isInitial && lastVisible) {
@@ -496,7 +621,11 @@
 
                     if (snapshot.empty) {
                         if (isInitial) {
-                            noMoviesMessage.querySelector('p').textContent = `No movies found for "${currentFilter}". You can request a movie.`;
+                            let message = `No content found`;
+                            if (currentCategory !== 'all') message += ` in the ${currentCategory} category`;
+                            if (currentFilter !== 'All') message += ` for "${currentFilter}"`;
+                            message += `. You can make a request.`;
+                            noMoviesMessage.querySelector('p').textContent = message;
                             noMoviesMessage.style.display = 'block';
                             movieGrid.style.display = 'none';
                         }
@@ -511,7 +640,7 @@
                 } catch (error) {
                     console.error("Error fetching movies:", error);
                     skeletonLoader.style.display = 'none';
-                    noMoviesMessage.innerHTML = `<p>Could not load data. Please check your internet connection or try again later. If the problem persists, the developer may need to create a composite index in Firebase. Check the browser console for an index creation link.</p>`;
+                    noMoviesMessage.innerHTML = `<p>Could not load data. Please check your internet connection. <strong>For developers:</strong> This error often means a composite index is required in Firestore. Check the browser console for a link to create it.</p>`;
                     noMoviesMessage.style.display = 'block';
                 } finally {
                     isFetchingMore = false;
@@ -533,13 +662,14 @@
                     let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     skeletonLoader.style.display = 'none';
                     
-                    let filteredMovies = allMoviesForSearch;
-                    
+                    if (currentCategory !== 'all') {
+                        allMoviesForSearch = allMoviesForSearch.filter(movie => movie.type === currentCategory);
+                    }
                     if (currentFilter !== 'All') {
-                        filteredMovies = filteredMovies.filter(movie => movie.categories && movie.categories.includes(currentFilter));
+                        allMoviesForSearch = allMoviesForSearch.filter(movie => movie.categories && movie.categories.includes(currentFilter));
                     }
 
-                    filteredMovies = filteredMovies.filter(movie =>
+                    const filteredMovies = allMoviesForSearch.filter(movie =>
                         movie.title.toLowerCase().includes(searchTerm) ||
                         (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
                         String(movie.year).includes(searchTerm)
@@ -555,17 +685,26 @@
             };
             
             const appendMovies = (moviesToAppend) => {
-                const isListView = movieGrid.classList.contains('list-view');
                 moviesToAppend.forEach(movie => {
                     const movieCard = document.createElement('div');
                     movieCard.className = 'movie-card';
                     movieCard.dataset.movieId = movie.id;
 
-                    if (isListView) {
-                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.style.display='none'"></div><div class="movie-info"><h3 class="movie-title">${movie.title} (${movie.year || 'N/A'})</h3><p class="movie-rating">IMDb ${movie.rating || 'N/A'}</p><p class="movie-description-snippet">${movie.description || 'No description available.'}</p></div>`;
-                    } else {
-                        movieCard.innerHTML = `<div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div><div class="movie-info"><h3 class="movie-title">${movie.title}</h3><p class="movie-genres">${movie.genres || ''}</p><p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p><p class="movie-year">${movie.year || 'N/A'}</p><p class="movie-language">${movie.language || 'N/A'}</p></div>`;
+                    const isSeries = movie.type === 'web-series' || movie.type === 'anime-series' || movie.type === 'drama';
+                    let seriesInfoHTML = '';
+                    if (isSeries && (movie.season || movie.episode)) {
+                        seriesInfoHTML = `<p class="movie-series-info">S${movie.season || '?'} | E${movie.episode || '?'}</p>`;
                     }
+
+                    movieCard.innerHTML = `
+                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">${movie.title}</h3>
+                            ${seriesInfoHTML}
+                            <p class="movie-genres">${movie.genres || ''}</p>
+                            <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p>
+                            <p class="movie-year">${movie.year || 'N/A'}</p>
+                        </div>`;
                     movieGrid.appendChild(movieCard);
                 });
             };
@@ -574,12 +713,12 @@
                 movieGrid.innerHTML = '';
                 const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
                 if (activeMovies.length === 0) {
-                    noMoviesMessage.querySelector('p').textContent = "The movie you are looking for is not available. You can request it from the admin.";
+                    noMoviesMessage.querySelector('p').textContent = "The content you are looking for is not available. You can request it.";
                     noMoviesMessage.style.display = 'block';
                     movieGrid.style.display = 'none';
                 } else {
                     noMoviesMessage.style.display = 'none';
-                    movieGrid.style.display = movieGrid.classList.contains('list-view') ? 'block' : 'grid';
+                    movieGrid.style.display = 'grid'; // Always render as grid initially
                     appendMovies(activeMovies);
                 }
             };
@@ -610,31 +749,27 @@
                     });
                 } catch (error) { console.error("Error setting up filters:", error); }
             };
-
+            
             const copyToClipboard = (text, button) => {
+                const originalText = button.innerHTML;
                 const showSuccess = () => {
                     button.innerHTML = `<i class="fas fa-check"></i> Copied!`;
-                    setTimeout(() => {
-                        button.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
-                    }, 2000);
+                    setTimeout(() => { button.innerHTML = originalText; }, 2000);
                 };
-
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(text).then(showSuccess).catch(err => {
                         console.warn("Clipboard API failed, using fallback.", err);
-                        fallbackCopy(text, button);
+                        fallbackCopy(text, button, originalText);
                     });
                 } else {
-                    fallbackCopy(text, button);
+                    fallbackCopy(text, button, originalText);
                 }
             };
-
-            const fallbackCopy = (text, button) => {
+            const fallbackCopy = (text, button, originalText) => {
                 const textArea = document.createElement('textarea');
                 textArea.value = text;
                 textArea.style.position = 'fixed';
                 textArea.style.top = '-9999px';
-                textArea.style.left = '-9999px';
                 document.body.appendChild(textArea);
                 textArea.focus();
                 textArea.select();
@@ -642,60 +777,52 @@
                     const successful = document.execCommand('copy');
                     if (successful) {
                          button.innerHTML = `<i class="fas fa-check"></i> Copied!`;
-                         setTimeout(() => {
-                             button.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
-                         }, 2000);
-                    } else {
-                        console.error("Fallback copy command failed");
-                        alert('Could not copy link.');
+                         setTimeout(() => { button.innerHTML = originalText; }, 2000);
                     }
-                } catch (err) {
-                    console.error("Error during fallback copy:", err);
-                    alert('Could not copy link.');
-                }
+                } catch (err) { console.error("Error during fallback copy:", err); }
                 document.body.removeChild(textArea);
             };
-            
             const getYoutubeVideoId = (url) => {
+                if(!url) return null;
                 let videoId = null;
                 try {
                     const urlObj = new URL(url);
-                    if (urlObj.hostname === 'youtu.be') {
-                        videoId = urlObj.pathname.slice(1);
-                    } else if (urlObj.hostname.includes('youtube.com')) {
-                        videoId = urlObj.searchParams.get('v');
-                    }
+                    if (urlObj.hostname === 'youtu.be') videoId = urlObj.pathname.slice(1);
+                    else if (urlObj.hostname.includes('youtube.com')) videoId = urlObj.searchParams.get('v');
                 } catch (e) {
-                    // Fallback for invalid URLs
                     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
                     const match = url.match(regex);
                     if (match) videoId = match[1];
                 }
                 return videoId;
             };
-             
             let tg = null;
             let backButton = null;
-
             function updateBackButton() {
                 if (!backButton) return;
                 const visibleModal = document.querySelector('.modal-overlay.visible');
-                if (visibleModal) {
-                    backButton.show();
-                } else {
-                    backButton.hide();
-                }
+                if (visibleModal) backButton.show();
+                else backButton.hide();
             }
-            
+
             const openDetailsModal = (movie) => {
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
                 document.getElementById('modal-genres').textContent = movie.genres || 'N/A';
                 document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10`;
-                document.getElementById('modal-year').textContent = movie.year || 'N/A';
+                document.getElementById('modal-year').textContent = `Year: ${movie.year || 'N/A'}`;
                 document.getElementById('modal-language').textContent = `Language: ${movie.language || 'N/A'}`;
                 document.getElementById('modal-description').textContent = movie.description || 'No description available.';
 
+                const modalSeriesInfo = document.getElementById('modal-series-info');
+                const isSeries = movie.type !== 'movie';
+                if (isSeries && (movie.season || movie.episode)) {
+                    modalSeriesInfo.textContent = `Season: ${movie.season || 'N/A'} | Episode: ${movie.episode || 'N/A'}`;
+                    modalSeriesInfo.style.display = 'block';
+                } else {
+                    modalSeriesInfo.style.display = 'none';
+                }
+                
                 const trailerContainer = document.getElementById('modal-trailer-container');
                 const downloadsContainer = document.getElementById('modal-downloads');
                 const actionsContainer = document.getElementById('modal-actions');
@@ -707,7 +834,7 @@
                 if (movie.trailerUrl) {
                     const trailerBtn = document.createElement('button');
                     trailerBtn.className = 'trailer-btn';
-                    trailerBtn.innerHTML = `<i class="fas fa-play"></i> Movie Trailer`;
+                    trailerBtn.innerHTML = `<i class="fas fa-play"></i> Watch Trailer`;
                     trailerBtn.onclick = () => {
                         const videoId = getYoutubeVideoId(movie.trailerUrl);
                         if (videoId) {
@@ -715,7 +842,7 @@
                             trailerModal.classList.add('visible');
                             updateBackButton();
                         } else {
-                            alert("Invalid trailer link.");
+                            alert("Invalid trailer link provided.");
                         }
                     };
                     trailerContainer.appendChild(trailerBtn);
@@ -737,54 +864,101 @@
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'action-btn copy';
                 copyBtn.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
-                copyBtn.onclick = (e) => {
-                    copyToClipboard(deepLink, e.currentTarget);
-                };
+                copyBtn.onclick = (e) => copyToClipboard(deepLink, e.currentTarget);
                 actionsContainer.appendChild(copyBtn);
 
-                if (movie.downloadLinks && movie.downloadLinks.length > 0) {
+                // For Movies
+                if (movie.type === 'movie' && movie.downloadLinks && movie.downloadLinks.length > 0) {
+                     const linksWrapper = document.createElement('div');
                     movie.downloadLinks.forEach(link => {
-                        const button = document.createElement('div');
+                        const button = document.createElement('a');
                         button.textContent = link.name;
                         button.className = 'download-btn';
-                        button.dataset.url = link.url;
-                        button.addEventListener('click', () => {
-                            incrementDownloadCount(movie.id);
-                            window.open(button.dataset.url, '_blank');
-                        });
+                        button.href = link.url;
+                        button.target = '_blank';
+                        button.addEventListener('click', () => incrementDownloadCount(movie.id));
                         button.addEventListener('contextmenu', (e) => e.preventDefault());
-                        downloadsContainer.appendChild(button);
+                        linksWrapper.appendChild(button);
+                    });
+                    downloadsContainer.appendChild(linksWrapper);
+                } 
+                // For Series (Web Series, Drama, Anime)
+                else if (movie.seasons && movie.seasons.length > 0) {
+                    movie.seasons.sort((a, b) => a.season_number - b.season_number).forEach(season => {
+                        
+                        const seasonAccordion = document.createElement('div');
+                        seasonAccordion.className = 'season-accordion';
+
+                        const seasonHeader = document.createElement('div');
+                        seasonHeader.className = 'season-accordion-header';
+                        seasonHeader.innerHTML = `<h4>Season ${season.season_number}</h4><i class="fas fa-chevron-down"></i>`;
+                        
+                        const seasonContent = document.createElement('div');
+                        seasonContent.className = 'season-accordion-content';
+
+                        if (season.episodes && season.episodes.length > 0) {
+                            season.episodes.sort((a, b) => a.episode_number - b.episode_number).forEach(episode => {
+                                const episodeContainer = document.createElement('div');
+                                episodeContainer.className = 'episode-container';
+
+                                const episodeTitle = document.createElement('p');
+                                episodeTitle.className = 'episode-title';
+                                episodeTitle.textContent = `Episode ${episode.episode_number}` + (episode.title ? `: ${episode.title}` : '');
+                                episodeContainer.appendChild(episodeTitle);
+                                
+                                if (episode.downloadLinks && episode.downloadLinks.length > 0) {
+                                    episode.downloadLinks.forEach(link => {
+                                        const button = document.createElement('a');
+                                        button.textContent = link.name;
+                                        button.className = 'download-btn';
+                                        button.href = link.url;
+                                        button.target = '_blank';
+                                        button.addEventListener('click', () => incrementDownloadCount(movie.id));
+                                        button.addEventListener('contextmenu', (e) => e.preventDefault());
+                                        episodeContainer.appendChild(button);
+                                    });
+                                } else {
+                                    const noLinksText = document.createElement('p');
+                                    noLinksText.textContent = 'No links for this episode.';
+                                    noLinksText.style.cssText = "font-size: 0.8rem; color: #777;";
+                                    episodeContainer.appendChild(noLinksText);
+                                }
+                                seasonContent.appendChild(episodeContainer);
+                            });
+                        }
+                        seasonAccordion.appendChild(seasonHeader);
+                        seasonAccordion.appendChild(seasonContent);
+                        downloadsContainer.appendChild(seasonAccordion);
                     });
                 }
+                
                 detailsModal.classList.add('visible');
                 updateBackButton();
             };
 
             const closeModal = (modalOrId) => {
                  let modal;
-                if (typeof modalOrId === 'string') {
-                    modal = document.getElementById(modalOrId);
-                } else {
-                    modal = modalOrId;
-                }
+                if (typeof modalOrId === 'string') modal = document.getElementById(modalOrId);
+                else modal = modalOrId;
                 if (!modal) return;
-                
                 modal.classList.remove('visible');
-                if (modal.id === 'trailer-modal') {
-                    youtubeTrailerIframe.src = '';
-                }
+                if (modal.id === 'trailer-modal') youtubeTrailerIframe.src = '';
                 updateBackButton();
             };
             
-            // --- Function Definitions End ---
+            // Single delegated event listener for season accordions
+            document.getElementById('modal-downloads').addEventListener('click', function(e) {
+                const header = e.target.closest('.season-accordion-header');
+                if (header) {
+                    const accordion = header.parentElement;
+                    accordion.classList.toggle('active');
+                }
+            });
 
-            // --- Event Listeners and App Initialization ---
-
-            // Updated search event listener
             searchForm.addEventListener('submit', (e) => {
                 e.preventDefault(); 
                 performSearch();
-                searchBar.blur(); // Hides keyboard after search
+                searchBar.blur();
             });
 
             searchBar.addEventListener('input', () => { 
@@ -793,16 +967,31 @@
                 }
             });
 
+            categoryButtonsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    const newCategory = e.target.dataset.category;
+                    if (newCategory === currentCategory) return;
+                    currentCategory = newCategory;
+                    currentFilter = 'All';
+                    searchBar.value = '';
+                    document.querySelector('.category-btn.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    const activeGenreFilter = filterContainer.querySelector('.filter.active');
+                    if(activeGenreFilter) activeGenreFilter.classList.remove('active');
+                    filterContainer.querySelector('.filter[data-filter="All"]').classList.add('active');
+                    fetchAndRenderMovies(true);
+                }
+            });
+
             filterContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter')) {
+                    const newFilter = e.target.dataset.filter;
+                    if (newFilter === currentFilter) return;
+                    currentFilter = newFilter;
+                    searchBar.value = '';
                     document.querySelector('.filter.active').classList.remove('active');
                     e.target.classList.add('active');
-                    const newFilter = e.target.dataset.filter;
-                    if (newFilter !== currentFilter) {
-                        currentFilter = newFilter;
-                        searchBar.value = '';
-                        fetchAndRenderMovies(true);
-                    }
+                    fetchAndRenderMovies(true);
                 }
             });
 
@@ -840,33 +1029,33 @@
                 });
             });
 
-
             movieRequestBtn.addEventListener('click', () => {
                 requestModal.classList.add('visible');
                 updateBackButton();
             });
-
 
             movieRequestForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const submitBtn = e.target.querySelector('button[type="submit"]');
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Sending...';
+                
                 const requestData = {
-                    userName: document.getElementById('request-user-name').value,
-                    movieName: document.getElementById('request-movie-name').value,
-                    trailerUrl: document.getElementById('request-trailer-url').value,
+                    userName: document.getElementById('request-user-name').value.trim(),
+                    movieName: document.getElementById('request-movie-name').value.trim(),
+                    trailerUrl: document.getElementById('request-trailer-url').value.trim(),
                     status: 'pending',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
+
                 try {
                     const tg = window.Telegram.WebApp;
-                    if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
                         const user = tg.initDataUnsafe.user;
                         requestData.telegramUser = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '' };
                     }
                     await db.collection('movieRequests').add(requestData);
-                    alert('Your movie request has been sent successfully!');
+                    alert('Your content request has been sent successfully!');
                     movieRequestForm.reset();
                     closeModal(requestModal);
                 } catch (error) {
@@ -878,7 +1067,6 @@
                 }
             });
 
-            // --- Main App Initializer Function ---
             const initializeApp = async (tgInstance) => {
                 if (tgInstance) {
                     tg = tgInstance;
@@ -887,9 +1075,7 @@
                     backButton = tg.BackButton;
                     backButton.onClick(() => {
                         const visibleModal = document.querySelector('.modal-overlay.visible');
-                        if (visibleModal) {
-                            closeModal(visibleModal);
-                        }
+                        if (visibleModal) closeModal(visibleModal);
                     });
                     backButton.hide();
 
@@ -902,48 +1088,35 @@
                             if (userDoc.exists && userDoc.data().status === 'blocked') {
                                 const data = userDoc.data();
                                 const unblockTime = data.unblockAt ? data.unblockAt.toMillis() : null;
-
                                 if (unblockTime && unblockTime > Date.now()) {
-                                    // --- TEMPORARY BLOCK IS ACTIVE ---
                                     const unblockDate = new Date(unblockTime).toLocaleString();
-                                    const blockPageHTML = `
-                                        <div class="block-page-container">
-                                            <i class="fas fa-ban block-icon"></i>
-                                            <h1>You Are Temporarily Blocked</h1>
-                                            <p class="block-reason">Your access to this service has been restricted.</p>
-                                            <div class="countdown-container">
-                                                <p>You will be unblocked in:</p>
-                                                <h2 id="countdown-timer">--:--:--</h2>
-                                            </div>
-                                            <p class="unblock-info">You will be automatically unblocked on ${unblockDate}.</p>
-                                        </div>`;
+                                    const blockPageHTML = `<div class="block-page-container"><i class="fas fa-ban block-icon"></i><h1>You Are Temporarily Blocked</h1><p class="block-reason">Your access has been restricted.</p><div class="countdown-container"><p>You will be unblocked in:</p><h2 id="countdown-timer">--:--:--</h2></div><p class="unblock-info">Auto unblock on ${unblockDate}.</p></div>`;
                                     document.body.innerHTML = blockPageHTML;
                                     startCountdown(unblockTime);
-                                    return; // Stop further app execution
+                                    return;
                                 } else if (unblockTime && unblockTime <= Date.now()) {
-                                    // --- TEMPORARY BLOCK HAS EXPIRED ---
-                                    await userRef.update({
-                                        status: 'active',
-                                        unblockAt: firebase.firestore.FieldValue.delete()
-                                    });
+                                    await userRef.update({ status: 'active', unblockAt: firebase.firestore.FieldValue.delete() });
                                 } else if (!unblockTime) { 
-                                    // --- PERMANENT BLOCK ---
-                                    const blockPageHTML = `
-                                        <div class="block-page-container">
-                                            <i class="fas fa-ban block-icon"></i>
-                                            <h1>Your Account is Blocked</h1>
-                                            <p class="block-reason">Your access has been permanently restricted. If you believe this is a mistake, please contact support.</p>
-                                        </div>`;
+                                    const blockPageHTML = `<div class="block-page-container"><i class="fas fa-ban block-icon"></i><h1>Your Account is Blocked</h1><p class="block-reason">Access permanently restricted. Contact support if this is a mistake.</p></div>`;
                                     document.body.innerHTML = blockPageHTML;
-                                    return; // Stop further app execution
+                                    return;
                                 }
                             }
+                            
+                            const userData = {
+                                id: user.id,
+                                firstName: user.first_name,
+                                lastName: user.last_name || '',
+                                username: user.username || '',
+                                photoUrl: user.photo_url || null,
+                                status: 'active',
+                                lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                            };
 
-                            // --- USER IS ACTIVE OR HAS JUST BEEN UNBLOCKED ---
-                            const userData = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '', status: 'active' };
                             if (!userDoc.exists) {
                                 userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
                             }
+                            
                             await userRef.set(userData, { merge: true });
                         }
                     } catch (error) {
@@ -977,13 +1150,12 @@
                 await fetchAndRenderMovies(true);
             };
 
-            // --- Start the App (FIXED CODE) ---
             try {
                 const webApp = window.Telegram.WebApp;
                 if (webApp && webApp.initData) {
                     initializeApp(webApp);
                 } else {
-                    console.log('Not running in Telegram or initData is missing. Initializing in standalone mode.');
+                    console.log('Not running in Telegram. Initializing in standalone mode.');
                     initializeApp(null);
                 }
             } catch (error) {
