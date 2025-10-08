@@ -85,36 +85,6 @@
             cursor: pointer;
         }
 
-        .category-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 0 auto 20px;
-            padding: 0 20px;
-            flex-wrap: wrap;
-        }
-        .category-btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 20px;
-            background: var(--green);
-            color: var(--text);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .category-btn:hover {
-             background-color: var(--dark-green);
-            transform: scale(1.05) translateY(-2px);
-        }
-         .category-btn.active {
-            background: var(--dark-green);
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
-        }
-
-
         .controls-container {
             display: flex;
             justify-content: center;
@@ -280,7 +250,7 @@
         .social-icons a:hover {
             transform: scale(1.15) rotate(5deg);
         }
-        .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by, .category-btn {
+        .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by {
             transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
                         background-color 0.3s ease, 
                         box-shadow 0.3s ease;
@@ -294,13 +264,12 @@
             background-color: var(--secondary);
             transform: scale(1.05) translateY(-2px);
         }
-        .request-btn:active, .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active, .submit-btn:active, .category-btn:active {
+        .request-btn:active, .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active, .submit-btn:active {
             transform: scale(0.97) translateY(0);
             box-shadow: none;
             transition-duration: 0.1s;
         }
 
-        /* ---------- কোড আপডেট শুরু ---------- */
         .season-accordion {
             margin-bottom: 5px;
         }
@@ -390,7 +359,6 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
-        /* ---------- কোড আপডেট শেষ ---------- */
         
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
@@ -411,17 +379,9 @@
         </div>
     </div>
 
-    <div class="category-buttons">
-        <button class="category-btn active" data-category="all">All</button>
-        <button class="category-btn" data-category="movie">Movies</button>
-        <button class="category-btn" data-category="web-series">Web Series</button>
-        <button class="category-btn" data-category="drama">Drama</button>
-        <button class="category-btn" data-category="anime-series">Anime Series</button>
-    </div>
-
     <div class="controls-container">
         <select id="sort-by">
-            <option value="createdAt_desc">Latest</option>
+            <option value="updatedAt_desc">Latest</option>
             <option value="createdAt_asc">Oldest</option>
             <option value="rating_desc">Top Rated</option>
             <option value="rating_asc">Lowest Rated</option>
@@ -506,21 +466,22 @@
     </div>
 
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <!-- Firebase Modular SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, increment, serverTimestamp, query, where, orderBy, startAfter, limit, deleteField } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyC47Ol1RJQ1_xkt78li2tDZdaxgxljALIU",
-            authDomain: "baflix-app.firebaseapp.com",
-            projectId: "baflix-app",
-            storageBucket: "baflix-app.firebasestorage.app",
-            messagingSenderId: "221693630977",
-            appId: "1:221693630977:web:620d115d11b8e3af677e00"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+  apiKey: "AIzaSyAQZz2HexhdoKvIe4jq3rRWUME3vJ6RSZ4",
+  authDomain: "nawapp-3a2ab.firebaseapp.com",
+  projectId: "nawapp-3a2ab",
+  storageBucket: "nawapp-3a2ab.firebasestorage.app",
+  messagingSenderId: "56575021907",
+  appId: "1:56575021907:web:bff8de2df3ef8b147147a6",
+  measurementId: "G-R20Y3VZ11W"
+};
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
         
         function startCountdown(unblockTimestamp) {
             const countdownElement = document.getElementById('countdown-timer');
@@ -559,24 +520,22 @@
             const movieRequestBtn = document.getElementById('movie-request-btn');
             const movieRequestForm = document.getElementById('movie-request-form');
             const sortBySelect = document.getElementById('sort-by');
-            const categoryButtonsContainer = document.querySelector('.category-buttons');
 
             let currentlyLoadedMovies = [];
             let isFetchingMore = false;
-            let currentCategory = 'all';
             let currentFilter = 'All';
-            let currentSort = 'createdAt_desc';
+            let currentSort = 'updatedAt_desc'; // ডিফল্ট সর্টিং
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
             
-            const trackVisit = () => db.collection('visits').add({ timestamp: firebase.firestore.FieldValue.serverTimestamp() }).catch(err => console.error("Visit tracking failed:", err));
+            const trackVisit = () => addDoc(collection(db, 'visits'), { timestamp: serverTimestamp() }).catch(err => console.error("Visit tracking failed:", err));
 
             const incrementDownloadCount = async (movieId) => {
                 if (!movieId) return;
-                const movieRef = db.collection('movies').doc(movieId);
+                const movieRef = doc(db, 'movies', movieId);
                 try {
-                    await movieRef.update({
-                        downloadCount: firebase.firestore.FieldValue.increment(1)
+                    await updateDoc(movieRef, {
+                        downloadCount: increment(1)
                     });
                 } catch (error) {
                     console.error("Error incrementing download count:", error);
@@ -599,30 +558,29 @@
 
                 try {
                     const [sortField, sortDirection] = currentSort.split('_');
-                    let query = db.collection('movies');
-
-                    if (currentCategory !== 'all') {
-                        query = query.where('type', '==', currentCategory);
-                    }
+                    const moviesCollection = collection(db, 'movies');
+                    
+                    let queryConstraints = [];
                     if (currentFilter !== 'All') {
-                        query = query.where('categories', 'array-contains', currentFilter);
+                        queryConstraints.push(where('categories', 'array-contains', currentFilter));
                     }
                     
-                    query = query.orderBy(sortField, sortDirection);
+                    queryConstraints.push(orderBy(sortField, sortDirection));
                     
                     if (!isInitial && lastVisible) {
-                        query = query.startAfter(lastVisible);
+                        queryConstraints.push(startAfter(lastVisible));
                     }
                     
-                    query = query.limit(MOVIES_PER_PAGE);
+                    queryConstraints.push(limit(MOVIES_PER_PAGE));
 
-                    const snapshot = await query.get();
+                    const q = query(moviesCollection, ...queryConstraints);
+                    const snapshot = await getDocs(q);
+
                     skeletonLoader.style.display = 'none';
 
                     if (snapshot.empty) {
                         if (isInitial) {
                             let message = `No content found`;
-                            if (currentCategory !== 'all') message += ` in the ${currentCategory} category`;
                             if (currentFilter !== 'All') message += ` for "${currentFilter}"`;
                             message += `. You can make a request.`;
                             noMoviesMessage.querySelector('p').textContent = message;
@@ -658,13 +616,11 @@
                 noMoviesMessage.style.display = 'none';
                 skeletonLoader.style.display = 'grid';
                 try {
-                    const moviesSnapshot = await db.collection('movies').where('status', '==', 'active').get();
+                    const q = query(collection(db, 'movies'), where('status', '==', 'active'));
+                    const moviesSnapshot = await getDocs(q);
                     let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     skeletonLoader.style.display = 'none';
                     
-                    if (currentCategory !== 'all') {
-                        allMoviesForSearch = allMoviesForSearch.filter(movie => movie.type === currentCategory);
-                    }
                     if (currentFilter !== 'All') {
                         allMoviesForSearch = allMoviesForSearch.filter(movie => movie.categories && movie.categories.includes(currentFilter));
                     }
@@ -685,6 +641,7 @@
             };
             
             const appendMovies = (moviesToAppend) => {
+                const fragment = document.createDocumentFragment();
                 moviesToAppend.forEach(movie => {
                     const movieCard = document.createElement('div');
                     movieCard.className = 'movie-card';
@@ -705,8 +662,9 @@
                             <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p>
                             <p class="movie-year">${movie.year || 'N/A'}</p>
                         </div>`;
-                    movieGrid.appendChild(movieCard);
+                    fragment.appendChild(movieCard);
                 });
+                movieGrid.appendChild(fragment);
             };
 
             const renderMovies = (moviesToRender) => {
@@ -725,14 +683,16 @@
 
             const renderSocialLinks = async () => {
                 try {
-                    const snapshot = await db.collection('socialLinks').get();
+                    const q = query(collection(db, 'socialLinks'));
+                    const snapshot = await getDocs(q);
                     socialIconsContainer.innerHTML = snapshot.docs.map(doc => `<a href="${doc.data().url}" target="_blank"><img src="${doc.data().imageUrl}" alt="Social Icon"></a>`).join('');
                 } catch (error) { console.error("Error setting up social links:", error); }
             };
 
             const setupFilters = async () => {
                  try {
-                    const filtersSnapshot = await db.collection('filters').orderBy('name').get();
+                    const q = query(collection(db, 'filters'), orderBy('name'));
+                    const filtersSnapshot = await getDocs(q);
                     const filters = filtersSnapshot.docs.map(doc => doc.data().name);
                     filterContainer.innerHTML = '';
                     const allFilter = document.createElement('div');
@@ -967,22 +927,6 @@
                 }
             });
 
-            categoryButtonsContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('category-btn')) {
-                    const newCategory = e.target.dataset.category;
-                    if (newCategory === currentCategory) return;
-                    currentCategory = newCategory;
-                    currentFilter = 'All';
-                    searchBar.value = '';
-                    document.querySelector('.category-btn.active').classList.remove('active');
-                    e.target.classList.add('active');
-                    const activeGenreFilter = filterContainer.querySelector('.filter.active');
-                    if(activeGenreFilter) activeGenreFilter.classList.remove('active');
-                    filterContainer.querySelector('.filter[data-filter="All"]').classList.add('active');
-                    fetchAndRenderMovies(true);
-                }
-            });
-
             filterContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter')) {
                     const newFilter = e.target.dataset.filter;
@@ -1045,7 +989,7 @@
                     movieName: document.getElementById('request-movie-name').value.trim(),
                     trailerUrl: document.getElementById('request-trailer-url').value.trim(),
                     status: 'pending',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: serverTimestamp()
                 };
 
                 try {
@@ -1054,7 +998,7 @@
                         const user = tg.initDataUnsafe.user;
                         requestData.telegramUser = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '' };
                     }
-                    await db.collection('movieRequests').add(requestData);
+                    await addDoc(collection(db, 'movieRequests'), requestData);
                     alert('Your content request has been sent successfully!');
                     movieRequestForm.reset();
                     closeModal(requestModal);
@@ -1082,10 +1026,10 @@
                     try {
                         const user = tg.initDataUnsafe.user;
                         if (user && user.id) {
-                            const userRef = db.collection('telegramUsers').doc(String(user.id));
-                            const userDoc = await userRef.get();
+                            const userRef = doc(db, 'telegramUsers', String(user.id));
+                            const userDoc = await getDoc(userRef);
 
-                            if (userDoc.exists && userDoc.data().status === 'blocked') {
+                            if (userDoc.exists() && userDoc.data().status === 'blocked') {
                                 const data = userDoc.data();
                                 const unblockTime = data.unblockAt ? data.unblockAt.toMillis() : null;
                                 if (unblockTime && unblockTime > Date.now()) {
@@ -1095,7 +1039,7 @@
                                     startCountdown(unblockTime);
                                     return;
                                 } else if (unblockTime && unblockTime <= Date.now()) {
-                                    await userRef.update({ status: 'active', unblockAt: firebase.firestore.FieldValue.delete() });
+                                    await updateDoc(userRef, { status: 'active', unblockAt: deleteField() });
                                 } else if (!unblockTime) { 
                                     const blockPageHTML = `<div class="block-page-container"><i class="fas fa-ban block-icon"></i><h1>Your Account is Blocked</h1><p class="block-reason">Access permanently restricted. Contact support if this is a mistake.</p></div>`;
                                     document.body.innerHTML = blockPageHTML;
@@ -1110,14 +1054,14 @@
                                 username: user.username || '',
                                 photoUrl: user.photo_url || null,
                                 status: 'active',
-                                lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                                lastSeen: serverTimestamp()
                             };
 
-                            if (!userDoc.exists) {
-                                userData.joinedAt = firebase.firestore.FieldValue.serverTimestamp();
+                            if (!userDoc.exists()) {
+                                userData.joinedAt = serverTimestamp();
                             }
                             
-                            await userRef.set(userData, { merge: true });
+                            await updateDoc(userRef, userData, { merge: true });
                         }
                     } catch (error) {
                         console.log('Could not register Telegram user:', error);
@@ -1135,8 +1079,8 @@
                     if (startParam && startParam.startsWith('movie_')) {
                         const movieId = startParam.split('_')[1];
                         try {
-                            const movieDoc = await db.collection('movies').doc(movieId).get();
-                            if (movieDoc.exists) {
+                            const movieDoc = await getDoc(doc(db, 'movies', movieId));
+                            if (movieDoc.exists()) {
                                 const movieData = { id: movieDoc.id, ...movieDoc.data() };
                                 currentlyLoadedMovies.push(movieData);
                                 openDetailsModal(movieData);
