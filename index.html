@@ -472,39 +472,17 @@
         import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, increment, serverTimestamp, query, where, orderBy, startAfter, limit, deleteField } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
-  apiKey: "AIzaSyCzSOBVlOJA2rd09z5dGM3Z7m-01JqgUMI",
-  authDomain: "baflix-admin.firebaseapp.com",
-  projectId: "baflix-admin",
-  storageBucket: "baflix-admin.firebasestorage.app",
-  messagingSenderId: "242365922009",
-  appId: "1:242365922009:web:95a4f4c0cf99922165dcc8",
-  measurementId: "G-W5Q3Q8PM55"
-};
+          apiKey: "AIzaSyCzSOBVlOJA2rd09z5dGM3Z7m-01JqgUMI",
+          authDomain: "baflix-admin.firebaseapp.com",
+          projectId: "baflix-admin",
+          storageBucket: "baflix-admin.firebasestorage.app",
+          messagingSenderId: "242365922009",
+          appId: "1:242365922009:web:95a4f4c0cf99922165dcc8",
+          measurementId: "G-W5Q3Q8PM55"
+        };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
-        function startCountdown(unblockTimestamp) {
-            const countdownElement = document.getElementById('countdown-timer');
-            if (!countdownElement) return;
-            const interval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = unblockTimestamp - now;
-                if (distance < 1000) {
-                    clearInterval(interval);
-                    window.location.reload();
-                    return;
-                }
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                let timerString = '';
-                if (days > 0) timerString += `${days}d `;
-                timerString += `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                countdownElement.innerHTML = timerString;
-            }, 1000);
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const movieGrid = document.querySelector('.movie-grid');
             const skeletonLoader = document.getElementById('skeleton-loader');
@@ -527,8 +505,6 @@
             let currentSort = 'updatedAt_desc'; // ডিফল্ট সর্টিং
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
-            
-            const trackVisit = () => addDoc(collection(db, 'visits'), { timestamp: serverTimestamp() }).catch(err => console.error("Visit tracking failed:", err));
 
             const incrementDownloadCount = async (movieId) => {
                 if (!movieId) return;
@@ -647,18 +623,31 @@
                     movieCard.className = 'movie-card';
                     movieCard.dataset.movieId = movie.id;
 
-                    const isSeries = movie.type === 'web-series' || movie.type === 'anime-series' || movie.type === 'drama';
+                    const isSeries = movie.type !== 'movie';
                     let seriesInfoHTML = '';
-                    if (isSeries && (movie.season || movie.episode)) {
-                        seriesInfoHTML = `<p class="movie-series-info">S${movie.season || '?'} | E${movie.episode || '?'}</p>`;
+                    
+                    if (isSeries && movie.seasons && movie.seasons.length > 0) {
+                        // Find the latest season by sorting
+                        const sortedSeasons = [...movie.seasons].sort((a, b) => b.season_number - a.season_number);
+                        const latestSeason = sortedSeasons[0];
+
+                        if (latestSeason && latestSeason.episodes && latestSeason.episodes.length > 0) {
+                            // Find the latest episode in that season
+                            const sortedEpisodes = [...latestSeason.episodes].sort((a, b) => b.episode_number - a.episode_number);
+                            const latestEpisode = sortedEpisodes[0];
+                            
+                            if (latestEpisode) {
+                                seriesInfoHTML = `<p class="movie-series-info">S${latestSeason.season_number} | E${latestEpisode.episode_number}</p>`;
+                            }
+                        }
                     }
 
                     movieCard.innerHTML = `
                         <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
                         <div class="movie-info">
                             <h3 class="movie-title">${movie.title}</h3>
-                            ${seriesInfoHTML}
                             <p class="movie-genres">${movie.genres || ''}</p>
+                            ${seriesInfoHTML}
                             <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p>
                             <p class="movie-year">${movie.year || 'N/A'}</p>
                         </div>`;
@@ -776,8 +765,10 @@
 
                 const modalSeriesInfo = document.getElementById('modal-series-info');
                 const isSeries = movie.type !== 'movie';
-                if (isSeries && (movie.season || movie.episode)) {
-                    modalSeriesInfo.textContent = `Season: ${movie.season || 'N/A'} | Episode: ${movie.episode || 'N/A'}`;
+                if (isSeries && movie.seasons && movie.seasons.length > 0) {
+                    const seasonCount = movie.seasons.length;
+                    const episodeCount = movie.seasons.reduce((acc, season) => acc + (season.episodes ? season.episodes.length : 0), 0);
+                    modalSeriesInfo.textContent = `Total Seasons: ${seasonCount} | Total Episodes: ${episodeCount}`;
                     modalSeriesInfo.style.display = 'block';
                 } else {
                     modalSeriesInfo.style.display = 'none';
@@ -993,11 +984,7 @@
                 };
 
                 try {
-                    const tg = window.Telegram.WebApp;
-                    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        const user = tg.initDataUnsafe.user;
-                        requestData.telegramUser = { id: user.id, firstName: user.first_name, lastName: user.last_name || '', username: user.username || '' };
-                    }
+                    // Removed automatic Telegram user data collection
                     await addDoc(collection(db, 'movieRequests'), requestData);
                     alert('Your content request has been sent successfully!');
                     movieRequestForm.reset();
@@ -1023,52 +1010,9 @@
                     });
                     backButton.hide();
 
-                    try {
-                        const user = tg.initDataUnsafe.user;
-                        if (user && user.id) {
-                            const userRef = doc(db, 'telegramUsers', String(user.id));
-                            const userDoc = await getDoc(userRef);
-
-                            if (userDoc.exists() && userDoc.data().status === 'blocked') {
-                                const data = userDoc.data();
-                                const unblockTime = data.unblockAt ? data.unblockAt.toMillis() : null;
-                                if (unblockTime && unblockTime > Date.now()) {
-                                    const unblockDate = new Date(unblockTime).toLocaleString();
-                                    const blockPageHTML = `<div class="block-page-container"><i class="fas fa-ban block-icon"></i><h1>You Are Temporarily Blocked</h1><p class="block-reason">Your access has been restricted.</p><div class="countdown-container"><p>You will be unblocked in:</p><h2 id="countdown-timer">--:--:--</h2></div><p class="unblock-info">Auto unblock on ${unblockDate}.</p></div>`;
-                                    document.body.innerHTML = blockPageHTML;
-                                    startCountdown(unblockTime);
-                                    return;
-                                } else if (unblockTime && unblockTime <= Date.now()) {
-                                    await updateDoc(userRef, { status: 'active', unblockAt: deleteField() });
-                                } else if (!unblockTime) { 
-                                    const blockPageHTML = `<div class="block-page-container"><i class="fas fa-ban block-icon"></i><h1>Your Account is Blocked</h1><p class="block-reason">Access permanently restricted. Contact support if this is a mistake.</p></div>`;
-                                    document.body.innerHTML = blockPageHTML;
-                                    return;
-                                }
-                            }
-                            
-                            const userData = {
-                                id: user.id,
-                                firstName: user.first_name,
-                                lastName: user.last_name || '',
-                                username: user.username || '',
-                                photoUrl: user.photo_url || null,
-                                status: 'active',
-                                lastSeen: serverTimestamp()
-                            };
-
-                            if (!userDoc.exists()) {
-                                userData.joinedAt = serverTimestamp();
-                            }
-                            
-                            await updateDoc(userRef, userData, { merge: true });
-                        }
-                    } catch (error) {
-                        console.log('Could not register Telegram user:', error);
-                    }
+                    // Removed entire user data collection and blocking check logic
                 }
 
-                trackVisit();
                 await Promise.all([
                     renderSocialLinks(),
                     setupFilters()
