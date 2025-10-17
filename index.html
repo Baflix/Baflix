@@ -821,12 +821,15 @@
                 const botUsername = "Baflix_Bot"; 
                 const deepLink = `https://t.me/${botUsername}?startapp=movie_${movie.id}`;
 
+                // <<< START: Updated Share and Copy Logic >>>
+                const shareMessage = `🎬 "${movie.title}" দেখুন এখন Baflix-এ!\n\nদেখার জন্য নিচের লিঙ্কে ক্লিক করুন 👇`;
+                const fullTextToCopy = `${shareMessage}\n${deepLink}`;
+
                 const shareBtn = document.createElement('button');
                 shareBtn.className = 'action-btn';
                 shareBtn.innerHTML = `<i class="fas fa-share-alt"></i> Share`;
                 shareBtn.onclick = () => {
-                    const shareText = `Check out "${movie.title}" on Baflix!`;
-                    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(deepLink)}&text=${encodeURIComponent(shareText)}`;
+                    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(deepLink)}&text=${encodeURIComponent(shareMessage)}`;
                     window.open(telegramShareUrl, '_blank');
                 };
                 actionsContainer.appendChild(shareBtn);
@@ -834,8 +837,9 @@
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'action-btn copy';
                 copyBtn.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
-                copyBtn.onclick = (e) => copyToClipboard(deepLink, e.currentTarget);
+                copyBtn.onclick = (e) => copyToClipboard(fullTextToCopy, e.currentTarget);
                 actionsContainer.appendChild(copyBtn);
+                // <<< END: Updated Share and Copy Logic >>>
 
                 // For Movies
                 if (movie.type === 'movie' && movie.downloadLinks && movie.downloadLinks.length > 0) {
