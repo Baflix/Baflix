@@ -363,7 +363,7 @@
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
     <header>
         <h1 class="logo">Baflix</h1>
         <div class="social-icons"></div>
@@ -828,7 +828,7 @@
                         button.href = link.url;
                         button.target = '_blank';
                         button.addEventListener('click', () => incrementDownloadCount(movie.id));
-                        button.addEventListener('contextmenu', (e) => e.preventDefault());
+                        // The global oncontextmenu handler on the body will prevent the default behavior
                         linksWrapper.appendChild(button);
                     });
                     downloadsContainer.appendChild(linksWrapper);
@@ -865,7 +865,7 @@
                                         button.href = link.url;
                                         button.target = '_blank';
                                         button.addEventListener('click', () => incrementDownloadCount(movie.id));
-                                        button.addEventListener('contextmenu', (e) => e.preventDefault());
+                                        // The global oncontextmenu handler on the body will prevent the default behavior
                                         episodeContainer.appendChild(button);
                                     });
                                 } else {
