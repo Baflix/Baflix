@@ -363,7 +363,7 @@
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
     <header>
         <h1 class="logo">Baflix</h1>
         <div class="social-icons"></div>
@@ -505,6 +505,11 @@
             let currentSort = 'updatedAt_desc'; // ডিফল্ট সর্টিং
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
+   
+            // Add this event listener to disable the context menu on the entire body
+            document.body.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
 
             const incrementDownloadCount = async (movieId) => {
                 if (!movieId) return;
@@ -828,7 +833,7 @@
                         button.href = link.url;
                         button.target = '_blank';
                         button.addEventListener('click', () => incrementDownloadCount(movie.id));
-                        // The global oncontextmenu handler on the body will prevent the default behavior
+                        button.addEventListener('contextmenu', (e) => e.preventDefault());
                         linksWrapper.appendChild(button);
                     });
                     downloadsContainer.appendChild(linksWrapper);
@@ -865,7 +870,7 @@
                                         button.href = link.url;
                                         button.target = '_blank';
                                         button.addEventListener('click', () => incrementDownloadCount(movie.id));
-                                        // The global oncontextmenu handler on the body will prevent the default behavior
+                                        button.addEventListener('contextmenu', (e) => e.preventDefault());
                                         episodeContainer.appendChild(button);
                                     });
                                 } else {
