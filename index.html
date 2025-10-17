@@ -221,7 +221,21 @@
         #modal-series-info { font-weight: bold; color: var(--green); }
         .modal-description { padding: 25px; font-size: 1rem; line-height: 1.7; }
         .modal-downloads { padding: 0 25px 25px; }
-        .download-btn { background: var(--green); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: inline-block; margin: 5px; }
+        .download-btn {
+            background: var(--green);
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+            border: none;
+            font-family: 'Arial', sans-serif;
+        }
         .trailer-btn { background: var(--primary); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;}
         
         .modal-actions { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; margin: 0 25px; padding-top: 25px; }
@@ -505,8 +519,8 @@
             let currentSort = 'updatedAt_desc'; // ডিফল্ট সর্টিং
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
-   
-            // Add this event listener to disable the context menu on the entire body
+
+            // Disable context menu on the entire page
             document.body.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
             });
@@ -827,12 +841,17 @@
                 if (movie.type === 'movie' && movie.downloadLinks && movie.downloadLinks.length > 0) {
                      const linksWrapper = document.createElement('div');
                     movie.downloadLinks.forEach(link => {
-                        const button = document.createElement('a');
+                        const button = document.createElement('button');
                         button.textContent = link.name;
                         button.className = 'download-btn';
-                        button.href = link.url;
-                        button.target = '_blank';
-                        button.addEventListener('click', () => incrementDownloadCount(movie.id));
+                        button.dataset.url = link.url;
+                        button.addEventListener('click', (e) => {
+                            incrementDownloadCount(movie.id);
+                            const url = e.currentTarget.dataset.url;
+                            if (url) {
+                                window.open(url, '_blank');
+                            }
+                        });
                         button.addEventListener('contextmenu', (e) => e.preventDefault());
                         linksWrapper.appendChild(button);
                     });
@@ -864,12 +883,17 @@
                                 
                                 if (episode.downloadLinks && episode.downloadLinks.length > 0) {
                                     episode.downloadLinks.forEach(link => {
-                                        const button = document.createElement('a');
+                                        const button = document.createElement('button');
                                         button.textContent = link.name;
                                         button.className = 'download-btn';
-                                        button.href = link.url;
-                                        button.target = '_blank';
-                                        button.addEventListener('click', () => incrementDownloadCount(movie.id));
+                                        button.dataset.url = link.url;
+                                        button.addEventListener('click', (e) => {
+                                            incrementDownloadCount(movie.id);
+                                            const url = e.currentTarget.dataset.url;
+                                            if (url) {
+                                                window.open(url, '_blank');
+                                            }
+                                        });
                                         button.addEventListener('contextmenu', (e) => e.preventDefault());
                                         episodeContainer.appendChild(button);
                                     });
