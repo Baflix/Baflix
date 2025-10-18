@@ -575,9 +575,11 @@
 
                     if (snapshot.empty) {
                         if (isInitial) {
-                            let message = `No content found`;
-                            if (currentFilter !== 'All') message += ` for "${currentFilter}"`;
-                            message += `. You can make a request.`;
+                            let message = `This section is empty.`;
+                            if (currentFilter !== 'All') {
+                                message = `No movie or series found for "${currentFilter}".`;
+                            }
+                            message += " You can request the admin to add it.";
                             noMoviesMessage.querySelector('p').textContent = message;
                             noMoviesMessage.style.display = 'block';
                             movieGrid.style.display = 'none';
@@ -1071,7 +1073,22 @@
                 await fetchAndRenderMovies(true);
             };
 
+            const handleConnectionChange = () => {
+                if (!navigator.onLine) {
+                    skeletonLoader.style.display = 'none';
+                    noMoviesMessage.innerHTML = `<p>You are offline. Please check your internet connection.</p>`;
+                    noMoviesMessage.style.display = 'block';
+                }
+            };
+            
+            window.addEventListener('online', () => window.location.reload());
+            window.addEventListener('offline', handleConnectionChange);
+            
             try {
+                 if (!navigator.onLine) {
+                    handleConnectionChange();
+                    return;
+                }
                 const webApp = window.Telegram.WebApp;
                 if (webApp && webApp.initData) {
                     initializeApp(webApp);
