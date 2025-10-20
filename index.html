@@ -618,9 +618,7 @@
                     let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     skeletonLoader.style.display = 'none';
                     
-                    if (currentFilter !== 'All') {
-                        allMoviesForSearch = allMoviesForSearch.filter(movie => movie.categories && movie.categories.includes(currentFilter));
-                    }
+                    // The category filter is intentionally removed from search to allow global searching.
 
                     const filteredMovies = allMoviesForSearch.filter(movie =>
                         movie.title.toLowerCase().includes(searchTerm) ||
@@ -639,6 +637,8 @@
             
             const appendMovies = (moviesToAppend) => {
                 const fragment = document.createDocumentFragment();
+                const isListView = movieGrid.classList.contains('list-view');
+
                 moviesToAppend.forEach(movie => {
                     const movieCard = document.createElement('div');
                     movieCard.className = 'movie-card';
@@ -648,12 +648,10 @@
                     let seriesInfoHTML = '';
                     
                     if (isSeries && movie.seasons && movie.seasons.length > 0) {
-                        // Find the latest season by sorting
                         const sortedSeasons = [...movie.seasons].sort((a, b) => b.season_number - a.season_number);
                         const latestSeason = sortedSeasons[0];
 
                         if (latestSeason && latestSeason.episodes && latestSeason.episodes.length > 0) {
-                            // Find the latest episode in that season
                             const sortedEpisodes = [...latestSeason.episodes].sort((a, b) => b.episode_number - a.episode_number);
                             const latestEpisode = sortedEpisodes[0];
                             
@@ -663,15 +661,34 @@
                         }
                     }
 
-                    movieCard.innerHTML = `
-                        <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
-                        <div class="movie-info">
-                            <h3 class="movie-title">${movie.title}</h3>
-                            <p class="movie-genres">${movie.genres || ''}</p>
-                            ${seriesInfoHTML}
-                            <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p>
-                            <p class="movie-year">${movie.year || 'N/A'}</p>
-                        </div>`;
+                    let cardHTML = '';
+                    if (isListView) {
+                        // List view for search results
+                        cardHTML = `
+                            <div class="movie-poster">
+                                <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'">
+                            </div>
+                            <div class="movie-info">
+                                <h3 class="movie-title">${movie.title}</h3>
+                                <p class="movie-description-snippet">${movie.description || 'No description available.'}</p>
+                                <p class="movie-genres"><b>Genres:</b> ${movie.genres || 'N/A'}</p>
+                                ${seriesInfoHTML}
+                                <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p>
+                                <p class="movie-year"><b>Year:</b> ${movie.year || 'N/A'}</p>
+                            </div>`;
+                    } else {
+                        // Grid view for browsing
+                        cardHTML = `
+                            <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                            <div class="movie-info">
+                                <h3 class="movie-title">${movie.title}</h3>
+                                <p class="movie-genres">${movie.genres || ''}</p>
+                                ${seriesInfoHTML}
+                                <p class="movie-rating"><i class="fas fa-star" style="color:gold;"></i> ${movie.rating || 'N/A'}/10</p>
+                                <p class="movie-year">${movie.year || 'N/A'}</p>
+                            </div>`;
+                    }
+                    movieCard.innerHTML = cardHTML;
                     fragment.appendChild(movieCard);
                 });
                 movieGrid.appendChild(fragment);
@@ -686,7 +703,7 @@
                     movieGrid.style.display = 'none';
                 } else {
                     noMoviesMessage.style.display = 'none';
-                    movieGrid.style.display = 'grid'; // Always render as grid initially
+                    movieGrid.style.display = movieGrid.classList.contains('list-view') ? 'block' : 'grid';
                     appendMovies(activeMovies);
                 }
             };
