@@ -1100,19 +1100,10 @@
                     tg = tgInstance;
                     tg.expand();
                     
-                    // START: দিনে একবার ব্যবহারকারীকে চেক করার নতুন লজিক
+                    // START: প্রতিবার অ্যাপ খোলার সময় ব্যবহারকারীকে চেক করার নতুন লজিক
                     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        const lastCheck = localStorage.getItem('lastUserCheck');
-                        const currentTime = new Date().getTime();
-                        const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
-
-                        // যদি আগে কখনো চেক না করা হয়ে থাকে অথবা ২৪ ঘণ্টা পার হয়ে গিয়ে থাকে
-                        if (!lastCheck || (currentTime - parseInt(lastCheck) > TWENTY_FOUR_HOURS_IN_MS)) {
-                            console.log("Performing daily user data sync.");
-                            await saveOrUpdateTelegramUser(tg.initDataUnsafe.user);
-                            // বর্তমান সময় লোকাল স্টোরেজে সেভ করা
-                            localStorage.setItem('lastUserCheck', currentTime.toString());
-                        }
+                        console.log("Syncing user data on app open.");
+                        await saveOrUpdateTelegramUser(tg.initDataUnsafe.user);
 
                         // রিকুয়েস্ট ফর্ম থেকে নাম ইনপুট লুকিয়ে দেওয়া
                         const userNameInput = document.getElementById('request-user-name');
