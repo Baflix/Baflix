@@ -130,7 +130,7 @@
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
-            position: relative; /* Added for positioning the language badge */
+            position: relative;
         }
         .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -269,23 +269,10 @@
         #trailer-modal .modal-content { max-width: 800px; background: #000; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        .block-page-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 20px; color: var(--text); }
-        .block-icon { font-size: 5rem; color: var(--primary); margin-bottom: 20px; }
-        .block-page-container h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .block-reason { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 30px; }
-        .countdown-container { background: var(--light-dark); padding: 20px 40px; border-radius: 8px; margin-bottom: 20px; }
-        .countdown-container p { font-size: 1rem; color: var(--text-secondary); }
-        #countdown-timer { font-size: 3rem; font-weight: bold; letter-spacing: 4px; }
-        .unblock-info { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px; }
         
-        .social-icons a:hover {
-            transform: scale(1.15) rotate(5deg);
-        }
+        .social-icons a:hover { transform: scale(1.15) rotate(5deg); }
         .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by {
-            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-                        background-color 0.3s ease, 
-                        box-shadow 0.3s ease;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s ease, box-shadow 0.3s ease;
             will-change: transform;
         }
         .request-btn:hover, .search-btn:hover, .download-btn:hover, .trailer-btn:hover, .action-btn:hover, .submit-btn:hover {
@@ -302,9 +289,7 @@
             transition-duration: 0.1s;
         }
 
-        .season-accordion {
-            margin-bottom: 5px;
-        }
+        .season-accordion { margin-bottom: 5px; }
         .season-accordion-header {
             display: flex;
             justify-content: space-between;
@@ -323,32 +308,18 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
             background: linear-gradient(145deg, #34495e, #4a627a);
         }
-        .season-accordion-header h4 {
-            font-size: 1.1rem;
-            color: var(--text);
-            font-weight: bold;
-            margin: 0;
-        }
-        .season-accordion-header .fas {
-            transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
+        .season-accordion-header h4 { font-size: 1.1rem; color: var(--text); font-weight: bold; margin: 0; }
+        .season-accordion-header .fas { transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); color: var(--text-secondary); font-size: 1rem; }
         .season-accordion.active .season-accordion-header {
             background: linear-gradient(145deg, #3a506b, #4a627a);
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
-        .season-accordion.active .season-accordion-header .fas {
-            transform: rotate(180deg);
-            color: var(--text);
-        }
+        .season-accordion.active .season-accordion-header .fas { transform: rotate(180deg); color: var(--text); }
         .season-accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        padding 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        opacity 0.2s ease-out;
+            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease-out;
             background-color: rgba(0,0,0,0.2);
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
@@ -359,9 +330,7 @@
             max-height: 2000px;
             padding: 20px 15px 5px;
             opacity: 1;
-            transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        padding 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        opacity 0.4s ease-in 0.1s;
+            transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-in 0.1s;
         }
         .episode-container {
             margin-bottom: 15px;
@@ -371,26 +340,15 @@
             transform: translateY(-15px);
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
-        .episode-container:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .season-accordion.active .episode-container {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .episode-container:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .season-accordion.active .episode-container { opacity: 1; transform: translateY(0); }
         .season-accordion.active .episode-container:nth-child(1) { transition-delay: 0.1s; }
         .season-accordion.active .episode-container:nth-child(2) { transition-delay: 0.15s; }
         .season-accordion.active .episode-container:nth-child(3) { transition-delay: 0.2s; }
         .season-accordion.active .episode-container:nth-child(4) { transition-delay: 0.25s; }
         .season-accordion.active .episode-container:nth-child(5) { transition-delay: 0.3s; }
         .season-accordion.active .episode-container:nth-child(n+6) { transition-delay: 0.35s; }
-        .episode-title {
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+        .episode-title { color: var(--text-secondary); margin-bottom: 10px; font-weight: bold; }
         
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
     </style>
@@ -501,7 +459,7 @@
     <!-- Firebase Modular SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, increment, serverTimestamp, query, where, orderBy, startAfter, limit, deleteField } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, setDoc, increment, serverTimestamp, query, where, orderBy, startAfter, limit, deleteField } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCzSOBVlOJA2rd09z5dGM3Z7m-01JqgUMI",
@@ -534,14 +492,32 @@
             let currentlyLoadedMovies = [];
             let isFetchingMore = false;
             let currentFilter = 'All';
-            let currentSort = 'updatedAt_desc'; // ডিফল্ট সর্টিং
+            let currentSort = 'updatedAt_desc';
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
 
-            // Disable context menu on the entire page
             document.body.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
             });
+            
+            const parseEpisodeNumber = (epNumStr) => {
+                const str = String(epNumStr).trim();
+                if (str.includes('-')) {
+                    const parts = str.split('-').map(num => parseInt(num.trim(), 10));
+                    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                        const [start, end] = parts;
+                        const count = Math.abs(end - start) + 1;
+                        const highest = Math.max(start, end);
+                        return { count, highest };
+                    }
+                }
+                const singleNum = parseInt(str, 10);
+                if (!isNaN(singleNum)) {
+                    return { count: 1, highest: singleNum };
+                }
+                return { count: 1, highest: 0 };
+            };
+
 
             const incrementDownloadCount = async (movieId) => {
                 if (!movieId) return;
@@ -636,8 +612,6 @@
                     let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     skeletonLoader.style.display = 'none';
                     
-                    // The category filter is intentionally removed from search to allow global searching.
-
                     const filteredMovies = allMoviesForSearch.filter(movie =>
                         movie.title.toLowerCase().includes(searchTerm) ||
                         (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
@@ -670,11 +644,16 @@
                         const latestSeason = sortedSeasons[0];
 
                         if (latestSeason && latestSeason.episodes && latestSeason.episodes.length > 0) {
-                            const sortedEpisodes = [...latestSeason.episodes].sort((a, b) => b.episode_number - a.episode_number);
+                            const sortedEpisodes = [...latestSeason.episodes].sort((a, b) => {
+                                const highestA = parseEpisodeNumber(a.episode_number).highest;
+                                const highestB = parseEpisodeNumber(b.episode_number).highest;
+                                return highestB - highestA;
+                            });
                             const latestEpisode = sortedEpisodes[0];
                             
                             if (latestEpisode) {
-                                seriesInfoHTML = `<p class="movie-series-info">S${latestSeason.season_number} | E${latestEpisode.episode_number}</p>`;
+                                const latestEpisodeInfo = parseEpisodeNumber(latestEpisode.episode_number);
+                                seriesInfoHTML = `<p class="movie-series-info">S${latestSeason.season_number} | E${latestEpisodeInfo.highest}</p>`;
                             }
                         }
                     }
@@ -683,7 +662,6 @@
                     let languageBadgeHTML = movie.language ? `<div class="language-badge">${movie.language}</div>` : '';
 
                     if (isListView) {
-                        // List view for search results
                         cardHTML = `
                             <div class="movie-poster">
                                 ${languageBadgeHTML}
@@ -698,7 +676,6 @@
                                 <p class="movie-year"><b>Year:</b> ${movie.year || 'N/A'}</p>
                             </div>`;
                     } else {
-                        // Grid view for browsing
                         cardHTML = `
                             ${languageBadgeHTML}
                             <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
@@ -767,7 +744,6 @@
                 };
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(text).then(showSuccess).catch(err => {
-                        console.warn("Clipboard API failed, using fallback.", err);
                         fallbackCopy(text, button, originalText);
                     });
                 } else {
@@ -810,8 +786,11 @@
             function updateBackButton() {
                 if (!backButton) return;
                 const visibleModal = document.querySelector('.modal-overlay.visible');
-                if (visibleModal) backButton.show();
-                else backButton.hide();
+                if (visibleModal) {
+                    backButton.show();
+                } else {
+                    backButton.hide();
+                }
             }
 
             const openDetailsModal = (movie) => {
@@ -825,9 +804,19 @@
 
                 const modalSeriesInfo = document.getElementById('modal-series-info');
                 const isSeries = movie.type !== 'movie';
+
                 if (isSeries && movie.seasons && movie.seasons.length > 0) {
                     const seasonCount = movie.seasons.length;
-                    const episodeCount = movie.seasons.reduce((acc, season) => acc + (season.episodes ? season.episodes.length : 0), 0);
+                    const episodeCount = movie.seasons.reduce((totalAcc, season) => {
+                        if (!season.episodes || season.episodes.length === 0) {
+                            return totalAcc;
+                        }
+                        const seasonEpisodeCount = season.episodes.reduce((seasonAcc, episode) => {
+                            const episodeInfo = parseEpisodeNumber(episode.episode_number);
+                            return seasonAcc + episodeInfo.count;
+                        }, 0);
+                        return totalAcc + seasonEpisodeCount;
+                    }, 0);
                     modalSeriesInfo.textContent = `Total Seasons: ${seasonCount} | Total Episodes: ${episodeCount}`;
                     modalSeriesInfo.style.display = 'block';
                 } else {
@@ -862,7 +851,6 @@
                 const botUsername = "Baflix_Bot"; 
                 const deepLink = `https://t.me/${botUsername}?startapp=movie_${movie.id}`;
 
-                // <<< START: Updated Share and Copy Logic >>>
                 const shareMessage = `🎬 "${movie.title}" দেখুন এখন Baflix-এ!\n\nদেখার জন্য নিচের লিঙ্কে ক্লিক করুন 👇`;
                 const fullTextToCopy = `${shareMessage}\n${deepLink}`;
 
@@ -880,9 +868,7 @@
                 copyBtn.innerHTML = `<i class="fas fa-copy"></i> Copy Link`;
                 copyBtn.onclick = (e) => copyToClipboard(fullTextToCopy, e.currentTarget);
                 actionsContainer.appendChild(copyBtn);
-                // <<< END: Updated Share and Copy Logic >>>
 
-                // For Movies
                 if (movie.type === 'movie' && movie.downloadLinks && movie.downloadLinks.length > 0) {
                      const linksWrapper = document.createElement('div');
                     movie.downloadLinks.forEach(link => {
@@ -902,7 +888,6 @@
                     });
                     downloadsContainer.appendChild(linksWrapper);
                 } 
-                // For Series (Web Series, Drama, Anime)
                 else if (movie.seasons && movie.seasons.length > 0) {
                     movie.seasons.sort((a, b) => a.season_number - b.season_number).forEach(season => {
                         
@@ -917,7 +902,11 @@
                         seasonContent.className = 'season-accordion-content';
 
                         if (season.episodes && season.episodes.length > 0) {
-                            season.episodes.sort((a, b) => a.episode_number - b.episode_number).forEach(episode => {
+                            season.episodes.sort((a, b) => {
+                                const highestA = parseEpisodeNumber(a.episode_number).highest;
+                                const highestB = parseEpisodeNumber(b.episode_number).highest;
+                                return highestA - highestB;
+                            }).forEach(episode => {
                                 const episodeContainer = document.createElement('div');
                                 episodeContainer.className = 'episode-container';
 
@@ -971,7 +960,6 @@
                 updateBackButton();
             };
             
-            // Single delegated event listener for season accordions
             document.getElementById('modal-downloads').addEventListener('click', function(e) {
                 const header = e.target.closest('.season-accordion-header');
                 if (header) {
@@ -1056,9 +1044,16 @@
                     status: 'pending',
                     createdAt: serverTimestamp()
                 };
+                
+                if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    const user = tg.initDataUnsafe.user;
+                    requestData.userId = user.id;
+                    requestData.telegramUsername = user.username || '';
+                    requestData.userName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                }
+
 
                 try {
-                    // Removed automatic Telegram user data collection
                     await addDoc(collection(db, 'movieRequests'), requestData);
                     alert('Your content request has been sent successfully!');
                     movieRequestForm.reset();
@@ -1071,20 +1066,77 @@
                     submitBtn.textContent = 'Send Request';
                 }
             });
+            
+            const saveOrUpdateTelegramUser = async (user) => {
+                if (!user || !user.id) return;
+                
+                const userDocRef = doc(db, "telegramUsers", String(user.id));
+                
+                try {
+                    const docSnap = await getDoc(userDocRef);
+                    const userData = {
+                        id: user.id,
+                        firstName: user.first_name || '',
+                        lastName: user.last_name || '',
+                        username: user.username || '',
+                        lastSeen: serverTimestamp()
+                    };
 
+                    if (docSnap.exists()) {
+                        await updateDoc(userDocRef, userData);
+                    } else {
+                        userData.createdAt = serverTimestamp();
+                        userData.status = 'active';
+                        await setDoc(userDocRef, userData);
+                    }
+                } catch (error) {
+                    console.error("Error saving or updating user data:", error);
+                }
+            };
+
+            // UPDATE: initializeApp ফাংশনে পরিবর্তন
             const initializeApp = async (tgInstance) => {
                 if (tgInstance) {
                     tg = tgInstance;
                     tg.expand();
                     
-                    backButton = tg.BackButton;
-                    backButton.onClick(() => {
-                        const visibleModal = document.querySelector('.modal-overlay.visible');
-                        if (visibleModal) closeModal(visibleModal);
-                    });
-                    backButton.hide();
+                    // START: দিনে একবার ব্যবহারকারীকে চেক করার নতুন লজিক
+                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                        const lastCheck = localStorage.getItem('lastUserCheck');
+                        const currentTime = new Date().getTime();
+                        const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
 
-                    // Removed entire user data collection and blocking check logic
+                        // যদি আগে কখনো চেক না করা হয়ে থাকে অথবা ২৪ ঘণ্টা পার হয়ে গিয়ে থাকে
+                        if (!lastCheck || (currentTime - parseInt(lastCheck) > TWENTY_FOUR_HOURS_IN_MS)) {
+                            console.log("Performing daily user data sync.");
+                            await saveOrUpdateTelegramUser(tg.initDataUnsafe.user);
+                            // বর্তমান সময় লোকাল স্টোরেজে সেভ করা
+                            localStorage.setItem('lastUserCheck', currentTime.toString());
+                        }
+
+                        // রিকুয়েস্ট ফর্ম থেকে নাম ইনপুট লুকিয়ে দেওয়া
+                        const userNameInput = document.getElementById('request-user-name');
+                        const userNameGroup = userNameInput.closest('.form-group');
+                        if (userNameGroup) {
+                            userNameGroup.style.display = 'none';
+                        }
+                    }
+                    // END: নতুন লজিক
+
+                    backButton = tg.BackButton;
+                    
+                    const handleBackClick = () => {
+                        const visibleModal = document.querySelector('.modal-overlay.visible');
+                        if (visibleModal) {
+                            closeModal(visibleModal);
+                        } else {
+                            tg.close();
+                        }
+                    };
+
+                    backButton.onClick(handleBackClick);
+                    tg.onEvent('backButtonClicked', handleBackClick);
+                    backButton.hide();
                 }
 
                 await Promise.all([
