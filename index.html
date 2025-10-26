@@ -132,7 +132,7 @@
             cursor: pointer;
             position: relative;
         }
-        .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; }
+        .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; position: relative; } /* Added position: relative */
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
@@ -150,6 +150,20 @@
             top: 8px;
             right: 8px;
             background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+        
+        /* New CSS for Upload Date Badge */
+        .upload-date-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: rgba(229, 9, 20, 0.8); /* Using primary color for visibility */
             color: #fff;
             padding: 3px 8px;
             border-radius: 4px;
@@ -660,10 +674,20 @@
 
                     let cardHTML = '';
                     let languageBadgeHTML = movie.language ? `<div class="language-badge">${movie.language}</div>` : '';
+                    
+                    // START: New code for upload date
+                    let uploadDateHTML = '';
+                    if (movie.createdAt && typeof movie.createdAt.toDate === 'function') {
+                        const uploadDate = movie.createdAt.toDate();
+                        const formattedDate = uploadDate.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
+                        uploadDateHTML = `<div class="upload-date-badge">${formattedDate}</div>`;
+                    }
+                    // END: New code for upload date
 
                     if (isListView) {
                         cardHTML = `
                             <div class="movie-poster">
+                                ${uploadDateHTML}
                                 ${languageBadgeHTML}
                                 <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'">
                             </div>
@@ -676,9 +700,13 @@
                                 <p class="movie-year"><b>Year:</b> ${movie.year || 'N/A'}</p>
                             </div>`;
                     } else {
+                        // Corrected the structure to place badges inside the poster div
                         cardHTML = `
-                            ${languageBadgeHTML}
-                            <div class="movie-poster"><img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'"></div>
+                            <div class="movie-poster">
+                                ${uploadDateHTML}
+                                ${languageBadgeHTML}
+                                <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/222/fff?text=Error'">
+                            </div>
                             <div class="movie-info">
                                 <h3 class="movie-title">${movie.title}</h3>
                                 <p class="movie-genres">${movie.genres || ''}</p>
@@ -1094,25 +1122,21 @@
                 }
             };
 
-            // UPDATE: initializeApp ফাংশনে পরিবর্তন
             const initializeApp = async (tgInstance) => {
                 if (tgInstance) {
                     tg = tgInstance;
                     tg.expand();
                     
-                    // START: প্রতিবার অ্যাপ খোলার সময় ব্যবহারকারীকে চেক করার নতুন লজিক
                     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                         console.log("Syncing user data on app open.");
                         await saveOrUpdateTelegramUser(tg.initDataUnsafe.user);
 
-                        // রিকুয়েস্ট ফর্ম থেকে নাম ইনপুট লুকিয়ে দেওয়া
                         const userNameInput = document.getElementById('request-user-name');
                         const userNameGroup = userNameInput.closest('.form-group');
                         if (userNameGroup) {
                             userNameGroup.style.display = 'none';
                         }
                     }
-                    // END: নতুন লজিক
 
                     backButton = tg.BackButton;
                     
