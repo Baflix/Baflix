@@ -42,22 +42,7 @@
             position: relative;
             max-width: 600px;
             margin: 0 auto 20px;
-            padding: 50px 20px 0;
-        }
-        .request-btn {
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 8px 16px;
-            background: var(--secondary);
-            color: var(--text);
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            white-space: nowrap;
+            padding: 20px 20px 0;
         }
         .search-container {
             display: flex;
@@ -132,7 +117,7 @@
             cursor: pointer;
             position: relative;
         }
-        .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; position: relative; } /* Added position: relative */
+        .movie-poster { width: 100%; aspect-ratio: 2 / 3; background-color: #333; overflow: hidden; position: relative; }
         .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
         .movie-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
@@ -158,12 +143,11 @@
             z-index: 1;
         }
         
-        /* New CSS for Upload Date Badge */
         .upload-date-badge {
             position: absolute;
             top: 8px;
             left: 8px;
-            background-color: rgba(229, 9, 20, 0.8); /* Using primary color for visibility */
+            background-color: rgba(229, 9, 20, 0.8);
             color: #fff;
             padding: 3px 8px;
             border-radius: 4px;
@@ -273,23 +257,17 @@
         .modal-actions { padding: 0 25px 25px; display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; margin: 0 25px; padding-top: 25px; }
         .action-btn { background: #007bff; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 5px; transition: background 0.3s; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; }
         .action-btn.copy { background: #6c757d; }
-
-        .request-modal-content h2 { text-align: center; margin-bottom: 20px; font-size: 1.5rem; }
-        .request-modal-content form { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .request-modal-content .form-group label { display: block; margin-bottom: 5px; color: var(--text-secondary); }
-        .request-modal-content .form-control { width: 100%; padding: 12px; background: var(--dark); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 1rem; }
-        .request-modal-content .submit-btn { padding: 12px; background: var(--primary); color: var(--text); border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
         
         #trailer-modal .modal-content { max-width: 800px; background: #000; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
         .social-icons a:hover { transform: scale(1.15) rotate(5deg); }
-        .request-btn, .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, .submit-btn, #sort-by {
+        .search-btn, .filter, .download-btn, .trailer-btn, .action-btn, #sort-by {
             transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s ease, box-shadow 0.3s ease;
             will-change: transform;
         }
-        .request-btn:hover, .search-btn:hover, .download-btn:hover, .trailer-btn:hover, .action-btn:hover, .submit-btn:hover {
+        .search-btn:hover, .download-btn:hover, .trailer-btn:hover, .action-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
@@ -297,7 +275,7 @@
             background-color: var(--secondary);
             transform: scale(1.05) translateY(-2px);
         }
-        .request-btn:active, .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active, .submit-btn:active {
+        .search-btn:active, .filter:active, .download-btn:active, .trailer-btn:active, .action-btn:active {
             transform: scale(0.97) translateY(0);
             box-shadow: none;
             transition-duration: 0.1s;
@@ -374,10 +352,9 @@
     </header>
 
     <div class="search-container-wrapper">
-        <button id="movie-request-btn" class="request-btn"><i class="fas fa-plus-circle"></i> Content Request</button>
         <div class="search-container">
             <form id="search-form">
-                <input type="search" id="search-bar" class="search-bar" placeholder="Search by title, genre, year..." enterkeyhint="search">
+                <input type="search" id="search-bar" class="search-bar" placeholder="Search by title..." enterkeyhint="search" autocapitalize="none">
                 <button type="submit" id="search-btn" class="search-btn"><i class="fas fa-search"></i></button>
             </form>
         </div>
@@ -434,31 +411,6 @@
         </div>
     </div>
 
-    <!-- Movie Request Modal -->
-    <div id="request-modal" class="modal-overlay">
-        <div class="modal-content request-modal-content">
-             <button class="modal-close-btn" data-target="request-modal">&times;</button>
-             <div class="modal-body">
-                 <div class="modal-header"><h2>Request Content</h2></div>
-                 <form id="movie-request-form">
-                     <div class="form-group">
-                         <label for="request-user-name">Enter Your Name *</label>
-                         <input type="text" id="request-user-name" class="form-control" required>
-                     </div>
-                     <div class="form-group">
-                         <label for="request-movie-name">Enter Content Name *</label>
-                         <input type="text" id="request-movie-name" class="form-control" required>
-                     </div>
-                     <div class="form-group">
-                         <label for="request-trailer-url">Enter YouTube Trailer (Optional)</label>
-                         <input type="url" id="request-trailer-url" class="form-control" placeholder="https://youtube.com/...">
-                     </div>
-                     <button type="submit" class="submit-btn">Send Request</button>
-                 </form>
-             </div>
-        </div>
-    </div>
-
     <!-- Trailer Modal -->
     <div id="trailer-modal" class="modal-overlay">
         <div class="modal-content">
@@ -491,7 +443,6 @@
             const movieGrid = document.querySelector('.movie-grid');
             const skeletonLoader = document.getElementById('skeleton-loader');
             const detailsModal = document.getElementById('details-modal');
-            const requestModal = document.getElementById('request-modal');
             const trailerModal = document.getElementById('trailer-modal');
             const youtubeTrailerIframe = document.getElementById('youtube-trailer-iframe');
             const noMoviesMessage = document.getElementById('no-movies-message');
@@ -499,8 +450,6 @@
             const filterContainer = document.querySelector('.filter-container');
             const searchBar = document.getElementById('search-bar');
             const searchForm = document.getElementById('search-form');
-            const movieRequestBtn = document.getElementById('movie-request-btn');
-            const movieRequestForm = document.getElementById('movie-request-form');
             const sortBySelect = document.getElementById('sort-by');
 
             let currentlyLoadedMovies = [];
@@ -587,7 +536,6 @@
                             if (currentFilter !== 'All') {
                                 message = `No movie or series found for "${currentFilter}".`;
                             }
-                            message += " You can request the admin to add it.";
                             noMoviesMessage.querySelector('p').textContent = message;
                             noMoviesMessage.style.display = 'block';
                             movieGrid.style.display = 'none';
@@ -611,33 +559,46 @@
             };
             
             const performSearch = async () => {
-                const searchTerm = searchBar.value.toLowerCase().trim();
+                const searchTerm = searchBar.value.trim();
                 if (!searchTerm) {
+                    movieGrid.classList.remove('list-view');
                     fetchAndRenderMovies(true);
                     return;
                 }
+                
+                const searchTermLower = searchTerm.toLowerCase();
 
+                movieGrid.innerHTML = '';
                 movieGrid.style.display = 'none';
                 noMoviesMessage.style.display = 'none';
                 skeletonLoader.style.display = 'grid';
+
                 try {
-                    const q = query(collection(db, 'movies'), where('status', '==', 'active'));
-                    const moviesSnapshot = await getDocs(q);
-                    let allMoviesForSearch = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const moviesCollection = collection(db, 'movies');
+                    
+                    const q = query(
+                        moviesCollection,
+                        where('status', '==', 'active'),
+                        orderBy('title_lowercase'),
+                        where('title_lowercase', '>=', searchTermLower),
+                        where('title_lowercase', '<=', searchTermLower + '\uf8ff'),
+                        limit(30)
+                    );
+
+                    const snapshot = await getDocs(q);
                     skeletonLoader.style.display = 'none';
                     
-                    const filteredMovies = allMoviesForSearch.filter(movie =>
-                        movie.title.toLowerCase().includes(searchTerm) ||
-                        (movie.genres && movie.genres.toLowerCase().includes(searchTerm)) ||
-                        String(movie.year).includes(searchTerm)
-                    );
+                    const filteredMovies = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     
                     currentlyLoadedMovies = filteredMovies;
                     movieGrid.classList.add('list-view');
                     renderMovies(filteredMovies);
+
                 } catch (error) {
                     console.error("Error fetching movies for search:", error);
                     skeletonLoader.style.display = 'none';
+                    noMoviesMessage.innerHTML = `<p>সার্চ করতে একটি সমস্যা হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন। <strong>ডেভেলপারদের জন্য:</strong> এই সমস্যার কারণ হতে পারে Firestore-এ প্রয়োজনীয় Index তৈরি না থাকা। বিস্তারিত জানতে ব্রাউজার কনসোল চেক করুন।</p>`;
+                    noMoviesMessage.style.display = 'block';
                 }
             };
             
@@ -675,14 +636,12 @@
                     let cardHTML = '';
                     let languageBadgeHTML = movie.language ? `<div class="language-badge">${movie.language}</div>` : '';
                     
-                    // START: New code for upload date
                     let uploadDateHTML = '';
                     if (movie.createdAt && typeof movie.createdAt.toDate === 'function') {
                         const uploadDate = movie.createdAt.toDate();
                         const formattedDate = uploadDate.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
                         uploadDateHTML = `<div class="upload-date-badge">${formattedDate}</div>`;
                     }
-                    // END: New code for upload date
 
                     if (isListView) {
                         cardHTML = `
@@ -700,7 +659,6 @@
                                 <p class="movie-year"><b>Year:</b> ${movie.year || 'N/A'}</p>
                             </div>`;
                     } else {
-                        // Corrected the structure to place badges inside the poster div
                         cardHTML = `
                             <div class="movie-poster">
                                 ${uploadDateHTML}
@@ -725,7 +683,7 @@
                 movieGrid.innerHTML = '';
                 const activeMovies = moviesToRender.filter(movie => movie.status === 'active');
                 if (activeMovies.length === 0) {
-                    noMoviesMessage.querySelector('p').textContent = "The content you are looking for is not available. You can request it.";
+                    noMoviesMessage.querySelector('p').textContent = "The content you are looking for is not available.";
                     noMoviesMessage.style.display = 'block';
                     movieGrid.style.display = 'none';
                 } else {
@@ -1004,6 +962,7 @@
 
             searchBar.addEventListener('input', () => { 
                 if (searchBar.value.trim() === '') {
+                    movieGrid.classList.remove('list-view');
                     fetchAndRenderMovies(true);
                 }
             });
@@ -1053,47 +1012,6 @@
                      if (e.target === modal) closeModal(modal);
                 });
             });
-
-            movieRequestBtn.addEventListener('click', () => {
-                requestModal.classList.add('visible');
-                updateBackButton();
-            });
-
-            movieRequestForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Sending...';
-                
-                const requestData = {
-                    userName: document.getElementById('request-user-name').value.trim(),
-                    movieName: document.getElementById('request-movie-name').value.trim(),
-                    trailerUrl: document.getElementById('request-trailer-url').value.trim(),
-                    status: 'pending',
-                    createdAt: serverTimestamp()
-                };
-                
-                if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    const user = tg.initDataUnsafe.user;
-                    requestData.userId = user.id;
-                    requestData.telegramUsername = user.username || '';
-                    requestData.userName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-                }
-
-
-                try {
-                    await addDoc(collection(db, 'movieRequests'), requestData);
-                    alert('Your content request has been sent successfully!');
-                    movieRequestForm.reset();
-                    closeModal(requestModal);
-                } catch (error) {
-                    console.error("Error sending request: ", error);
-                    alert('Failed to send request. Please try again.');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send Request';
-                }
-            });
             
             const saveOrUpdateTelegramUser = async (user) => {
                 if (!user || !user.id) return;
@@ -1121,6 +1039,21 @@
                     console.error("Error saving or updating user data:", error);
                 }
             };
+            
+            // ########### ভিজিট কাউন্টার ফাংশন ###########
+            const logVisit = async (user) => {
+                try {
+                    // 'visits' কালেকশনে একটি নতুন ডকুমেন্ট যোগ করা হচ্ছে
+                    await addDoc(collection(db, "visits"), {
+                        timestamp: serverTimestamp(), // কখন ভিজিট করা হয়েছে তার সময়
+                        userId: user ? String(user.id) : 'anonymous' // কোন ব্যবহারকারী ভিজিট করেছেন তার আইডি
+                    });
+                    console.log('Visit logged successfully.');
+                } catch (error) {
+                    console.error("Failed to log visit:", error);
+                }
+            };
+            // #########################################
 
             const initializeApp = async (tgInstance) => {
                 if (tgInstance) {
@@ -1128,14 +1061,14 @@
                     tg.expand();
                     
                     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        console.log("Syncing user data on app open.");
-                        await saveOrUpdateTelegramUser(tg.initDataUnsafe.user);
-
-                        const userNameInput = document.getElementById('request-user-name');
-                        const userNameGroup = userNameInput.closest('.form-group');
-                        if (userNameGroup) {
-                            userNameGroup.style.display = 'none';
-                        }
+                        console.log("Syncing user data and logging visit.");
+                        // ব্যবহারকারীর তথ্য সেভ করার পাশাপাশি ভিজিটও লগ করা হচ্ছে
+                        await Promise.all([
+                            saveOrUpdateTelegramUser(tg.initDataUnsafe.user),
+                            logVisit(tg.initDataUnsafe.user)
+                        ]);
+                    } else {
+                         await logVisit(null); // যদি টেলিগ্রামের বাইরে থেকে কেউ ভিজিট করে
                     }
 
                     backButton = tg.BackButton;
@@ -1152,6 +1085,8 @@
                     backButton.onClick(handleBackClick);
                     tg.onEvent('backButtonClicked', handleBackClick);
                     backButton.hide();
+                } else {
+                    await logVisit(null); // টেলিগ্রাম ছাড়া সাধারণ ব্রাউজারে অ্যাপ খুললেও ভিজিট কাউন্ট হবে
                 }
 
                 await Promise.all([
