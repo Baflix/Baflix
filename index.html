@@ -780,6 +780,9 @@
             }
 
             const openDetailsModal = (movie) => {
+                // ADDED: Reset scroll position to the top every time the modal is opened
+                document.querySelector('#details-modal .modal-body').scrollTop = 0;
+
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
                 document.getElementById('modal-title').textContent = movie.title;
                 document.getElementById('modal-genres').textContent = movie.genres || 'N/A';
