@@ -826,6 +826,7 @@
             let popupTimeLeft = 5;
             let popupLinkUrl = '';
             let hasShownPopup = false;
+            let isUserProcessed = false; // ইউজার প্রসেস হয়েছে কিনা ট্র্যাক করার জন্য
 
             document.body.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
@@ -919,7 +920,7 @@
                 } catch (error) {
                     console.error("Error fetching movies:", error);
                     skeletonLoader.style.display = 'none';
-                    noMoviesMessage.innerHTML = `<p>Could not load data. Please check your internet connection. <strong>For developers:</strong> This error often means a composite index is required in Firestore. Check the browser console for a link to create it.</p>`;
+                    noMoviesMessage.innerHTML = `<p>Could not load data. Please check your internet connection.</p>`;
                     noMoviesMessage.style.display = 'block';
                 } finally {
                     isFetchingMore = false;
@@ -965,7 +966,7 @@
                 } catch (error) {
                     console.error("Error fetching movies for search:", error);
                     skeletonLoader.style.display = 'none';
-                    noMoviesMessage.innerHTML = `<p>সার্চ করতে একটি সমস্যা হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন। <strong>ডেভেলপারদের জন্য:</strong> এই সমস্যার কারণ হতে পারে Firestore-এ প্রয়োজনীয় Index তৈরি না থাকা। বিস্তারিত জানতে ব্রাউজার কনসোল চেক করুন।</p>`;
+                    noMoviesMessage.innerHTML = `<p>সার্চ করতে একটি সমস্যা হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।</p>`;
                     noMoviesMessage.style.display = 'block';
                 }
             };
@@ -1007,7 +1008,7 @@
                     let uploadDateHTML = '';
                     if (movie.createdAt && typeof movie.createdAt.toDate === 'function') {
                         const uploadDate = movie.createdAt.toDate();
-                        const formattedDate = uploadDate.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
+                        const formattedDate = uploadDate.toLocaleDateString('en-GB');
                         uploadDateHTML = `<div class="upload-date-badge">${formattedDate}</div>`;
                     }
 
@@ -1117,7 +1118,6 @@
                 welcomePopupTimer.textContent = `${popupTimeLeft}s`;
                 welcomePopupClose.classList.remove('visible');
                 
-                // Start timer
                 if (popupTimer) clearInterval(popupTimer);
                 popupTimer = setInterval(() => {
                     popupTimeLeft--;
@@ -1139,7 +1139,6 @@
                 welcomePopupTimer.style.display = 'block';
             };
 
-            // Welcome Popup Click Handler (redirect to link)
             const handleWelcomePopupClick = () => {
                 if (popupLinkUrl) {
                     window.open(popupLinkUrl, '_blank');
@@ -1147,16 +1146,12 @@
                 closeWelcomePopup();
             };
 
-            // Close button click
             welcomePopupClose.addEventListener('click', (e) => {
                 e.stopPropagation();
                 closeWelcomePopup();
             });
 
-            // Click on popup content (redirect)
             welcomePopupContent.addEventListener('click', handleWelcomePopupClick);
-
-            // Prevent closing when clicking on close button (already handled)
             
             const copyToClipboard = (text, button) => {
                 const originalText = button.innerHTML;
@@ -1216,7 +1211,6 @@
             }
 
             const openDetailsModal = (movie) => {
-                // ADDED: Reset scroll position to the top every time the modal is opened
                 document.querySelector('#details-modal .modal-body').scrollTop = 0;
 
                 document.getElementById('modal-poster-img').src = movie.posterUrl;
@@ -1455,7 +1449,6 @@
             // User Info Functions
             window.closeUserInfo = () => {
                 userInfoSection.classList.remove('visible');
-                // Save to localStorage that user has seen the info
                 localStorage.setItem('userInfoShown', 'true');
             };
 
@@ -1470,7 +1463,6 @@
                     document.execCommand('copy');
                     document.body.removeChild(tempInput);
                     
-                    // Show copied feedback
                     const copyBtn = event.currentTarget;
                     const originalHTML = copyBtn.innerHTML;
                     copyBtn.innerHTML = '<i class="fas fa-check"></i>';
@@ -1480,77 +1472,134 @@
                 }
             };
             
-            const saveOrUpdateTelegramUser = async (user) => {
-                if (!user || !user.id) return;
+            // ========== আপডেটেড ইউজার ট্র্যাকিং ফাংশন ==========
+            // এই ফাংশন প্রতিবার অ্যাপ ওপেন করলে কল হবে এবং ইউজারকে ট্র্যাক করবে
+            const trackUser = async (user) => {
+                if (!user || !user.id) {
+                    console.log("No user data to track");
+                    return false;
+                }
+                
+                console.log("Tracking user:", user.id);
                 
                 const userDocRef = doc(db, "telegramUsers", String(user.id));
                 
                 try {
                     const docSnap = await getDoc(userDocRef);
+                    
+                    // বর্তমান সময়
+                    const now = new Date();
+                    
+                    // ইউজারের ডাটা প্রস্তুত করা
                     const userData = {
                         id: user.id,
                         firstName: user.first_name || '',
                         lastName: user.last_name || '',
                         username: user.username || '',
-                        lastSeen: serverTimestamp()
+                        languageCode: user.language_code || '',
+                        isPremium: user.is_premium || false,
+                        lastSeen: serverTimestamp(),
+                        lastVisit: now.toISOString(),
+                        visitCount: increment(1) // প্রতিবার ভিজিট কাউন্ট বাড়বে
                     };
 
                     if (docSnap.exists()) {
-                        await updateDoc(userDocRef, userData);
+                        // ইউজার আগে থেকেই আছে - শুধু আপডেট করব
+                        console.log("Existing user, updating lastSeen and visitCount");
+                        await updateDoc(userDocRef, {
+                            ...userData,
+                            createdAt: docSnap.data().createdAt // পুরনো createdAt রাখব
+                        });
+                        
+                        // ইউজার ইনফো UI তে দেখাব (শুধু প্রথমবার নয়, প্রতিবার)
+                        const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                        if (welcomeUserName) welcomeUserName.textContent = `Welcome back, ${fullName}!`;
+                        if (userTelegramName) userTelegramName.textContent = fullName;
+                        if (userChatId) userChatId.textContent = user.id;
+                        if (userUsername) userUsername.textContent = user.username ? '@' + user.username : 'No username';
+                        
+                        // প্রতি ৫ বার ভিজিটের পর একবার ইউজার ইনফো দেখাব
+                        const currentVisits = (docSnap.data().visitCount || 0) + 1;
+                        if (currentVisits % 5 === 0 && !localStorage.getItem('userInfoShown')) {
+                            setTimeout(() => {
+                                userInfoSection.classList.add('visible');
+                            }, 1000);
+                        }
+                        
+                        return true;
                     } else {
+                        // নতুন ইউজার - প্রথমবার যোগ হচ্ছে
+                        console.log("New user, creating record");
                         userData.createdAt = serverTimestamp();
                         userData.status = 'active';
+                        userData.visitCount = 1;
+                        userData.firstVisit = now.toISOString();
+                        
                         await setDoc(userDocRef, userData);
                         
-                        // Show user info section only for first-time users
+                        // নতুন ইউজার হলে সবসময় ইউজার ইনফো দেখাব
                         setTimeout(() => {
                             if (!localStorage.getItem('userInfoShown')) {
                                 userInfoSection.classList.add('visible');
                             }
                         }, 1000);
+                        
+                        // ইউজার ইনফো UI তে দেখাব
+                        const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                        if (welcomeUserName) welcomeUserName.textContent = `Welcome, ${fullName}!`;
+                        if (userTelegramName) userTelegramName.textContent = fullName;
+                        if (userChatId) userChatId.textContent = user.id;
+                        if (userUsername) userUsername.textContent = user.username ? '@' + user.username : 'No username';
+                        
+                        return true;
                     }
                     
-                    // Update user info in UI
-                    const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-                    welcomeUserName.textContent = `Welcome, ${fullName}!`;
-                    userTelegramName.textContent = fullName;
-                    userChatId.textContent = user.id;
-                    userUsername.textContent = user.username ? '@' + user.username : 'No username';
-                    
                 } catch (error) {
-                    console.error("Error saving or updating user data:", error);
+                    console.error("Error tracking user:", error);
+                    return false;
                 }
             };
             
-            // ########### ভিজিট কাউন্টার ফাংশন ###########
+            // ভিজিট কাউন্টার ফাংশন
             const logVisit = async (user) => {
                 try {
-                    // 'visits' কালেকশনে একটি নতুন ডকুমেন্ট যোগ করা হচ্ছে
                     await addDoc(collection(db, "visits"), {
-                        timestamp: serverTimestamp(), // কখন ভিজিট করা হয়েছে তার সময়
-                        userId: user ? String(user.id) : 'anonymous' // কোন ব্যবহারকারী ভিজিট করেছেন তার আইডি
+                        timestamp: serverTimestamp(),
+                        userId: user ? String(user.id) : 'anonymous',
+                        userAgent: navigator.userAgent,
+                        platform: navigator.platform,
+                        language: navigator.language
                     });
                     console.log('Visit logged successfully.');
                 } catch (error) {
                     console.error("Failed to log visit:", error);
                 }
             };
-            // #########################################
 
+            // অ্যাপ ইনিশিয়ালাইজ ফাংশন
             const initializeApp = async (tgInstance) => {
+                console.log("Initializing app...");
+                
                 if (tgInstance) {
                     tg = tgInstance;
                     tg.expand();
                     
                     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        console.log("Syncing user data and logging visit.");
-                        // ব্যবহারকারীর তথ্য সেভ করার পাশাপাশি ভিজিটও লগ করা হচ্ছে
-                        await Promise.all([
-                            saveOrUpdateTelegramUser(tg.initDataUnsafe.user),
-                            logVisit(tg.initDataUnsafe.user)
-                        ]);
+                        console.log("Telegram user detected:", tg.initDataUnsafe.user);
+                        
+                        // ইউজার ট্র্যাক করুন (প্রতিবার ওপেন করবে)
+                        const tracked = await trackUser(tg.initDataUnsafe.user);
+                        
+                        // ভিজিট লগ করুন
+                        await logVisit(tg.initDataUnsafe.user);
+                        
+                        if (tracked) {
+                            console.log("User tracked successfully");
+                        }
+                        
                     } else {
-                         await logVisit(null); // যদি টেলিগ্রামের বাইরে থেকে কেউ ভিজিট করে
+                        console.log("No Telegram user data");
+                        await logVisit(null);
                     }
 
                     backButton = tg.BackButton;
@@ -1564,21 +1613,26 @@
                         }
                     };
 
-                    backButton.onClick(handleBackClick);
-                    tg.onEvent('backButtonClicked', handleBackClick);
-                    backButton.hide();
+                    if (backButton) {
+                        backButton.onClick(handleBackClick);
+                        tg.onEvent('backButtonClicked', handleBackClick);
+                        backButton.hide();
+                    }
                 } else {
-                    await logVisit(null); // টেলিগ্রাম ছাড়া সাধারণ ব্রাউজারে অ্যাপ খুললেও ভিজিট কাউন্ট হবে
+                    console.log('Not running in Telegram. Initializing in standalone mode.');
+                    await logVisit(null);
                 }
 
+                // অন্যান্য ফাংশন কল করুন
                 await Promise.all([
                     renderSocialLinks(),
                     setupFilters()
                 ]);
 
-                // Load welcome popup settings
+                // ওয়েলকাম পপ-আপ লোড করুন
                 await loadWelcomePopupSettings();
 
+                // ডিপ লিংক চেক করুন
                 if (tg) {
                     const startParam = tg.initDataUnsafe?.start_param;
                     if (startParam && startParam.startsWith('movie_')) {
@@ -1596,7 +1650,10 @@
                     }
                 }
 
+                // মুভি লোড করুন
                 await fetchAndRenderMovies(true);
+                
+                console.log("App initialization complete");
             };
 
             const handleConnectionChange = () => {
@@ -1615,7 +1672,7 @@
                     handleConnectionChange();
                     return;
                 }
-                const webApp = window.Telegram.WebApp;
+                const webApp = window.Telegram?.WebApp;
                 if (webApp && webApp.initData) {
                     initializeApp(webApp);
                 } else {
