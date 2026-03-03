@@ -101,6 +101,135 @@
         .filter { padding: 8px 15px; border-radius: 20px; background: var(--light-dark); color: var(--text); cursor: pointer; transition: background 0.3s, transform 0.2s; }
         .filter.active { background: var(--primary); font-weight: bold; }
 
+        /* User Info Section */
+        .user-info-section {
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 20px 25px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.2);
+            display: none;
+        }
+        .user-info-section.visible {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+        .user-welcome-text h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+        .user-welcome-text p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .user-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .detail-content {
+            flex: 1;
+        }
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+        .detail-value {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            word-break: break-word;
+        }
+        .detail-value.small {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+        .copy-btn:hover {
+            transform: scale(1.1);
+        }
+        .user-info-close {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+        .close-user-info {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .close-user-info:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
         .movie-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -343,13 +472,230 @@
         .episode-title { color: var(--text-secondary); margin-bottom: 10px; font-weight: bold; }
         
         @media (min-width: 600px) { .modal-header { flex-direction: row; } .modal-poster img { width: 180px; } .modal-content { width: 80%; } }
+
+        /* Welcome Popup Styles */
+        .welcome-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .welcome-popup-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .welcome-popup-content {
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            width: 90%;
+            max-width: 380px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.3);
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            position: relative;
+        }
+        .welcome-popup-overlay.visible .welcome-popup-content {
+            transform: scale(1) translateY(0);
+        }
+        .welcome-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 2002;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+        }
+        .welcome-popup-close.visible {
+            opacity: 1;
+        }
+        .welcome-popup-close:hover {
+            background: var(--primary);
+            transform: rotate(90deg);
+        }
+        .welcome-popup-timer {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: bold;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 2002;
+            box-shadow: 0 2px 10px rgba(229, 9, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            letter-spacing: 0.5px;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .welcome-popup-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        .welcome-popup-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            pointer-events: none;
+        }
+        .welcome-popup-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .welcome-popup-image:hover img {
+            transform: scale(1.1);
+        }
+        .welcome-popup-text {
+            padding: 25px 20px 30px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .welcome-popup-text h2 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 2rem;
+            text-shadow: 0 2px 10px rgba(229, 9, 20, 0.3);
+        }
+        .welcome-popup-text p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .welcome-popup-click-hint {
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(229, 9, 20, 0.1);
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px dashed rgba(229, 9, 20, 0.3);
+        }
+        .welcome-popup-click-hint i {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
+    <!-- Welcome Popup -->
+    <div id="welcome-popup" class="welcome-popup-overlay">
+        <div class="welcome-popup-content" id="welcome-popup-content">
+            <button class="welcome-popup-close" id="welcome-popup-close">&times;</button>
+            <div class="welcome-popup-timer" id="welcome-popup-timer">5s</div>
+            <div class="welcome-popup-image" id="welcome-popup-image">
+                <img src="" alt="Welcome" id="welcome-popup-img">
+            </div>
+            <div class="welcome-popup-text" id="welcome-popup-text">
+                <h2 id="welcome-popup-title"></h2>
+                <p id="welcome-popup-description"></p>
+                <div class="welcome-popup-click-hint">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <span>Click anywhere to explore</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header>
         <h1 class="logo">Baflix</h1>
         <div class="social-icons"></div>
     </header>
+
+    <!-- User Info Section -->
+    <div id="user-info-section" class="user-info-section">
+        <div class="user-info-header">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-welcome-text">
+                <h3 id="welcome-user-name"></h3>
+                <p>Welcome to Baflix!</p>
+            </div>
+        </div>
+        <div class="user-details">
+            <div class="user-detail-item">
+                <div class="detail-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-label">Telegram Name</div>
+                    <div class="detail-value" id="user-telegram-name"></div>
+                </div>
+                <button class="copy-btn" onclick="copyToClipboard('user-telegram-name')">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+            <div class="user-detail-item">
+                <div class="detail-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-label">Chat ID</div>
+                    <div class="detail-value" id="user-chat-id"></div>
+                </div>
+                <button class="copy-btn" onclick="copyToClipboard('user-chat-id')">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+            <div class="user-detail-item">
+                <div class="detail-icon">
+                    <i class="fas fa-at"></i>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-label">Username</div>
+                    <div class="detail-value small" id="user-username"></div>
+                </div>
+            </div>
+        </div>
+        <div class="user-info-close">
+            <button class="close-user-info" onclick="closeUserInfo()">
+                <i class="fas fa-check"></i> Got it!
+            </button>
+        </div>
+    </div>
 
     <div class="search-container-wrapper">
         <div class="search-container">
@@ -452,12 +798,34 @@
             const searchForm = document.getElementById('search-form');
             const sortBySelect = document.getElementById('sort-by');
 
+            // User Info Elements
+            const userInfoSection = document.getElementById('user-info-section');
+            const welcomeUserName = document.getElementById('welcome-user-name');
+            const userTelegramName = document.getElementById('user-telegram-name');
+            const userChatId = document.getElementById('user-chat-id');
+            const userUsername = document.getElementById('user-username');
+
+            // Welcome Popup Elements
+            const welcomePopup = document.getElementById('welcome-popup');
+            const welcomePopupClose = document.getElementById('welcome-popup-close');
+            const welcomePopupTimer = document.getElementById('welcome-popup-timer');
+            const welcomePopupImg = document.getElementById('welcome-popup-img');
+            const welcomePopupTitle = document.getElementById('welcome-popup-title');
+            const welcomePopupDescription = document.getElementById('welcome-popup-description');
+            const welcomePopupContent = document.getElementById('welcome-popup-content');
+            const welcomePopupImage = document.getElementById('welcome-popup-image');
+            const welcomePopupText = document.getElementById('welcome-popup-text');
+
             let currentlyLoadedMovies = [];
             let isFetchingMore = false;
             let currentFilter = 'All';
             let currentSort = 'updatedAt_desc';
             let lastVisible = null;
             const MOVIES_PER_PAGE = 20;
+            let popupTimer = null;
+            let popupTimeLeft = 5;
+            let popupLinkUrl = '';
+            let hasShownPopup = false;
 
             document.body.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
@@ -721,6 +1089,74 @@
                     });
                 } catch (error) { console.error("Error setting up filters:", error); }
             };
+
+            // Load Welcome Popup Settings
+            const loadWelcomePopupSettings = async () => {
+                try {
+                    const popupDoc = await getDoc(doc(db, 'settings', 'welcomePopup'));
+                    if (popupDoc.exists()) {
+                        const data = popupDoc.data();
+                        if (data.enabled && !hasShownPopup) {
+                            welcomePopupImg.src = data.imageUrl || '';
+                            welcomePopupTitle.textContent = data.title || 'Welcome to Baflix!';
+                            welcomePopupDescription.textContent = data.description || 'Enjoy unlimited streaming of movies and series.';
+                            popupLinkUrl = data.linkUrl || '';
+                            showWelcomePopup();
+                            hasShownPopup = true;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error loading welcome popup settings:", error);
+                }
+            };
+
+            // Welcome Popup Functions
+            const showWelcomePopup = () => {
+                welcomePopup.classList.add('visible');
+                popupTimeLeft = 5;
+                welcomePopupTimer.textContent = `${popupTimeLeft}s`;
+                welcomePopupClose.classList.remove('visible');
+                
+                // Start timer
+                if (popupTimer) clearInterval(popupTimer);
+                popupTimer = setInterval(() => {
+                    popupTimeLeft--;
+                    welcomePopupTimer.textContent = `${popupTimeLeft}s`;
+                    
+                    if (popupTimeLeft <= 0) {
+                        clearInterval(popupTimer);
+                        welcomePopupClose.classList.add('visible');
+                        welcomePopupTimer.style.display = 'none';
+                    }
+                }, 1000);
+            };
+
+            const closeWelcomePopup = () => {
+                welcomePopup.classList.remove('visible');
+                if (popupTimer) {
+                    clearInterval(popupTimer);
+                }
+                welcomePopupTimer.style.display = 'block';
+            };
+
+            // Welcome Popup Click Handler (redirect to link)
+            const handleWelcomePopupClick = () => {
+                if (popupLinkUrl) {
+                    window.open(popupLinkUrl, '_blank');
+                }
+                closeWelcomePopup();
+            };
+
+            // Close button click
+            welcomePopupClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeWelcomePopup();
+            });
+
+            // Click on popup content (redirect)
+            welcomePopupContent.addEventListener('click', handleWelcomePopupClick);
+
+            // Prevent closing when clicking on close button (already handled)
             
             const copyToClipboard = (text, button) => {
                 const originalText = button.innerHTML;
@@ -837,7 +1273,7 @@
                     trailerContainer.appendChild(trailerBtn);
                 }
                 
-                const botUsername = "Baflix_Bot"; 
+                const botUsername = "Baflix_Movie_Bot"; 
                 const deepLink = `https://t.me/${botUsername}?startapp=movie_${movie.id}`;
 
                 const shareMessage = `🎬 "${movie.title}" দেখুন এখন Baflix-এ!\n\nদেখার জন্য নিচের লিঙ্কে ক্লিক করুন 👇`;
@@ -1015,6 +1451,34 @@
                      if (e.target === modal) closeModal(modal);
                 });
             });
+
+            // User Info Functions
+            window.closeUserInfo = () => {
+                userInfoSection.classList.remove('visible');
+                // Save to localStorage that user has seen the info
+                localStorage.setItem('userInfoShown', 'true');
+            };
+
+            window.copyToClipboard = (elementId) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    const text = element.textContent;
+                    const tempInput = document.createElement('input');
+                    tempInput.value = text;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    
+                    // Show copied feedback
+                    const copyBtn = event.currentTarget;
+                    const originalHTML = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHTML;
+                    }, 2000);
+                }
+            };
             
             const saveOrUpdateTelegramUser = async (user) => {
                 if (!user || !user.id) return;
@@ -1037,7 +1501,22 @@
                         userData.createdAt = serverTimestamp();
                         userData.status = 'active';
                         await setDoc(userDocRef, userData);
+                        
+                        // Show user info section only for first-time users
+                        setTimeout(() => {
+                            if (!localStorage.getItem('userInfoShown')) {
+                                userInfoSection.classList.add('visible');
+                            }
+                        }, 1000);
                     }
+                    
+                    // Update user info in UI
+                    const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                    welcomeUserName.textContent = `Welcome, ${fullName}!`;
+                    userTelegramName.textContent = fullName;
+                    userChatId.textContent = user.id;
+                    userUsername.textContent = user.username ? '@' + user.username : 'No username';
+                    
                 } catch (error) {
                     console.error("Error saving or updating user data:", error);
                 }
@@ -1096,6 +1575,9 @@
                     renderSocialLinks(),
                     setupFilters()
                 ]);
+
+                // Load welcome popup settings
+                await loadWelcomePopupSettings();
 
                 if (tg) {
                     const startParam = tg.initDataUnsafe?.start_param;
