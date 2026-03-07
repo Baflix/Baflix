@@ -1482,7 +1482,7 @@
                 }
             };
             
-            // ========== আপডেটেড ইউজার ট্র্যাকিং ফাংশন (সর্বশেষ) ==========
+            // ========== আপডেটেড ইউজার ট্র্যাকিং ফাংশন (lastActive সহ) ==========
             const saveOrUpdateTelegramUser = async (user) => {
                 if (!user || !user.id) return;
                 
@@ -1492,21 +1492,24 @@
                     const docSnap = await getDoc(userDocRef);
                     const now = new Date();
                     
+                    // Always update lastActive timestamp
                     const userData = {
                         id: user.id,
                         firstName: user.first_name || '',
                         lastName: user.last_name || '',
                         username: user.username || '',
                         lastSeen: serverTimestamp(),
+                        lastActive: serverTimestamp(), // নতুন ফিল্ড: শেষবার সক্রিয় ছিল
                         lastVisit: now.toISOString(),
                         visitCount: increment(1)
                     };
 
                     if (docSnap.exists()) {
+                        // User exists - update their data
                         await updateDoc(userDocRef, userData);
-                        console.log("✅ Existing user updated:", user.id);
+                        console.log("✅ Existing user updated with lastActive:", user.id);
                         
-                        // প্রতি ৫ ভিজিটে একবার ইউজার ইনফো দেখান
+                        // Show user info on every 5th visit
                         const currentVisits = (docSnap.data().visitCount || 0) + 1;
                         if (currentVisits % 5 === 0 && !localStorage.getItem('userInfoShown')) {
                             setTimeout(() => {
@@ -1514,14 +1517,15 @@
                             }, 1000);
                         }
                     } else {
+                        // New user - create with all fields
                         userData.createdAt = serverTimestamp();
                         userData.status = 'active';
                         userData.visitCount = 1;
                         userData.firstVisit = now.toISOString();
                         await setDoc(userDocRef, userData);
-                        console.log("✅ New user created:", user.id);
+                        console.log("✅ New user created with lastActive:", user.id);
                         
-                        // নতুন ইউজার হলে ইউজার ইনফো দেখান
+                        // Show welcome info for new users
                         setTimeout(() => {
                             if (!localStorage.getItem('userInfoShown')) {
                                 userInfoSection.classList.add('visible');
@@ -1529,7 +1533,7 @@
                         }, 1000);
                     }
                     
-                    // UI আপডেট
+                    // Update UI
                     const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
                     if (welcomeUserName) welcomeUserName.textContent = `Welcome, ${fullName}!`;
                     if (userTelegramName) userTelegramName.textContent = fullName;
@@ -1567,7 +1571,7 @@
                     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                         console.log("Telegram user detected:", tg.initDataUnsafe.user);
                         
-                        // ইউজার ট্র্যাক করুন
+                        // ইউজার ট্র্যাক করুন (lastActive সহ)
                         await saveOrUpdateTelegramUser(tg.initDataUnsafe.user);
                         
                         // ভিজিট লগ করুন
