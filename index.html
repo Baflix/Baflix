@@ -225,6 +225,7 @@
 
         const PREMIUM_DURATION_HOURS = 12;
         const BOT_USERNAME = 'BaflixStreamBot';
+        const AD_SITE_URL = 'https://baflix.github.io/Baflix/ad.html';
         let userId = null;
         let isPremiumActive = false;
         let premiumUntil = null;
@@ -398,10 +399,8 @@
                 const now = new Date();
                 const premiumUntilDate = new Date(now.getTime() + (PREMIUM_DURATION_HOURS * 60 * 60 * 1000));
                 
-                // টোকেন তৈরি
                 const token = 'premium_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
                 
-                // ইউজার আপডেট
                 await updateDoc(userRef, {
                     premiumUntil: premiumUntilDate.toISOString(),
                     premiumToken: token,
@@ -409,7 +408,6 @@
                     lastPremiumAt: serverTimestamp()
                 });
                 
-                // টোকেন সেভ
                 await setDoc(doc(db, 'premium_tokens', token), {
                     userId: userId,
                     token: token,
@@ -419,7 +417,6 @@
                     durationHours: PREMIUM_DURATION_HOURS
                 });
                 
-                // লগ
                 await addDoc(collection(db, 'premium_logs'), {
                     userId: userId,
                     token: token,
@@ -433,8 +430,6 @@
                 
                 unlockBtn.innerHTML = '✅ Premium Active';
                 unlockBtn.disabled = true;
-                
-                // Firestore listener auto আপডেট করবে
                 
             } catch (error) {
                 console.error('❌ Error unlocking premium:', error);
@@ -455,7 +450,6 @@
         // ===== INIT =====
         // ============================================
         const init = () => {
-            // URL থেকে userId নিন
             const params = new URLSearchParams(window.location.search);
             userId = params.get('uid');
             
@@ -466,8 +460,6 @@
             }
             
             userIdDisplay.textContent = userId;
-            
-            // প্রিমিয়াম স্ট্যাটাস লিসেন করুন
             listenPremiumStatus(userId);
         };
 
