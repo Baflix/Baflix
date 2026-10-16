@@ -37,7 +37,6 @@
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
-
         img {
             -webkit-user-drag: none;
             user-drag: none;
@@ -64,7 +63,7 @@
             -webkit-user-select: text !important;
         }
 
-        /* ===================== PREMIUM LOADERS ===================== */
+        /* ===================== LOADERS ===================== */
         #initialLoader {
             position: fixed;
             inset: 0;
@@ -132,7 +131,6 @@
             0%, 100% { opacity: 0.4; }
             50% { opacity: 1; }
         }
-
         .skeleton-card {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -172,7 +170,6 @@
             animation: shimmer 1.4s infinite;
         }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
-
         .inline-loader {
             display: flex;
             flex-direction: column;
@@ -209,7 +206,6 @@
             0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
             40% { transform: translateY(-9px); opacity: 1; }
         }
-
         .end-state {
             display: flex;
             flex-direction: column;
@@ -230,26 +226,13 @@
             background: rgba(0,136,204,0.08);
             border: 1px solid rgba(0,136,204,0.25);
         }
-
         .fade-in-card { animation: cardFadeIn 0.45s ease both; }
         @keyframes cardFadeIn {
             from { opacity: 0; transform: translateY(14px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        .search-loader {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            padding: 40px 20px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        /* =====================================================
-           ADMIN TIPS SECTION
-           ===================================================== */
+        /* ===== ADMIN TIPS ===== */
         .admin-tips-container {
             display: none;
             margin-bottom: 18px;
@@ -309,11 +292,7 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
-        .admin-tips-body a {
-            color: #38bdf8;
-            text-decoration: none;
-            font-weight: 600;
-        }
+        .admin-tips-body a { color: #38bdf8; text-decoration: none; font-weight: 600; }
         .admin-tips-body b, .admin-tips-body strong { color: #fbbf24; }
         .admin-tips-body i, .admin-tips-body em { color: #94a3b8; font-style: italic; }
         .admin-tips-body code {
@@ -325,9 +304,7 @@
             color: #38bdf8;
         }
 
-        /* =====================================================
-           REFERRAL TIPS SECTION
-           ===================================================== */
+        /* ===== REFERRAL TIPS ===== */
         .referral-tips-container {
             display: none;
             margin-bottom: 16px;
@@ -399,7 +376,7 @@
             color: #38bdf8;
         }
 
-        /* ===== STICKY HEADER ===== */
+        /* ===== HEADER ===== */
         header {
             position: fixed;
             top: 0;
@@ -476,9 +453,7 @@
             text-align: center;
         }
 
-        /* =====================================================
-           🔥 BOTTOM NAVIGATION BAR (YouTube/Facebook style)
-           ===================================================== */
+        /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -527,18 +502,10 @@
             text-transform: uppercase;
             transition: color 0.25s ease;
         }
-        .nav-tab:hover {
-            color: #cbd5e1;
-        }
-        .nav-tab:active .nav-icon {
-            transform: scale(0.85);
-        }
-        .nav-tab.active {
-            color: var(--accent);
-        }
-        .nav-tab.active .nav-icon {
-            transform: scale(1.1);
-        }
+        .nav-tab:hover { color: #cbd5e1; }
+        .nav-tab:active .nav-icon { transform: scale(0.85); }
+        .nav-tab.active { color: var(--accent); }
+        .nav-tab.active .nav-icon { transform: scale(1.1); }
         .nav-tab.active::before {
             content: "";
             position: absolute;
@@ -550,9 +517,7 @@
             border-radius: 0 0 3px 3px;
             box-shadow: 0 0 12px var(--glow);
         }
-        .nav-tab.premium-tab.active {
-            color: var(--premium);
-        }
+        .nav-tab.premium-tab.active { color: var(--premium); }
         .nav-tab.premium-tab.active::before {
             background: linear-gradient(90deg, transparent, var(--premium), transparent);
             box-shadow: 0 0 12px var(--premium-glow);
@@ -588,12 +553,8 @@
             line-height: 1.3;
         }
 
-        /* =====================================================
-           TAB VIEWS (Home / Premium)
-           ===================================================== */
-        .tab-view {
-            display: none;
-        }
+        /* ===== TAB VIEWS ===== */
+        .tab-view { display: none; }
         .tab-view.active {
             display: block;
             animation: tabFadeIn 0.4s ease;
@@ -631,7 +592,7 @@
             box-shadow: 0 0 10px var(--glow);
         }
 
-        /* ===== SWIPER BANNER ===== */
+        /* ===== SWIPER ===== */
         .slider-section { width: 100%; margin-bottom: 20px; }
         .swiper { width: 100%; padding-top: 10px; padding-bottom: 30px; }
         .swiper-slide {
@@ -680,7 +641,6 @@
             position: relative;
         }
         .poster-container img { width: 100%; height: 100%; object-fit: cover; }
-
         .poster-overlay {
             position: absolute;
             bottom: 0;
@@ -714,7 +674,6 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .movie-badge {
             position: absolute;
             top: 10px;
@@ -770,7 +729,6 @@
             -webkit-touch-callout: none;
         }
         .action-btn.unlocked { background: var(--success); }
-
         .action-btn.loading {
             background: linear-gradient(90deg, #0f2a42 0%, #1a4971 50%, #0f2a42 100%);
             background-size: 200% 100%;
@@ -807,11 +765,7 @@
             color: #ffffff;
             white-space: nowrap;
         }
-        .btn-ad-dots {
-            display: flex;
-            gap: 4px;
-            margin-left: 2px;
-        }
+        .btn-ad-dots { display: flex; gap: 4px; margin-left: 2px; }
         .btn-ad-dots span {
             width: 6px;
             height: 6px;
@@ -828,10 +782,16 @@
             background: #22c55e;
             box-shadow: 0 0 6px #22c55e;
         }
+        .action-btn.blocked {
+            background: linear-gradient(90deg, #3b0f0f, #7f1d1d, #3b0f0f);
+            background-size: 200% 100%;
+            animation: btnShimmer 2s linear infinite;
+            color: #fca5a5;
+            cursor: not-allowed;
+            border: 1px solid rgba(239,68,68,0.35);
+        }
 
-        /* =====================================================
-           PREMIUM TAB (Full section)
-           ===================================================== */
+        /* ===== PREMIUM SECTION ===== */
         .premium-title-large {
             font-size: 22px;
             font-weight: 900;
@@ -854,8 +814,6 @@
             0%, 100% { transform: scale(1) rotate(0deg); }
             50% { transform: scale(1.15) rotate(-5deg); }
         }
-
-        /* Premium Lock Card */
         .premium-lock-card {
             background: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(236,72,153,0.05) 100%);
             border: 2px solid rgba(168,85,247,0.4);
@@ -932,9 +890,7 @@
             align-items: center;
             gap: 6px;
         }
-        .premium-info-pill .value {
-            color: var(--gold);
-        }
+        .premium-info-pill .value { color: var(--gold); }
         .premium-unlock-btn {
             background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
             color: #fff;
@@ -974,7 +930,6 @@
         }
         .premium-tokens-note b { color: var(--gold); }
 
-        /* Premium Active Card (Timer) */
         .premium-active-card {
             background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(236,72,153,0.08) 100%);
             border: 2px solid rgba(168,85,247,0.6);
@@ -1099,8 +1054,6 @@
             line-height: 1.5;
         }
         .premium-active-note b { color: #4ade80; }
-
-        /* Premium Content Grid */
         .premium-content-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -1123,199 +1076,496 @@
             opacity: 0.6;
         }
 
-        /* ===================== AD BLOCK MODAL ===================== */
-        .adblock-modal-overlay {
+        /* ===== REFERRAL VIEW ===== */
+        #referralView {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 5000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .adblock-modal-overlay.active { display: flex; }
-        .adblock-modal-box {
-            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            border-radius: 18px;
-            padding: 26px 22px 22px;
-            max-width: 400px;
+            top: 0;
+            left: 0;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            text-align: center;
+            height: 100%;
+            background: var(--bg);
+            z-index: 1100;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
         }
-        .adblock-icon { font-size: 46px; margin-bottom: 10px; }
-        .adblock-title {
-            font-size: 19px;
-            font-weight: 800;
-            color: #f87171;
-            margin-bottom: 12px;
+        #referralView.active { display: flex; }
+        .referral-header {
+            position: sticky;
+            top: 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 10;
+            min-height: var(--header-height);
         }
-        .adblock-desc {
-            font-size: 13.5px;
-            color: #cbd5e1;
-            line-height: 1.7;
-            margin-bottom: 18px;
-            text-align: left;
-        }
-        .adblock-list {
-            list-style: none;
-            margin: 10px 0;
-            background: rgba(0,0,0,0.25);
-            border-radius: 10px;
-            padding: 12px 14px;
-            border-left: 3px solid #ef4444;
-        }
-        .adblock-list li {
-            font-size: 12.5px;
-            color: #94a3b8;
-            padding: 4px 0;
-        }
-        .adblock-actions { display: flex; gap: 10px; margin-top: 6px; }
-        .adblock-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
+        .referral-header-title {
+            flex-grow: 1;
+            font-size: 18px;
             font-weight: 700;
-            cursor: pointer;
-            border: none;
-        }
-        .adblock-btn.retry { background: var(--accent); color: white; }
-        .adblock-btn.close {
-            background: rgba(255,255,255,0.06);
-            color: #94a3b8;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .action-btn.blocked {
-            background: linear-gradient(90deg, #3b0f0f, #7f1d1d, #3b0f0f);
-            background-size: 200% 100%;
-            animation: btnShimmer 2s linear infinite;
-            color: #fca5a5;
-            cursor: not-allowed;
-            border: 1px solid rgba(239,68,68,0.35);
-        }
-
-        /* Premium Unlock Modal */
-        .premium-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(10px);
-            z-index: 5500;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: modalFadeIn 0.3s ease;
-        }
-        .premium-modal-overlay.active { display: flex; }
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .premium-modal-box {
-            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
-            border: 2px solid rgba(168, 85, 247, 0.5);
-            border-radius: 20px;
-            padding: 26px 22px 22px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(168,85,247,0.4);
-            text-align: center;
-            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes modalPop {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .premium-modal-icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 0 20px rgba(168,85,247,0.8));
-            animation: lockBounce 2s ease-in-out infinite;
-        }
-        .premium-modal-title {
-            font-size: 20px;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
+            background: linear-gradient(180deg, #ffffff 0%, #f59e0b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
         }
-        .premium-modal-subtitle {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-bottom: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .close-referral {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px 8px;
         }
-        .premium-modal-info {
-            background: rgba(0,0,0,0.4);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 18px;
-            text-align: left;
-            border-left: 3px solid #a855f7;
-        }
-        .premium-modal-info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 13px;
-            border-bottom: 1px solid rgba(168,85,247,0.15);
-        }
-        .premium-modal-info-row:last-child { border-bottom: none; }
-        .premium-modal-info-row .label { color: #94a3b8; }
-        .premium-modal-info-row .value { color: #fff; font-weight: 700; }
-        .premium-modal-info-row .value.gold { color: #f59e0b; }
-        .premium-modal-info-row .value.green { color: #22c55e; }
-        .premium-modal-info-row .value.red { color: #ef4444; }
-        .premium-modal-actions {
+        .referral-wrapper { padding: 16px; }
+        .referral-stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 18px;
         }
-        .premium-modal-btn {
-            padding: 13px;
-            border-radius: 10px;
+        .referral-stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 18px 14px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .referral-stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+        .referral-stat-card.coins::before {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+        .referral-stat-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .referral-stat-value {
+            font-size: 26px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+        .referral-stat-card.coins .referral-stat-value { color: var(--gold); }
+        .referral-stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .section-subtitle {
             font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .milestone-list { display: flex; flex-direction: column; gap: 12px; }
+        .milestone-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .milestone-card.claimed {
+            background: linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(34,197,94,0.02) 100%);
+            border-color: rgba(34,197,94,0.4);
+        }
+        .milestone-card.completed {
+            background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.02) 100%);
+            border-color: rgba(245,158,11,0.5);
+            box-shadow: 0 0 20px rgba(245,158,11,0.2);
+            animation: milestoneGlow 2s ease-in-out infinite;
+        }
+        @keyframes milestoneGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(245,158,11,0.2); }
+            50% { box-shadow: 0 0 30px rgba(245,158,11,0.5); }
+        }
+        .milestone-top-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .milestone-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            background: rgba(245,158,11,0.15);
+            border: 1px solid rgba(245,158,11,0.3);
+        }
+        .milestone-card.claimed .milestone-icon {
+            background: rgba(34,197,94,0.15);
+            border-color: rgba(34,197,94,0.3);
+        }
+        .milestone-card.completed .milestone-icon {
+            background: rgba(245,158,11,0.25);
+            border-color: rgba(245,158,11,0.6);
+            animation: iconPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .milestone-info { flex-grow: 1; min-width: 0; }
+        .milestone-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .milestone-progress-text {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .milestone-progress-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .milestone-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .milestone-card.claimed .milestone-progress-fill {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+        .milestone-reward {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .milestone-coins {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+            justify-content: flex-end;
+        }
+        .milestone-claim-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
             border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .milestone-claimed-badge {
+            background: rgba(34,197,94,0.2);
+            color: #22c55e;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .milestone-locked-badge {
+            background: rgba(148,163,184,0.15);
+            color: var(--muted);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .milestone-share-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(245,158,11,0.25);
+        }
+        .milestone-card.claimed .milestone-share-row {
+            border-top-color: rgba(34,197,94,0.25);
+        }
+        .milestone-share-btn {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             font-family: inherit;
             transition: 0.2s;
         }
-        .premium-modal-btn.buy {
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(168,85,247,0.5);
+        .milestone-share-btn.copy {
+            background: rgba(0,136,204,0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(0,136,204,0.4);
         }
-        .premium-modal-btn.buy:hover:not(:disabled) {
+        .milestone-share-btn.copy:hover {
+            background: #38bdf8;
+            color: #fff;
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(168,85,247,0.7);
         }
-        .premium-modal-btn.buy:disabled {
-            background: #475569;
-            color: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .premium-modal-btn.cancel {
-            background: rgba(255,255,255,0.06);
-            color: #94a3b8;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .premium-modal-btn.cancel:hover {
-            background: rgba(255,255,255,0.12);
+        .milestone-share-btn.share {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: #fff;
+        }
+        .milestone-share-btn.share:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(245,158,11,0.4);
+        }
+        .empty-milestones {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--muted);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px dashed rgba(255,255,255,0.08);
+            font-size: 13px;
+            line-height: 1.7;
         }
 
-        /* ===== SEARCH OVERLAY ===== */
+        /* ===== RECENT REFERRALS ===== */
+        .recent-referrals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .referral-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: referralSlideIn 0.4s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+        .referral-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #22c55e, #16a34a);
+            border-radius: 3px 0 0 3px;
+        }
+        .referral-item.new-highlight {
+            border-color: rgba(34,197,94,0.8);
+            background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.02));
+            animation: newReferralPulse 2s ease-in-out;
+        }
+        @keyframes referralSlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes newReferralPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(34,197,94,0.3); }
+            50% { box-shadow: 0 0 30px rgba(34,197,94,0.6); }
+        }
+        .referral-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(34,197,94,0.4);
+            overflow: hidden;
+        }
+        .referral-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .referral-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .referral-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .referral-username {
+            font-size: 11px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .referral-time {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 2px;
+            display: block;
+        }
+        .referral-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(34,197,94,0.4);
+        }
+        .empty-referrals {
+            text-align: center;
+            padding: 24px 20px;
+            color: var(--muted);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px dashed rgba(34,197,94,0.3);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        .empty-referrals .empty-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+        .live-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            animation: liveDotPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes liveDotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+        }
+
+        /* ===== FLOATING NOTIFICATION ===== */
+        .referral-notification {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-200%);
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            padding: 14px 20px 14px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 5000;
+            box-shadow: 0 10px 40px rgba(34,197,94,0.5), 0 0 30px rgba(34,197,94,0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 90%;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .referral-notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .referral-notification-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.4);
+            overflow: hidden;
+        }
+        .referral-notification-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .referral-notification-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        .referral-notification-title {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .referral-notification-sub {
+            font-size: 11px;
+            opacity: 0.95;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .referral-notification-sub b { color: #fff; font-weight: 900; }
+
+        /* ===== SEARCH VIEW ===== */
         #searchView {
             position: fixed;
             top: 0;
@@ -1403,8 +1653,17 @@
             background: var(--card-bg);
             border-radius: var(--radius);
         }
+        .search-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 13px;
+        }
 
-        /* ===== HISTORY OVERLAY ===== */
+        /* ===== HISTORY VIEW ===== */
         #historyView {
             position: fixed;
             top: 0;
@@ -1521,294 +1780,187 @@
             margin-bottom: 10px;
         }
 
-        /* =====================================================
-           REFERRAL VIEW
-           ===================================================== */
-        #referralView {
+        /* ===== MODALS ===== */
+        .adblock-modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            z-index: 1100;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
             display: none;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        #referralView.active { display: flex; }
-        .referral-header {
-            position: sticky;
-            top: 0;
-            display: flex;
-            gap: 10px;
             align-items: center;
-            padding: 12px 16px;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            z-index: 10;
-            min-height: var(--header-height);
+            justify-content: center;
+            padding: 20px;
         }
-        .referral-header-title {
-            flex-grow: 1;
-            font-size: 18px;
+        .adblock-modal-overlay.active { display: flex; }
+        .adblock-modal-box {
+            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 18px;
+            padding: 26px 22px 22px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            text-align: center;
+        }
+        .adblock-icon { font-size: 46px; margin-bottom: 10px; }
+        .adblock-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #f87171;
+            margin-bottom: 12px;
+        }
+        .adblock-desc {
+            font-size: 13.5px;
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .adblock-list {
+            list-style: none;
+            margin: 10px 0;
+            background: rgba(0,0,0,0.25);
+            border-radius: 10px;
+            padding: 12px 14px;
+            border-left: 3px solid #ef4444;
+        }
+        .adblock-list li {
+            font-size: 12.5px;
+            color: #94a3b8;
+            padding: 4px 0;
+        }
+        .adblock-actions { display: flex; gap: 10px; margin-top: 6px; }
+        .adblock-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 700;
-            background: linear-gradient(180deg, #ffffff 0%, #f59e0b 100%);
+            cursor: pointer;
+            border: none;
+        }
+        .adblock-btn.retry { background: var(--accent); color: white; }
+        .adblock-btn.close {
+            background: rgba(255,255,255,0.06);
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .premium-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(10px);
+            z-index: 5500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: modalFadeIn 0.3s ease;
+        }
+        .premium-modal-overlay.active { display: flex; }
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .premium-modal-box {
+            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            border-radius: 20px;
+            padding: 26px 22px 22px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(168,85,247,0.4);
+            text-align: center;
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .premium-modal-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 20px rgba(168,85,247,0.8));
+            animation: lockBounce 2s ease-in-out infinite;
+        }
+        .premium-modal-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
         }
-        .close-referral {
-            background: none;
-            border: none;
-            color: var(--muted);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px 8px;
-        }
-        .referral-wrapper { padding: 16px; }
-
-        .referral-stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .premium-modal-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
             margin-bottom: 18px;
-        }
-        .referral-stat-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 18px 14px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.06);
-            position: relative;
-            overflow: hidden;
-        }
-        .referral-stat-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-        }
-        .referral-stat-card.coins::before {
-            background: linear-gradient(90deg, #22c55e, #4ade80);
-        }
-        .referral-stat-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .referral-stat-value {
-            font-size: 26px;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 4px;
-            line-height: 1;
-        }
-        .referral-stat-card.coins .referral-stat-value {
-            color: var(--gold);
-        }
-        .referral-stat-label {
-            font-size: 11px;
-            color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
         }
-
-        .section-subtitle {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 12px;
+        .premium-modal-info {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 18px;
+            text-align: left;
+            border-left: 3px solid #a855f7;
+        }
+        .premium-modal-info-row {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(168,85,247,0.15);
         }
-
-        .milestone-list { display: flex; flex-direction: column; gap: 12px; }
-        .milestone-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 16px;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .milestone-card.claimed {
-            background: linear-gradient(135deg, rgba(34,197,94,0.1) 0%, rgba(34,197,94,0.02) 100%);
-            border-color: rgba(34,197,94,0.4);
-        }
-        .milestone-card.completed {
-            background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.02) 100%);
-            border-color: rgba(245,158,11,0.5);
-            box-shadow: 0 0 20px rgba(245,158,11,0.2);
-            animation: milestoneGlow 2s ease-in-out infinite;
-        }
-        @keyframes milestoneGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(245,158,11,0.2); }
-            50% { box-shadow: 0 0 30px rgba(245,158,11,0.5); }
-        }
-        
-        .milestone-top-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-        .milestone-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-            background: rgba(245,158,11,0.15);
-            border: 1px solid rgba(245,158,11,0.3);
-        }
-        .milestone-card.claimed .milestone-icon {
-            background: rgba(34,197,94,0.15);
-            border-color: rgba(34,197,94,0.3);
-        }
-        .milestone-card.completed .milestone-icon {
-            background: rgba(245,158,11,0.25);
-            border-color: rgba(245,158,11,0.6);
-            animation: iconPulse 1.5s ease-in-out infinite;
-        }
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        .milestone-info { flex-grow: 1; min-width: 0; }
-        .milestone-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .milestone-progress-text {
-            font-size: 11px;
-            color: var(--muted);
-            margin-bottom: 6px;
-        }
-        .milestone-progress-bar {
-            width: 100%;
-            height: 5px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .milestone-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-        .milestone-card.claimed .milestone-progress-fill {
-            background: linear-gradient(90deg, #22c55e, #4ade80);
-        }
-        .milestone-reward {
-            text-align: right;
-            flex-shrink: 0;
-        }
-        .milestone-coins {
-            font-size: 16px;
-            font-weight: 900;
-            color: var(--gold);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 4px;
-            justify-content: flex-end;
-        }
-        .milestone-claim-btn {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-        .milestone-claimed-badge {
-            background: rgba(34,197,94,0.2);
-            color: #22c55e;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-        .milestone-locked-badge {
-            background: rgba(148,163,184,0.15);
-            color: var(--muted);
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .milestone-share-row {
+        .premium-modal-info-row:last-child { border-bottom: none; }
+        .premium-modal-info-row .label { color: #94a3b8; }
+        .premium-modal-info-row .value { color: #fff; font-weight: 700; }
+        .premium-modal-info-row .value.gold { color: #f59e0b; }
+        .premium-modal-info-row .value.green { color: #22c55e; }
+        .premium-modal-info-row .value.red { color: #ef4444; }
+        .premium-modal-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            padding-top: 12px;
-            border-top: 1px dashed rgba(245,158,11,0.25);
+            gap: 10px;
         }
-        .milestone-card.claimed .milestone-share-row {
-            border-top-color: rgba(34,197,94,0.25);
-        }
-        .milestone-share-btn {
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            font-size: 12px;
-            font-weight: 700;
+        .premium-modal-btn {
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 800;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            border: none;
             font-family: inherit;
             transition: 0.2s;
         }
-        .milestone-share-btn.copy {
-            background: rgba(0,136,204,0.15);
-            color: #38bdf8;
-            border: 1px solid rgba(0,136,204,0.4);
-        }
-        .milestone-share-btn.copy:hover {
-            background: #38bdf8;
+        .premium-modal-btn.buy {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
             color: #fff;
-            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(168,85,247,0.5);
         }
-        .milestone-share-btn.share {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        .premium-modal-btn.buy:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(168,85,247,0.7);
+        }
+        .premium-modal-btn.buy:disabled {
+            background: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .premium-modal-btn.cancel {
+            background: rgba(255,255,255,0.06);
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .premium-modal-btn.cancel:hover {
+            background: rgba(255,255,255,0.12);
             color: #fff;
-        }
-        .milestone-share-btn.share:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(245,158,11,0.4);
-        }
-
-        .empty-milestones {
-            text-align: center;
-            padding: 30px 20px;
-            color: var(--muted);
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            border: 1px dashed rgba(255,255,255,0.08);
-            font-size: 13px;
-            line-height: 1.7;
         }
 
         /* ===== TOAST ===== */
@@ -1900,12 +2052,8 @@
         </div>
     </header>
 
-    <!-- =====================================================
-         TAB VIEW: HOME
-         ===================================================== -->
+    <!-- TAB VIEW: HOME -->
     <div id="homeTab" class="tab-view active">
-        
-        <!-- ADMIN TIPS -->
         <div class="admin-tips-container" id="adminTipsContainer">
             <div class="admin-tips-card">
                 <div class="admin-tips-header">
@@ -1937,9 +2085,7 @@
         </div>
     </div>
 
-    <!-- =====================================================
-         TAB VIEW: PREMIUM
-         ===================================================== -->
+    <!-- TAB VIEW: PREMIUM -->
     <div id="premiumTab" class="tab-view">
         <div class="premium-title-large">
             <span class="crown">👑</span>
@@ -1948,9 +2094,7 @@
         <div id="premiumContentContainer"></div>
     </div>
 
-    <!-- =====================================================
-         BOTTOM NAVIGATION BAR
-         ===================================================== -->
+    <!-- BOTTOM NAV -->
     <nav class="bottom-nav" id="bottomNav">
         <button class="nav-tab active" data-tab="home" id="navHomeBtn">
             <span class="nav-icon">🏠</span>
@@ -2041,6 +2185,20 @@
                 </div>
             </div>
 
+            <div class="section-subtitle" style="margin-top: 24px;">
+                📜 Recent Referrals
+                <span class="live-badge" id="liveBadge" style="display: none;">
+                    <span class="live-dot"></span> LIVE
+                </span>
+            </div>
+            <div class="recent-referrals-list" id="recentReferralsList">
+                <div class="empty-referrals">
+                    <span class="empty-icon">👥</span>
+                    No referrals yet.<br>
+                    <span style="font-size:11px; opacity:0.7;">Share your link to start earning!</span>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -2116,6 +2274,8 @@
         const UNLOCK_VALIDITY_MS = UNLOCK_VALIDITY_MINUTES * 60 * 1000;
         const SESSION_STORAGE_KEY = "tgmaster_session_id";
         const BOT_LINK = "https://t.me/TGmasterTVbot";
+        const MIN_ACTIVITY_MS = 5000;
+        const REFERRAL_VERIFY_KEY = "tgmaster_verified_referrals";
 
         let SESSION_ID = sessionStorage.getItem(SESSION_STORAGE_KEY);
         if (!SESSION_ID) {
@@ -2123,9 +2283,9 @@
             sessionStorage.setItem(SESSION_STORAGE_KEY, SESSION_ID);
         }
 
-        // =====================================================
-        // TELEGRAM USER DETECTION
-        // =====================================================
+        /* =====================================================
+           TELEGRAM USER DETECTION
+           ===================================================== */
         let userId = "guest_user";
         let tg = null;
         let tgUserData = null;
@@ -2150,7 +2310,7 @@
                 tgUserData = u;
                 startParam = tg.initDataUnsafe?.start_param || null;
                 IS_TELEGRAM_ENV = true;
-                console.log("✅ [TG] User:", userId, u.first_name);
+                console.log("✅ [TG] User:", userId, u.first_name, "| start_param:", startParam);
                 return true;
             }
             return false;
@@ -2168,10 +2328,11 @@
                 if (detected) {
                     clearInterval(retryInterval);
                     console.log("✅ [TG] User detected on retry", retries);
-                    if (!referralInitStarted) initReferralSystem();
-                    initPremiumSystem();
+                    runStartupSystems();
                 } else if (retries >= maxRetries) {
                     clearInterval(retryInterval);
+                    console.warn("⚠️ [TG] Max retries reached. Running as guest.");
+                    
                     const container = document.getElementById("milestoneContainer");
                     if (container) {
                         container.innerHTML = `
@@ -2180,8 +2341,46 @@
                                 <span style="font-size:11px; opacity:0.7;">Referral system শুধু Telegram Mini App-এ কাজ করে।</span>
                             </div>`;
                     }
+                    
+                    const refContainer = document.getElementById("recentReferralsList");
+                    if (refContainer) {
+                        refContainer.innerHTML = `
+                            <div class="empty-referrals">
+                                <span class="empty-icon">⚠️</span>
+                                Telegram-এ খুলুন<br>
+                                <span style="font-size:11px; opacity:0.7;">Referral tracking শুধু Mini App-এ কাজ করে।</span>
+                            </div>`;
+                    }
+                    
+                    // Still load tips and movies
+                    startTipsListener();
+                    loadMovies();
+                    hideInitialLoader();
                 }
             }, 500);
+        } else {
+            // Detected immediately
+            setTimeout(runStartupSystems, 300);
+        }
+
+        function runStartupSystems() {
+            console.log("🚀 [Startup] Running all systems...");
+            
+            // 1. Start tips
+            startTipsListener();
+            
+            // 2. Load movies
+            loadMovies();
+            
+            // 3. Init referral (auto-detects start_param)
+            if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
+                initReferralSystem();
+            }
+            
+            // 4. Init premium
+            if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
+                initPremiumSystem();
+            }
         }
 
         /* =====================================================
@@ -2202,17 +2401,15 @@
         }, false);
 
         /* =====================================================
-           🔥 BOTTOM NAVIGATION TABS
+           BOTTOM NAVIGATION
            ===================================================== */
         function switchBottomTab(tabName) {
-            console.log("🔄 [Tab] Switching to:", tabName);
+            console.log("🔄 [Tab]", tabName);
 
-            // Update nav buttons
             document.querySelectorAll(".nav-tab").forEach(btn => {
                 btn.classList.toggle("active", btn.dataset.tab === tabName);
             });
 
-            // Update tab views
             document.querySelectorAll(".tab-view").forEach(view => {
                 view.classList.remove("active");
             });
@@ -2226,14 +2423,11 @@
                 renderPremiumSection();
             }
 
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
         document.getElementById("navHomeBtn").addEventListener("click", () => switchBottomTab("home"));
-        document.getElementById("navReferralBtn").addEventListener("click", () => {
-            openReferralView();
-        });
+        document.getElementById("navReferralBtn").addEventListener("click", () => openReferralView());
         document.getElementById("navPremiumBtn").addEventListener("click", () => switchBottomTab("premium"));
 
         /* =====================================================
@@ -2310,7 +2504,7 @@
         }
 
         /* =====================================================
-           REFERRAL SYSTEM
+           REFERRAL SYSTEM (100% RELIABLE)
            ===================================================== */
         let referralData = {
             code: "",
@@ -2323,7 +2517,18 @@
         let currentReferralLink = "";
         let referralUnsubscribe = null;
         let milestonesUnsubscribe = null;
+        let recentReferralsUnsub = null;
         let referralInitStarted = false;
+
+        // Activity verification
+        let userActivityStartTime = Date.now();
+        let activityVerified = false;
+        let pendingReferralId = null;
+        let referralProcessing = false;
+
+        // Recent referrals tracking
+        let lastSeenReferralIds = new Set();
+        let initialReferralLoad = true;
 
         function generateReferralCode() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -2332,10 +2537,148 @@
             return code;
         }
 
+        // STEP 1: Detect referral from start_param
+        function detectReferralFromStartParam() {
+            if (!startParam || !startParam.startsWith("ref_")) {
+                console.log("ℹ️ [Referral] No referral param");
+                return;
+            }
+
+            const referrerId = startParam.substring(4).trim();
+            
+            console.log("🎁 [Referral] Detected:", referrerId);
+            
+            if (!referrerId) return;
+            if (referrerId === userId) {
+                console.warn("⚠️ [Referral] Self-referral blocked");
+                return;
+            }
+            if (!/^\d+$/.test(referrerId)) {
+                console.warn("⚠️ [Referral] Invalid referrer format");
+                return;
+            }
+            if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) {
+                console.warn("⚠️ [Referral] Invalid user");
+                return;
+            }
+
+            // Check session cache
+            try {
+                const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
+                if (verifiedSet.includes(referrerId)) {
+                    console.log("ℹ️ [Referral] Already verified this session");
+                    return;
+                }
+            } catch (e) {}
+
+            pendingReferralId = referrerId;
+            userActivityStartTime = Date.now();
+            
+            // Start verification after 5s
+            setTimeout(verifyAndProcessReferral, MIN_ACTIVITY_MS + 500);
+        }
+
+        // STEP 2: Verify user is real (active for 5+ seconds)
+        async function verifyAndProcessReferral() {
+            if (!pendingReferralId || referralProcessing) return;
+
+            const timeSpent = Date.now() - userActivityStartTime;
+            console.log(`⏱️ [Activity] ${timeSpent}ms / ${MIN_ACTIVITY_MS}ms`);
+
+            if (timeSpent < MIN_ACTIVITY_MS) {
+                setTimeout(verifyAndProcessReferral, MIN_ACTIVITY_MS - timeSpent + 500);
+                return;
+            }
+
+            activityVerified = true;
+            console.log("✅ [Activity] Verified!");
+            
+            await processVerifiedReferral(pendingReferralId);
+        }
+
+        // STEP 3: Process referral
+        async function processVerifiedReferral(referrerId) {
+            if (!referrerId || referralProcessing) return;
+            referralProcessing = true;
+
+            try {
+                console.log("🎁 [Referral] Processing:", referrerId, "←", userId);
+
+                const newUserRef = doc(db, "telegramUsers", userId);
+                const newUserSnap = await getDoc(newUserRef);
+                const newUserData = newUserSnap.exists() ? newUserSnap.data() : {};
+
+                if (newUserData.referredBy) {
+                    console.log("ℹ️ [Referral] Already referred");
+                    referralProcessing = false;
+                    return;
+                }
+
+                const referrerRef = doc(db, "telegramUsers", referrerId);
+                const referrerSnap = await getDoc(referrerRef);
+                
+                if (!referrerSnap.exists()) {
+                    console.warn("⚠️ [Referral] Referrer not found");
+                    referralProcessing = false;
+                    return;
+                }
+
+                const referrerData = referrerSnap.data();
+                const newUserName = `${tgUserData?.first_name || ""} ${tgUserData?.last_name || ""}`.trim() || "User";
+                const newUserUsername = tgUserData?.username || "";
+                const newUserPhotoUrl = tgUserData?.photo_url || "";
+
+                // 1. Mark new user
+                await updateDoc(newUserRef, {
+                    referredBy: referrerId,
+                    referredAt: serverTimestamp(),
+                    referralVerified: true,
+                    activityVerifiedAt: serverTimestamp()
+                });
+
+                // 2. Increment referrer
+                await updateDoc(referrerRef, {
+                    referralCount: increment(1)
+                });
+
+                // 3. Log event
+                await addDoc(collection(db, "referralEvents"), {
+                    referrerId: referrerId,
+                    referrerName: `${referrerData.firstName || ""} ${referrerData.lastName || ""}`.trim(),
+                    newUserId: userId,
+                    newUserName: newUserName,
+                    newUserUsername: newUserUsername,
+                    newUserPhotoUrl: newUserPhotoUrl,
+                    verified: true,
+                    verifiedAt: serverTimestamp(),
+                    timestamp: serverTimestamp(),
+                    timestampMs: Date.now()
+                });
+
+                // 4. Cache
+                try {
+                    const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
+                    verifiedSet.push(referrerId);
+                    sessionStorage.setItem(REFERRAL_VERIFY_KEY, JSON.stringify(verifiedSet));
+                } catch (e) {}
+
+                showToast("🎉 Welcome! Referral activated.", "success", 4000);
+                console.log("✅ [Referral] Complete!");
+
+            } catch (e) {
+                console.error("❌ [Referral] Error:", e);
+            } finally {
+                referralProcessing = false;
+            }
+        }
+
+        // STEP 4: Init referral system
         async function initReferralSystem() {
             if (referralInitStarted) return;
             if (!userId || userId === "guest_user") return;
             referralInitStarted = true;
+
+            console.log("🎁 [Referral] Init...");
 
             try {
                 const userRef = doc(db, "telegramUsers", userId);
@@ -2344,7 +2687,7 @@
 
                 if (!snap.exists() || !data.referralCode) {
                     const newCode = data.referralCode || generateReferralCode();
-                    const userPayload = {
+                    const payload = {
                         userId: userId,
                         referralCode: newCode,
                         referralCount: data.referralCount || 0,
@@ -2360,23 +2703,14 @@
                         status: "active"
                     };
                     if (!snap.exists()) {
-                        userPayload.firstVisit = serverTimestamp();
-                        userPayload.createdAt = serverTimestamp();
-                        userPayload.totalOpens = 1;
+                        payload.firstVisit = serverTimestamp();
+                        payload.createdAt = serverTimestamp();
+                        payload.totalOpens = 1;
                     } else {
-                        userPayload.totalOpens = increment(1);
+                        payload.totalOpens = increment(1);
                     }
-                    await setDoc(userRef, userPayload, { merge: true });
+                    await setDoc(userRef, payload, { merge: true });
                     data.referralCode = newCode;
-                }
-
-                if (startParam && startParam.startsWith("ref_")) {
-                    const referrerId = startParam.substring(4);
-                    if (referrerId && referrerId !== userId && !data.referredBy && /^\d+$/.test(referrerId)) {
-                        await processReferralJoin(referrerId, userId);
-                        const newSnap = await getDoc(userRef);
-                        data = newSnap.data() || data;
-                    }
                 }
 
                 referralData = {
@@ -2389,6 +2723,7 @@
 
                 updateReferralUI();
 
+                // User doc listener
                 if (referralUnsubscribe) referralUnsubscribe();
                 referralUnsubscribe = onSnapshot(userRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -2400,12 +2735,19 @@
                             claimedMilestones: d.claimedMilestones || [],
                             referredBy: d.referredBy || null
                         };
+                        console.log("🔄 [Referral] Live:", referralData);
                         updateReferralUI();
                         updatePremiumModalIfOpen();
                     }
+                }, (err) => {
+                    console.error("❌ [Referral] Listener error:", err);
                 });
 
                 startMilestonesListener();
+                startRecentReferralsListener();
+
+                // Check for referral in start_param
+                detectReferralFromStartParam();
 
             } catch (e) {
                 console.error("❌ [Referral] Init error:", e);
@@ -2414,38 +2756,7 @@
             }
         }
 
-        async function processReferralJoin(referrerId, newUserId) {
-            try {
-                const referrerRef = doc(db, "telegramUsers", referrerId);
-                const referrerSnap = await getDoc(referrerRef);
-                if (!referrerSnap.exists()) return;
-
-                const referrerData = referrerSnap.data();
-
-                await updateDoc(doc(db, "telegramUsers", newUserId), {
-                    referredBy: referrerId,
-                    referredAt: serverTimestamp()
-                });
-
-                await updateDoc(referrerRef, {
-                    referralCount: increment(1)
-                });
-
-                await addDoc(collection(db, "referralEvents"), {
-                    referrerId: referrerId,
-                    newUserId: newUserId,
-                    referrerName: referrerData.firstName || "",
-                    newUserName: tgUserData?.first_name || "",
-                    timestamp: serverTimestamp()
-                });
-
-                showToast("🎉 Referral link used successfully!", "success", 3000);
-
-            } catch (e) {
-                console.error("❌ [Referral] Process error:", e);
-            }
-        }
-
+        // STEP 5: Milestones listener
         function startMilestonesListener() {
             if (milestonesUnsubscribe) milestonesUnsubscribe();
 
@@ -2463,22 +2774,231 @@
                     snap.forEach(d => referralMilestones.push({ id: d.id, ...d.data() }));
                     referralMilestones.sort((a, b) => (a.target || 0) - (b.target || 0));
                     renderMilestones();
-                }, (err2) => {
-                    referralMilestones = [];
-                    renderMilestones();
                 });
             });
         }
 
+        // STEP 6: Recent referrals listener
+        function startRecentReferralsListener() {
+            if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
+            if (recentReferralsUnsub) recentReferralsUnsub();
+
+            console.log("📜 [Recent Referrals] Starting...");
+
+            const q1 = query(
+                collection(db, "referralEvents"),
+                where("referrerId", "==", userId),
+                orderBy("timestamp", "desc"),
+                limit(20)
+            );
+
+            recentReferralsUnsub = onSnapshot(q1, 
+                (snap) => handleReferralEventsSnapshot(snap),
+                (err) => {
+                    console.warn("⚠️ [Recent Referrals] Fallback:", err.message);
+                    const q2 = query(
+                        collection(db, "referralEvents"),
+                        where("referrerId", "==", userId),
+                        limit(20)
+                    );
+                    if (recentReferralsUnsub) recentReferralsUnsub();
+                    recentReferralsUnsub = onSnapshot(q2, (snap) => {
+                        const events = [];
+                        snap.forEach(d => events.push({ id: d.id, ...d.data() }));
+                        events.sort((a, b) => {
+                            const at = a.timestampMs || (a.timestamp?.seconds * 1000) || 0;
+                            const bt = b.timestampMs || (b.timestamp?.seconds * 1000) || 0;
+                            return bt - at;
+                        });
+                        handleReferralEvents(events);
+                    });
+                }
+            );
+        }
+
+        function handleReferralEventsSnapshot(snap) {
+            const events = [];
+            snap.forEach(d => events.push({ id: d.id, ...d.data() }));
+            handleReferralEvents(events);
+        }
+
+        function handleReferralEvents(events) {
+            console.log(`📜 [Recent Referrals] ${events.length} referrals`);
+            
+            if (!initialReferralLoad) {
+                // Check for NEW referrals
+                events.forEach(event => {
+                    if (!lastSeenReferralIds.has(event.id)) {
+                        console.log("🎉 [NEW Referral]:", event);
+                        showReferralNotification(
+                            event.newUserName || "New User",
+                            event.newUserPhotoUrl || "",
+                            event.newUserUsername || ""
+                        );
+                        fireConfetti();
+                        playNotificationSound();
+                        lastSeenReferralIds.add(event.id);
+                    }
+                });
+            } else {
+                events.forEach(event => lastSeenReferralIds.add(event.id));
+                initialReferralLoad = false;
+            }
+            
+            renderRecentReferrals(events);
+        }
+
+        // STEP 7: Render recent referrals
+        function renderRecentReferrals(referrals) {
+            const container = document.getElementById("recentReferralsList");
+            if (!container) return;
+
+            const liveBadge = document.getElementById("liveBadge");
+            if (liveBadge) liveBadge.style.display = "inline-flex";
+
+            if (referrals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-referrals">
+                        <span class="empty-icon">👥</span>
+                        No referrals yet.<br>
+                        <span style="font-size:11px; opacity:0.7;">Share your link to start earning!</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = "";
+            referrals.forEach((ref, idx) => {
+                const name = ref.newUserName || "User";
+                const username = ref.newUserUsername ? "@" + ref.newUserUsername : "No username";
+                const photoUrl = ref.newUserPhotoUrl || "";
+                const timeMs = ref.timestampMs || (ref.timestamp?.toMillis ? ref.timestamp.toMillis() : (ref.timestamp?.seconds * 1000 || 0));
+                const avatarLetter = name.charAt(0).toUpperCase();
+                
+                const item = document.createElement("div");
+                item.className = "referral-item";
+                
+                if (idx === 0 && !initialReferralLoad) {
+                    item.classList.add("new-highlight");
+                }
+                
+                let avatarHTML;
+                if (photoUrl && photoUrl.startsWith("http")) {
+                    avatarHTML = `<div class="referral-avatar"><img src="${photoUrl}" alt="${name}" onerror="this.parentElement.innerHTML='${avatarLetter}'"></div>`;
+                } else {
+                    avatarHTML = `<div class="referral-avatar">${avatarLetter}</div>`;
+                }
+                
+                item.innerHTML = `
+                    ${avatarHTML}
+                    <div class="referral-info">
+                        <div class="referral-name">${escapeHTML(name)}</div>
+                        <div class="referral-username">${escapeHTML(username)}</div>
+                        <span class="referral-time">🕐 ${getTimeAgo(timeMs)}</span>
+                    </div>
+                    <div class="referral-badge">✅ +1</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function escapeHTML(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function getTimeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return "Just now";
+            if (mins < 60) return `${mins} min ago`;
+            const hours = Math.floor(mins / 60);
+            if (hours < 24) return `${hours} hr ago`;
+            const days = Math.floor(hours / 24);
+            if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
+            const months = Math.floor(days / 30);
+            return `${months} month${months > 1 ? 's' : ''} ago`;
+        }
+
+        // STEP 8: Show notification
+        function showReferralNotification(name, photoUrl, username) {
+            const notification = document.createElement("div");
+            notification.className = "referral-notification";
+            
+            const avatarLetter = (name || "U").charAt(0).toUpperCase();
+            let avatarHTML;
+            
+            if (photoUrl && photoUrl.startsWith("http")) {
+                avatarHTML = `<div class="referral-notification-avatar"><img src="${photoUrl}" alt="${name}" onerror="this.parentElement.innerHTML='🎉'"></div>`;
+            } else {
+                avatarHTML = `<div class="referral-notification-avatar">🎉</div>`;
+            }
+            
+            const usernameText = username ? ` @${username}` : "";
+            
+            notification.innerHTML = `
+                ${avatarHTML}
+                <div class="referral-notification-text">
+                    <div class="referral-notification-title">🎉 New Referral!</div>
+                    <div class="referral-notification-sub"><b>${escapeHTML(name)}</b>${escapeHTML(usernameText)} joined</div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add("show"), 50);
+            setTimeout(() => {
+                notification.classList.remove("show");
+                setTimeout(() => notification.remove(), 500);
+            }, 4500);
+        }
+
+        // STEP 9: Sound
+        function playNotificationSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.frequency.value = 800;
+                osc1.type = "sine";
+                gain1.gain.setValueAtTime(0, ctx.currentTime);
+                gain1.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.05);
+                gain1.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.25);
+                osc1.start(ctx.currentTime);
+                osc1.stop(ctx.currentTime + 0.3);
+                
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.frequency.value = 1200;
+                osc2.type = "sine";
+                gain2.gain.setValueAtTime(0, ctx.currentTime + 0.15);
+                gain2.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.2);
+                gain2.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
+                osc2.start(ctx.currentTime + 0.15);
+                osc2.stop(ctx.currentTime + 0.5);
+            } catch (e) {}
+        }
+
+        // STEP 10: Update referral UI
         function updateReferralUI() {
-            // Header coin badge
             const badge = document.getElementById("headerCoinBadge");
             if (badge) {
                 badge.textContent = referralData.coins;
                 badge.style.display = referralData.coins > 0 ? "inline-block" : "none";
             }
 
-            // Bottom nav badge
             const navBadge = document.getElementById("navCoinBadge");
             if (navBadge) {
                 navBadge.textContent = referralData.coins;
@@ -2499,6 +3019,7 @@
             renderMilestones();
         }
 
+        // STEP 11: Render milestones
         function renderMilestones() {
             const container = document.getElementById("milestoneContainer");
             if (!container) return;
@@ -2515,8 +3036,7 @@
             if (referralMilestones.length === 0) {
                 container.innerHTML = `
                     <div class="empty-milestones">
-                        🎯 No rewards available yet.<br>
-                        <span style="font-size:11px; opacity:0.7;">Stay tuned for updates!</span>
+                        🎯 No rewards available yet.
                     </div>`;
                 return;
             }
@@ -2563,10 +3083,10 @@
                         </div>
                     </div>
                     <div class="milestone-share-row">
-                        <button class="milestone-share-btn copy" data-action="copy" data-milestone-id="${ms.id}">
+                        <button class="milestone-share-btn copy" data-action="copy">
                             📋 Copy Link
                         </button>
-                        <button class="milestone-share-btn share" data-action="share" data-milestone-id="${ms.id}">
+                        <button class="milestone-share-btn share" data-action="share">
                             🚀 Share
                         </button>
                     </div>
@@ -2577,9 +3097,7 @@
 
             container.querySelectorAll(".milestone-claim-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
-                    const msId = btn.dataset.milestoneId;
-                    const coins = parseInt(btn.dataset.coins, 10);
-                    claimMilestone(msId, coins);
+                    claimMilestone(btn.dataset.milestoneId, parseInt(btn.dataset.coins, 10));
                 });
             });
 
@@ -2596,13 +3114,13 @@
 
         async function handleCopyLink(btn) {
             if (!currentReferralLink || !/^\d+$/.test(userId)) {
-                showToast("⚠️ Telegram-এ খুলুন referral link পেতে", "error", 3000);
+                showToast("⚠️ Open in Telegram to get your link", "error", 3000);
                 return;
             }
             const originalHTML = btn.innerHTML;
             try {
                 await navigator.clipboard.writeText(currentReferralLink);
-                showToast("📋 Link copied!", "success", 2500);
+                showToast("📋 Link copied!", "success", 2000);
                 btn.innerHTML = "✅ Copied!";
                 setTimeout(() => { btn.innerHTML = originalHTML; }, 1500);
             } catch (e) {
@@ -2614,9 +3132,7 @@
                 textarea.select();
                 try {
                     document.execCommand("copy");
-                    showToast("📋 Link copied!", "success", 2500);
-                    btn.innerHTML = "✅ Copied!";
-                    setTimeout(() => { btn.innerHTML = originalHTML; }, 1500);
+                    showToast("📋 Link copied!", "success", 2000);
                 } catch(err) { showToast("❌ Copy failed", "error"); }
                 document.body.removeChild(textarea);
             }
@@ -2624,7 +3140,7 @@
 
         function handleShareLink() {
             if (!currentReferralLink || !/^\d+$/.test(userId)) {
-                showToast("⚠️ Telegram-এ খুলুন referral link পেতে", "error", 3000);
+                showToast("⚠️ Open in Telegram", "error", 3000);
                 return;
             }
             const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(currentReferralLink)}&text=${encodeURIComponent("🎬 TG MASTER এ যোগ দিন! প্রিমিয়াম কন্টেন্ট সবার আগে দেখুন!")}`;
@@ -2639,7 +3155,7 @@
 
         async function claimMilestone(milestoneId, coins) {
             if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) {
-                showToast("❌ Please open in Telegram", "error");
+                showToast("❌ Open in Telegram", "error");
                 return;
             }
 
@@ -2683,27 +3199,9 @@
 
                 showToast(`🎉 +${coins} coins claimed!`, "gold", 3000);
                 fireConfetti();
-
             } catch (e) {
+                console.error("❌ [Claim]", e);
                 showToast("❌ Claim failed. Try again.", "error");
-            }
-        }
-
-        function fireConfetti() {
-            const container = document.getElementById("confettiContainer");
-            const colors = ["#f59e0b", "#fbbf24", "#22c55e", "#38bdf8", "#a855f7", "#ef4444"];
-            for (let i = 0; i < 60; i++) {
-                const piece = document.createElement("div");
-                piece.className = "confetti-piece";
-                piece.style.left = Math.random() * 100 + "%";
-                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.animationDelay = Math.random() * 0.5 + "s";
-                piece.style.animationDuration = (2 + Math.random() * 1.5) + "s";
-                piece.style.width = (6 + Math.random() * 8) + "px";
-                piece.style.height = piece.style.width;
-                if (Math.random() > 0.5) piece.style.borderRadius = "50%";
-                container.appendChild(piece);
-                setTimeout(() => piece.remove(), 4000);
             }
         }
 
@@ -2786,7 +3284,7 @@
             const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
             const mins = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
             const secs = Math.floor((ms % (60 * 1000)) / 1000);
-            if (days > 0) return `${days}d ${hours}h ${mins}m ${secs}s`;
+            if (days > 0) return `${days}d ${hours}h ${mins}m`;
             if (hours > 0) return `${hours}h ${mins}m ${secs}s`;
             if (mins > 0) return `${mins}m ${secs}s`;
             return `${secs}s`;
@@ -2901,8 +3399,7 @@
                 contentHTML = `
                     <div class="premium-empty">
                         <span class="empty-icon">📭</span>
-                        Premium content শীঘ্রই যোগ করা হবে!<br>
-                        <span style="font-size:11px; opacity:0.7;">Stay tuned...</span>
+                        Premium content শীঘ্রই যোগ করা হবে!
                     </div>
                 `;
             } else {
@@ -3113,7 +3610,7 @@
                 fireConfetti();
 
             } catch (e) {
-                console.error("❌ [Premium] Unlock error:", e);
+                console.error("❌ [Premium]", e);
                 showToast("❌ Unlock failed. Try again.", "error");
             }
         }
@@ -3320,14 +3817,8 @@
             if (document.getElementById("referralView")?.classList.contains("active")) { closeReferralView(); return; }
             if (document.getElementById("historyView").classList.contains("active")) { closeHistoryView(); return; }
             if (document.getElementById("searchView").classList.contains("active")) { closeSearchView(); return; }
-
-            // If on premium tab, go back to home
             const premiumTab = document.getElementById("premiumTab");
-            if (premiumTab?.classList.contains("active")) {
-                switchBottomTab("home");
-                return;
-            }
-
+            if (premiumTab?.classList.contains("active")) { switchBottomTab("home"); return; }
             if (tg?.close) tg.close();
         }
         if (tg?.BackButton) {
@@ -3401,18 +3892,7 @@
             saveHistory(history);
             if (document.getElementById("historyView")?.classList.contains("active")) renderHistory();
         }
-        function getTimeAgo(timestamp) {
-            const diff = Date.now() - timestamp;
-            const mins = Math.floor(diff / 60000);
-            if (mins < 1) return "Just now";
-            if (mins < 60) return `${mins} min ago`;
-            const hours = Math.floor(mins / 60);
-            if (hours < 24) return `${hours} hr ago`;
-            const days = Math.floor(hours / 24);
-            if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
-            const months = Math.floor(days / 30);
-            return `${months} month${months > 1 ? 's' : ''} ago`;
-        }
+
         function renderHistory() {
             const container = document.getElementById("historyResultsContainer");
             const history = getHistory();
@@ -3953,9 +4433,6 @@
             }
         });
 
-        /* =====================================================
-           REFERRAL VIEW CONTROLS
-           ===================================================== */
         const referralView = document.getElementById("referralView");
 
         function openReferralView() {
@@ -3964,7 +4441,13 @@
             showTgBackButton();
             updateReferralUI();
             
-            if (!referralInitStarted && userId && userId !== "guest_user") initReferralSystem();
+            if (!referralInitStarted && userId && userId !== "guest_user") {
+                initReferralSystem();
+            }
+            
+            if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
+                if (!recentReferralsUnsub) startRecentReferralsListener();
+            }
         }
         function closeReferralView() {
             referralView.classList.remove("active");
@@ -3976,7 +4459,6 @@
         document.getElementById("openReferralBtn").addEventListener("click", openReferralView);
         document.getElementById("closeReferralBtn").addEventListener("click", closeReferralView);
 
-        // Premium modal controls
         document.getElementById("premiumModalCancelBtn").addEventListener("click", closePremiumModal);
         document.getElementById("premiumModalBuyBtn").addEventListener("click", unlockPremium);
         document.getElementById("premiumModal").addEventListener("click", (e) => {
@@ -4099,19 +4581,37 @@
             if (movie) addToHistory(movie, "downloaded");
         }
 
-        // =====================================================
-        // 🚀 INITIALIZATION
-        // =====================================================
-        loadMovies();
-        startTipsListener();
+        /* =====================================================
+           CONFETTI
+           ===================================================== */
+        function fireConfetti() {
+            const container = document.getElementById("confettiContainer");
+            const colors = ["#f59e0b", "#fbbf24", "#22c55e", "#38bdf8", "#a855f7", "#ef4444"];
+            for (let i = 0; i < 60; i++) {
+                const piece = document.createElement("div");
+                piece.className = "confetti-piece";
+                piece.style.left = Math.random() * 100 + "%";
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = Math.random() * 0.5 + "s";
+                piece.style.animationDuration = (2 + Math.random() * 1.5) + "s";
+                piece.style.width = (6 + Math.random() * 8) + "px";
+                piece.style.height = piece.style.width;
+                if (Math.random() > 0.5) piece.style.borderRadius = "50%";
+                container.appendChild(piece);
+                setTimeout(() => piece.remove(), 4000);
+            }
+        }
 
-        setTimeout(() => {
-            initReferralSystem();
-            initPremiumSystem();
-        }, 800);
+        /* =====================================================
+           FINAL INITIALIZATION
+           ===================================================== */
+        // Hide initial loader after timeout
+        setTimeout(hideInitialLoader, 2500);
+        setTimeout(hideInitialLoader, 5000);
 
-        setTimeout(hideInitialLoader, 2000);
-        setTimeout(hideInitialLoader, 4000);
+        console.log("✅ [TG MASTER] User Panel loaded successfully!");
+        console.log("📱 User ID:", userId);
+        console.log("🔗 Start Param:", startParam);
     </script>
 </body>
 </html>
