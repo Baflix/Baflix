@@ -554,7 +554,9 @@
         }
 
         /* ===== TAB VIEWS ===== */
-        .tab-view { display: none; }
+        .tab-view {
+            display: none;
+        }
         .tab-view.active {
             display: block;
             animation: tabFadeIn 0.4s ease;
@@ -929,7 +931,6 @@
             line-height: 1.5;
         }
         .premium-tokens-note b { color: var(--gold); }
-
         .premium-active-card {
             background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(236,72,153,0.08) 100%);
             border: 2px solid rgba(168,85,247,0.6);
@@ -1076,50 +1077,7 @@
             opacity: 0.6;
         }
 
-        /* ===== REFERRAL VIEW ===== */
-        #referralView {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            z-index: 1100;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        #referralView.active { display: flex; }
-        .referral-header {
-            position: sticky;
-            top: 0;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            z-index: 10;
-            min-height: var(--header-height);
-        }
-        .referral-header-title {
-            flex-grow: 1;
-            font-size: 18px;
-            font-weight: 700;
-            background: linear-gradient(180deg, #ffffff 0%, #f59e0b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .close-referral {
-            background: none;
-            border: none;
-            color: var(--muted);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px 8px;
-        }
-        .referral-wrapper { padding: 16px; }
+        /* ===== REFERRAL TAB ===== */
         .referral-stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2085,6 +2043,54 @@
         </div>
     </div>
 
+    <!-- TAB VIEW: REFERRAL -->
+    <div id="referralTab" class="tab-view">
+        <div class="referral-tips-container" id="referralTipsContainer">
+            <div class="referral-tips-card">
+                <div class="referral-tips-header">
+                    <span class="referral-tips-icon">🎯</span>
+                    <span class="referral-tips-title" id="referralTipsTitle">Referral Tips</span>
+                </div>
+                <div class="referral-tips-body" id="referralTipsBody"></div>
+            </div>
+        </div>
+        
+        <div class="referral-stats-grid">
+            <div class="referral-stat-card">
+                <span class="referral-stat-icon">👥</span>
+                <div class="referral-stat-value" id="refStatCount">0</div>
+                <div class="referral-stat-label">Total Referrals</div>
+            </div>
+            <div class="referral-stat-card coins">
+                <span class="referral-stat-icon">🪙</span>
+                <div class="referral-stat-value" id="refStatCoins">0</div>
+                <div class="referral-stat-label">Total Coins</div>
+            </div>
+        </div>
+
+        <div class="section-subtitle">🏆 Referral Rewards</div>
+        <div class="milestone-list" id="milestoneContainer">
+            <div class="empty-milestones">
+                <div class="spinner-ring" style="margin: 0 auto 12px; width: 32px; height: 32px;"></div>
+                🎯 Loading rewards...
+            </div>
+        </div>
+
+        <div class="section-subtitle" style="margin-top: 24px;">
+            📜 Recent Referrals
+            <span class="live-badge" id="liveBadge" style="display: none;">
+                <span class="live-dot"></span> LIVE
+            </span>
+        </div>
+        <div class="recent-referrals-list" id="recentReferralsList">
+            <div class="empty-referrals">
+                <span class="empty-icon">👥</span>
+                No referrals yet.<br>
+                <span style="font-size:11px; opacity:0.7;">Share your link to start earning!</span>
+            </div>
+        </div>
+    </div>
+
     <!-- TAB VIEW: PREMIUM -->
     <div id="premiumTab" class="tab-view">
         <div class="premium-title-large">
@@ -2143,62 +2149,6 @@
                     No history yet.
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- REFERRAL VIEW -->
-    <div id="referralView">
-        <div class="referral-header">
-            <button class="close-referral" id="closeReferralBtn">✕</button>
-            <div class="referral-header-title">🎁 Refer & Earn</div>
-        </div>
-        <div class="referral-wrapper">
-
-            <div class="referral-tips-container" id="referralTipsContainer">
-                <div class="referral-tips-card">
-                    <div class="referral-tips-header">
-                        <span class="referral-tips-icon">🎯</span>
-                        <span class="referral-tips-title" id="referralTipsTitle">Referral Tips</span>
-                    </div>
-                    <div class="referral-tips-body" id="referralTipsBody"></div>
-                </div>
-            </div>
-            
-            <div class="referral-stats-grid">
-                <div class="referral-stat-card">
-                    <span class="referral-stat-icon">👥</span>
-                    <div class="referral-stat-value" id="refStatCount">0</div>
-                    <div class="referral-stat-label">Total Referrals</div>
-                </div>
-                <div class="referral-stat-card coins">
-                    <span class="referral-stat-icon">🪙</span>
-                    <div class="referral-stat-value" id="refStatCoins">0</div>
-                    <div class="referral-stat-label">Total Coins</div>
-                </div>
-            </div>
-
-            <div class="section-subtitle">🏆 Referral Rewards</div>
-            <div class="milestone-list" id="milestoneContainer">
-                <div class="empty-milestones">
-                    <div class="spinner-ring" style="margin: 0 auto 12px; width: 32px; height: 32px;"></div>
-                    🎯 Loading rewards...
-                </div>
-            </div>
-
-            <div class="section-subtitle" style="margin-top: 24px;">
-                📜 Recent Referrals
-                <span class="live-badge" id="liveBadge" style="display: none;">
-                    <span class="live-dot"></span> LIVE
-                </span>
-            </div>
-            <div class="recent-referrals-list" id="recentReferralsList">
-                <div class="empty-referrals">
-                    <span class="empty-icon">👥</span>
-                    No referrals yet.<br>
-                    <span style="font-size:11px; opacity:0.7;">Share your link to start earning!</span>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -2352,34 +2302,34 @@
                             </div>`;
                     }
                     
-                    // Still load tips and movies
                     startTipsListener();
                     loadMovies();
                     hideInitialLoader();
                 }
             }, 500);
         } else {
-            // Detected immediately
             setTimeout(runStartupSystems, 300);
         }
 
+        // ✅ IMPROVED: runStartupSystems with proper checks
         function runStartupSystems() {
             console.log("🚀 [Startup] Running all systems...");
             
-            // 1. Start tips
+            const isRealUser = userId && userId !== "guest_user" && /^\d+$/.test(userId);
+            
+            // Start tips listener
             startTipsListener();
             
-            // 2. Load movies
+            // Load movies (this also calls runUserAnalytics internally)
             loadMovies();
             
-            // 3. Init referral (auto-detects start_param)
-            if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
+            // Init user-specific systems
+            if (isRealUser) {
                 initReferralSystem();
-            }
-            
-            // 4. Init premium
-            if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
                 initPremiumSystem();
+                
+                // Run user analytics
+                setTimeout(runUserAnalytics, 100);
             }
         }
 
@@ -2401,7 +2351,7 @@
         }, false);
 
         /* =====================================================
-           BOTTOM NAVIGATION
+           BOTTOM NAVIGATION TABS
            ===================================================== */
         function switchBottomTab(tabName) {
             console.log("🔄 [Tab]", tabName);
@@ -2417,6 +2367,19 @@
             if (tabName === "home") {
                 document.getElementById("homeTab").classList.add("active");
                 document.body.style.background = "var(--bg)";
+            } else if (tabName === "referral") {
+                document.getElementById("referralTab").classList.add("active");
+                document.body.style.background = "var(--bg)";
+                
+                updateReferralUI();
+                
+                if (!referralInitStarted && userId && userId !== "guest_user") {
+                    initReferralSystem();
+                }
+                
+                if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
+                    if (!recentReferralsUnsub) startRecentReferralsListener();
+                }
             } else if (tabName === "premium") {
                 document.getElementById("premiumTab").classList.add("active");
                 document.body.style.background = "linear-gradient(180deg, #1a0a2f 0%, var(--bg) 30%)";
@@ -2427,7 +2390,7 @@
         }
 
         document.getElementById("navHomeBtn").addEventListener("click", () => switchBottomTab("home"));
-        document.getElementById("navReferralBtn").addEventListener("click", () => openReferralView());
+        document.getElementById("navReferralBtn").addEventListener("click", () => switchBottomTab("referral"));
         document.getElementById("navPremiumBtn").addEventListener("click", () => switchBottomTab("premium"));
 
         /* =====================================================
@@ -2445,7 +2408,6 @@
                     
                     const data = docSnap.data();
                     
-                    // MAIN TIPS
                     const mainEnabled = data.tipsEnabled !== false;
                     const mainTitle = data.tipsTitle || "Tips & Updates";
                     const mainContent = data.tipsContent || "";
@@ -2464,7 +2426,6 @@
                         }
                     }
                     
-                    // REFERRAL TIPS
                     const refEnabled = data.referralTipsEnabled !== false;
                     const refTitle = data.referralTipsTitle || "Referral Tips";
                     const refContent = data.referralTipsContent || "";
@@ -2504,7 +2465,7 @@
         }
 
         /* =====================================================
-           REFERRAL SYSTEM (100% RELIABLE)
+           REFERRAL SYSTEM
            ===================================================== */
         let referralData = {
             code: "",
@@ -2520,13 +2481,11 @@
         let recentReferralsUnsub = null;
         let referralInitStarted = false;
 
-        // Activity verification
         let userActivityStartTime = Date.now();
         let activityVerified = false;
         let pendingReferralId = null;
         let referralProcessing = false;
 
-        // Recent referrals tracking
         let lastSeenReferralIds = new Set();
         let initialReferralLoad = true;
 
@@ -2537,7 +2496,6 @@
             return code;
         }
 
-        // STEP 1: Detect referral from start_param
         function detectReferralFromStartParam() {
             if (!startParam || !startParam.startsWith("ref_")) {
                 console.log("ℹ️ [Referral] No referral param");
@@ -2562,7 +2520,6 @@
                 return;
             }
 
-            // Check session cache
             try {
                 const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
                 if (verifiedSet.includes(referrerId)) {
@@ -2574,11 +2531,9 @@
             pendingReferralId = referrerId;
             userActivityStartTime = Date.now();
             
-            // Start verification after 5s
             setTimeout(verifyAndProcessReferral, MIN_ACTIVITY_MS + 500);
         }
 
-        // STEP 2: Verify user is real (active for 5+ seconds)
         async function verifyAndProcessReferral() {
             if (!pendingReferralId || referralProcessing) return;
 
@@ -2596,7 +2551,6 @@
             await processVerifiedReferral(pendingReferralId);
         }
 
-        // STEP 3: Process referral
         async function processVerifiedReferral(referrerId) {
             if (!referrerId || referralProcessing) return;
             referralProcessing = true;
@@ -2628,7 +2582,6 @@
                 const newUserUsername = tgUserData?.username || "";
                 const newUserPhotoUrl = tgUserData?.photo_url || "";
 
-                // 1. Mark new user
                 await updateDoc(newUserRef, {
                     referredBy: referrerId,
                     referredAt: serverTimestamp(),
@@ -2636,12 +2589,10 @@
                     activityVerifiedAt: serverTimestamp()
                 });
 
-                // 2. Increment referrer
                 await updateDoc(referrerRef, {
                     referralCount: increment(1)
                 });
 
-                // 3. Log event
                 await addDoc(collection(db, "referralEvents"), {
                     referrerId: referrerId,
                     referrerName: `${referrerData.firstName || ""} ${referrerData.lastName || ""}`.trim(),
@@ -2655,7 +2606,6 @@
                     timestampMs: Date.now()
                 });
 
-                // 4. Cache
                 try {
                     const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
                     verifiedSet.push(referrerId);
@@ -2672,7 +2622,6 @@
             }
         }
 
-        // STEP 4: Init referral system
         async function initReferralSystem() {
             if (referralInitStarted) return;
             if (!userId || userId === "guest_user") return;
@@ -2723,7 +2672,6 @@
 
                 updateReferralUI();
 
-                // User doc listener
                 if (referralUnsubscribe) referralUnsubscribe();
                 referralUnsubscribe = onSnapshot(userRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -2746,7 +2694,6 @@
                 startMilestonesListener();
                 startRecentReferralsListener();
 
-                // Check for referral in start_param
                 detectReferralFromStartParam();
 
             } catch (e) {
@@ -2756,7 +2703,6 @@
             }
         }
 
-        // STEP 5: Milestones listener
         function startMilestonesListener() {
             if (milestonesUnsubscribe) milestonesUnsubscribe();
 
@@ -2778,7 +2724,6 @@
             });
         }
 
-        // STEP 6: Recent referrals listener
         function startRecentReferralsListener() {
             if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
             if (recentReferralsUnsub) recentReferralsUnsub();
@@ -2826,7 +2771,6 @@
             console.log(`📜 [Recent Referrals] ${events.length} referrals`);
             
             if (!initialReferralLoad) {
-                // Check for NEW referrals
                 events.forEach(event => {
                     if (!lastSeenReferralIds.has(event.id)) {
                         console.log("🎉 [NEW Referral]:", event);
@@ -2848,7 +2792,6 @@
             renderRecentReferrals(events);
         }
 
-        // STEP 7: Render recent referrals
         function renderRecentReferrals(referrals) {
             const container = document.getElementById("recentReferralsList");
             if (!container) return;
@@ -2925,7 +2868,6 @@
             return `${months} month${months > 1 ? 's' : ''} ago`;
         }
 
-        // STEP 8: Show notification
         function showReferralNotification(name, photoUrl, username) {
             const notification = document.createElement("div");
             notification.className = "referral-notification";
@@ -2957,7 +2899,6 @@
             }, 4500);
         }
 
-        // STEP 9: Sound
         function playNotificationSound() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -2991,7 +2932,6 @@
             } catch (e) {}
         }
 
-        // STEP 10: Update referral UI
         function updateReferralUI() {
             const badge = document.getElementById("headerCoinBadge");
             if (badge) {
@@ -3019,7 +2959,6 @@
             renderMilestones();
         }
 
-        // STEP 11: Render milestones
         function renderMilestones() {
             const container = document.getElementById("milestoneContainer");
             if (!container) return;
@@ -3811,44 +3750,87 @@
             try { tg.BackButton.hide(); } catch(e) {}
         }
 
+        // ✅ IMPROVED: handleTgBack with all modals
         function handleTgBack() {
+            // 1. Close Premium Modal if open
             const premiumModal = document.getElementById("premiumModal");
-            if (premiumModal?.classList.contains("active")) { closePremiumModal(); return; }
-            if (document.getElementById("referralView")?.classList.contains("active")) { closeReferralView(); return; }
-            if (document.getElementById("historyView").classList.contains("active")) { closeHistoryView(); return; }
-            if (document.getElementById("searchView").classList.contains("active")) { closeSearchView(); return; }
+            if (premiumModal && premiumModal.classList.contains("active")) { 
+                closePremiumModal(); 
+                return; 
+            }
+            
+            // 2. Close Ad Block Modal if open
+            const adBlockModal = document.getElementById("adBlockModal");
+            if (adBlockModal && adBlockModal.classList.contains("active")) {
+                hideAdBlockModal();
+                return;
+            }
+            
+            // 3. Close History View if open
+            if (document.getElementById("historyView").classList.contains("active")) { 
+                closeHistoryView(); 
+                return; 
+            }
+            
+            // 4. Close Search View if open
+            if (document.getElementById("searchView").classList.contains("active")) { 
+                closeSearchView(); 
+                return; 
+            }
+            
+            // 5. If on Referral or Premium tab → go to Home
+            const referralTab = document.getElementById("referralTab");
             const premiumTab = document.getElementById("premiumTab");
-            if (premiumTab?.classList.contains("active")) { switchBottomTab("home"); return; }
+            
+            if (referralTab?.classList.contains("active") || premiumTab?.classList.contains("active")) {
+                switchBottomTab("home");
+                return;
+            }
+            
+            // 6. Close app
             if (tg?.close) tg.close();
         }
         if (tg?.BackButton) {
             try { tg.BackButton.onClick(handleTgBack); } catch(e) {}
         }
 
+        // ✅ IMPROVED: popstate with all modals
         window.addEventListener("popstate", () => {
+            // Premium modal
             const premiumModal = document.getElementById("premiumModal");
             if (premiumModal?.classList.contains("active")) {
                 closePremiumModal();
                 history.pushState(null, "", location.href);
                 return;
             }
-            if (document.getElementById("referralView")?.classList.contains("active")) {
-                closeReferralView();
+            
+            // Ad Block modal
+            const adBlockModal = document.getElementById("adBlockModal");
+            if (adBlockModal && adBlockModal.classList.contains("active")) {
+                hideAdBlockModal();
                 history.pushState(null, "", location.href);
                 return;
             }
+            
+            // History view
             if (document.getElementById("historyView").classList.contains("active")) {
                 closeHistoryView();
                 history.pushState(null, "", location.href);
                 return;
             }
+            
+            // Search view
             if (document.getElementById("searchView").classList.contains("active")) {
                 closeSearchView();
                 history.pushState(null, "", location.href);
                 return;
             }
+            
+            // Referral/Premium tab
+            const referralTab = document.getElementById("referralTab");
             const premiumTab = document.getElementById("premiumTab");
-            if (premiumTab?.classList.contains("active")) {
+            
+            if (referralTab?.classList.contains("active") || premiumTab?.classList.contains("active")) {
                 switchBottomTab("home");
                 history.pushState(null, "", location.href);
                 return;
@@ -4382,7 +4364,7 @@
         window.addEventListener("scroll", () => {
             if (document.getElementById("searchView").classList.contains("active")) return;
             if (document.getElementById("historyView").classList.contains("active")) return;
-            if (document.getElementById("referralView")?.classList.contains("active")) return;
+            if (document.getElementById("referralTab")?.classList.contains("active")) return;
             if (document.getElementById("premiumTab")?.classList.contains("active")) return;
             const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
             if (scrollTop + clientHeight >= scrollHeight - 300) loadMovies();
@@ -4402,8 +4384,7 @@
         function closeSearchView() {
             searchView.classList.remove("active");
             document.body.style.overflow = "";
-            if (!document.getElementById("historyView").classList.contains("active")
-                && !document.getElementById("referralView")?.classList.contains("active")) hideTgBackButton();
+            if (!document.getElementById("historyView").classList.contains("active")) hideTgBackButton();
         }
         document.getElementById("openSearchBtn").addEventListener("click", openSearchView);
         document.getElementById("closeSearchBtn").addEventListener("click", closeSearchView);
@@ -4420,8 +4401,7 @@
         function closeHistoryView() {
             historyView.classList.remove("active");
             document.body.style.overflow = "";
-            if (!document.getElementById("searchView").classList.contains("active")
-                && !document.getElementById("referralView")?.classList.contains("active")) hideTgBackButton();
+            if (!document.getElementById("searchView").classList.contains("active")) hideTgBackButton();
         }
         document.getElementById("openHistoryBtn").addEventListener("click", openHistoryView);
         document.getElementById("closeHistoryBtn").addEventListener("click", closeHistoryView);
@@ -4433,31 +4413,9 @@
             }
         });
 
-        const referralView = document.getElementById("referralView");
-
-        function openReferralView() {
-            referralView.classList.add("active");
-            document.body.style.overflow = "hidden";
-            showTgBackButton();
-            updateReferralUI();
-            
-            if (!referralInitStarted && userId && userId !== "guest_user") {
-                initReferralSystem();
-            }
-            
-            if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
-                if (!recentReferralsUnsub) startRecentReferralsListener();
-            }
-        }
-        function closeReferralView() {
-            referralView.classList.remove("active");
-            document.body.style.overflow = "";
-            if (!document.getElementById("searchView").classList.contains("active")
-                && !document.getElementById("historyView").classList.contains("active")) hideTgBackButton();
-        }
-
-        document.getElementById("openReferralBtn").addEventListener("click", openReferralView);
-        document.getElementById("closeReferralBtn").addEventListener("click", closeReferralView);
+        document.getElementById("openReferralBtn").addEventListener("click", () => {
+            switchBottomTab("referral");
+        });
 
         document.getElementById("premiumModalCancelBtn").addEventListener("click", closePremiumModal);
         document.getElementById("premiumModalBuyBtn").addEventListener("click", unlockPremium);
@@ -4605,7 +4563,6 @@
         /* =====================================================
            FINAL INITIALIZATION
            ===================================================== */
-        // Hide initial loader after timeout
         setTimeout(hideInitialLoader, 2500);
         setTimeout(hideInitialLoader, 5000);
 
