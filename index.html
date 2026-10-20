@@ -26,6 +26,8 @@
             --gold: #f59e0b;
             --premium: #a855f7;
             --premium-glow: rgba(168, 85, 247, 0.4);
+            --adfree: #ec4899;
+            --adfree-glow: rgba(236, 72, 153, 0.4);
             --radius: 14px;
             --header-height: 64px;
             --bottom-nav-height: 68px;
@@ -393,6 +395,7 @@
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
+        .app-title-wrap { display: flex; align-items: center; gap: 8px; }
         .app-title {
             font-size: 22px;
             font-weight: 900;
@@ -403,6 +406,18 @@
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
         }
+        
+        /* ✅ NEW: Header Premium Badge (Ad-Free Active) */
+        .header-premium-badge {
+            display: none; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white; font-size: 11px; font-weight: 900;
+            padding: 3px 10px; border-radius: 12px; box-shadow: 0 0 15px rgba(168,85,247,0.6);
+            animation: badgePulse 2s infinite; cursor: help; letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .header-premium-badge.show { display: inline-flex; }
+
         .header-buttons {
             display: flex;
             gap: 6px;
@@ -1134,6 +1149,20 @@
             align-items: center;
             gap: 8px;
         }
+        
+        /* ✅ NEW: Ad-Free Premium Section (Inside Referral Tab) */
+        .adfree-card { background: linear-gradient(135deg, rgba(236,72,153,0.15) 0%, rgba(236,72,153,0.03) 100%); border: 2px solid rgba(236,72,153,0.4); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(236,72,153,0.15); }
+        .adfree-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #ec4899, #f472b6); border-radius: var(--radius) 0 0 var(--radius); }
+        .adfree-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .adfree-title { font-size: 16px; font-weight: 800; color: #ec4899; display: flex; align-items: center; gap: 8px; }
+        .adfree-price { background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; color: var(--gold); border: 1px solid rgba(251,191,36,0.3); }
+        .adfree-desc { font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 16px; }
+        .adfree-buy-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 800; width: 100%; cursor: pointer; box-shadow: 0 4px 15px rgba(236,72,153,0.4); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .adfree-buy-btn:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+        .adfree-active-box { background: rgba(236,72,153,0.1); border: 1px solid rgba(236,72,153,0.3); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-size: 13px; color: #fbcfe8; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .adfree-timer-badge { background: #ec4899; color: white; padding: 2px 8px; border-radius: 6px; font-weight: bold; font-family: monospace; font-size: 14px; }
+
+        /* Milestones */
         .milestone-list { display: flex; flex-direction: column; gap: 12px; }
         .milestone-card {
             background: var(--card-bg);
@@ -1990,7 +2019,6 @@
 </head>
 <body>
 
-    <!-- INITIAL LOADER -->
     <div id="initialLoader">
         <div class="brand-loader-title">TG MASTER</div>
         <div class="orbit-loader">
@@ -2000,7 +2028,11 @@
     </div>
 
     <header>
-        <div class="app-title">TG MASTER</div>
+        <div class="app-title-wrap">
+            <div class="app-title">TG MASTER</div>
+            <!-- ✅ NEW: Header Premium Badge (Ad-Free Active) -->
+            <div class="header-premium-badge" id="headerAdFreeBadge" title="Ad-Free Active">⚡ AD-FREE</div>
+        </div>
         <div class="header-buttons">
             <button class="search-icon-btn referral-btn" id="openReferralBtn">
                 🎁 <span class="coin-badge" id="headerCoinBadge" style="display:none;">0</span>
@@ -2010,7 +2042,6 @@
         </div>
     </header>
 
-    <!-- TAB VIEW: HOME -->
     <div id="homeTab" class="tab-view active">
         <div class="admin-tips-container" id="adminTipsContainer">
             <div class="admin-tips-card">
@@ -2043,7 +2074,6 @@
         </div>
     </div>
 
-    <!-- TAB VIEW: REFERRAL -->
     <div id="referralTab" class="tab-view">
         <div class="referral-tips-container" id="referralTipsContainer">
             <div class="referral-tips-card">
@@ -2068,7 +2098,11 @@
             </div>
         </div>
 
-        <div class="section-subtitle">🏆 Referral Rewards</div>
+        <!-- ✅ NEW: Ad-Free Premium Section -->
+        <div class="section-subtitle" style="margin-top: 10px;">⚡ Ad-Free Premium</div>
+        <div id="adFreeContainer"></div>
+
+        <div class="section-subtitle" style="margin-top: 24px;">🏆 Referral Rewards</div>
         <div class="milestone-list" id="milestoneContainer">
             <div class="empty-milestones">
                 <div class="spinner-ring" style="margin: 0 auto 12px; width: 32px; height: 32px;"></div>
@@ -2091,7 +2125,6 @@
         </div>
     </div>
 
-    <!-- TAB VIEW: PREMIUM -->
     <div id="premiumTab" class="tab-view">
         <div class="premium-title-large">
             <span class="crown">👑</span>
@@ -2100,7 +2133,6 @@
         <div id="premiumContentContainer"></div>
     </div>
 
-    <!-- BOTTOM NAV -->
     <nav class="bottom-nav" id="bottomNav">
         <button class="nav-tab active" data-tab="home" id="navHomeBtn">
             <span class="nav-icon">🏠</span>
@@ -2119,7 +2151,6 @@
         </button>
     </nav>
 
-    <!-- SEARCH VIEW -->
     <div id="searchView">
         <div class="search-header">
             <button class="close-search" id="closeSearchBtn">✕</button>
@@ -2134,7 +2165,6 @@
         </div>
     </div>
 
-    <!-- HISTORY VIEW -->
     <div id="historyView">
         <div class="history-header">
             <button class="close-history" id="closeHistoryBtn">✕</button>
@@ -2152,7 +2182,6 @@
         </div>
     </div>
 
-    <!-- AD BLOCK MODAL -->
     <div id="adBlockModal" class="adblock-modal-overlay">
         <div class="adblock-modal-box">
             <div class="adblock-icon">🚫</div>
@@ -2173,7 +2202,22 @@
         </div>
     </div>
 
-    <!-- PREMIUM UNLOCK MODAL -->
+    <!-- ✅ NEW: Ad-Free Premium Modal -->
+    <div class="premium-modal-overlay" id="adFreeModal" style="border-color: rgba(236,72,153,0.5);">
+        <div class="premium-modal-box" style="border-color: rgba(236,72,153,0.5);">
+            <div class="premium-modal-icon" style="filter: drop-shadow(0 0 20px rgba(236,72,153,0.8));">⚡</div>
+            <div class="premium-modal-title" style="background: linear-gradient(135deg, #ec4899, #db2777); -webkit-background-clip: text;">Unlock Ad-Free</div>
+            <div class="premium-modal-subtitle">No Ads on any videos</div>
+            
+            <div class="premium-modal-info" id="adFreeModalInfo" style="border-left-color: #ec4899;"></div>
+            
+            <div class="premium-modal-actions">
+                <button class="premium-modal-btn cancel" id="adFreeModalCancelBtn">Cancel</button>
+                <button class="premium-modal-btn buy" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);" id="adFreeModalBuyBtn">Unlock Now</button>
+            </div>
+        </div>
+    </div>
+
     <div class="premium-modal-overlay" id="premiumModal">
         <div class="premium-modal-box">
             <div class="premium-modal-icon">👑</div>
@@ -2189,10 +2233,7 @@
         </div>
     </div>
 
-    <!-- TOAST -->
     <div class="toast" id="toast"></div>
-
-    <!-- CONFETTI -->
     <div class="confetti-container" id="confettiContainer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -2220,10 +2261,15 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        /* =====================================================
+           ✅ CONSTANTS
+           ===================================================== */
         const UNLOCK_VALIDITY_MINUTES = 15;
         const UNLOCK_VALIDITY_MS = UNLOCK_VALIDITY_MINUTES * 60 * 1000;
         const SESSION_STORAGE_KEY = "tgmaster_session_id";
         const BOT_LINK = "https://t.me/TGmasterTVbot";
+        const MINIAPP_DIRECT_LINK = "https://t.me/TGmasterTVbot/TG_MASTER";
+        const BOT_USERNAME = "TGmasterTVbot";
         const MIN_ACTIVITY_MS = 5000;
         const REFERRAL_VERIFY_KEY = "tgmaster_verified_referrals";
 
@@ -2234,13 +2280,73 @@
         }
 
         /* =====================================================
-           TELEGRAM USER DETECTION
+           ✅ NEW STATE VARIABLES FOR UPDATES
+           ===================================================== */
+        let adFreeSettings = { cost: 50, durationMs: 3600000, durationLabel: "1 Hour" };
+        let loginRewardSettings = { enabled: true, coins: 10, intervalMs: 86400000 };
+        let userAdFreeData = { unlockedAt: 0, expiresAt: 0 };
+
+        /* =====================================================
+           ✅ TELEGRAM USER DETECTION - TRIPLE FALLBACK
            ===================================================== */
         let userId = "guest_user";
         let tg = null;
         let tgUserData = null;
         let startParam = null;
         let IS_TELEGRAM_ENV = false;
+
+        function extractStartParam() {
+            let param = null;
+
+            try {
+                param = tg?.initDataUnsafe?.start_param || null;
+            } catch(e) {}
+            if (param) {
+                console.log("🎯 [Param] Found in initDataUnsafe.start_param:", param);
+                return param;
+            }
+
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                param = urlParams.get("startapp") 
+                     || urlParams.get("start_param") 
+                     || urlParams.get("start") 
+                     || null;
+            } catch(e) {}
+            if (param) {
+                console.log("🎯 [Param] Found in URL query:", param);
+                return param;
+            }
+
+            try {
+                if (window.location.hash && window.location.hash.length > 1) {
+                    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                    param = hashParams.get("startapp") 
+                         || hashParams.get("start_param") 
+                         || hashParams.get("start") 
+                         || null;
+                }
+            } catch(e) {}
+            if (param) {
+                console.log("🎯 [Param] Found in URL hash:", param);
+                return param;
+            }
+
+            try {
+                if (tg?.initData) {
+                    const initParams = new URLSearchParams(tg.initData);
+                    param = initParams.get("start_param") 
+                         || initParams.get("startapp") 
+                         || null;
+                }
+            } catch(e) {}
+            if (param) {
+                console.log("🎯 [Param] Found in raw initData:", param);
+                return param;
+            }
+
+            return null;
+        }
 
         function detectAndInitUser() {
             if (!window.Telegram || !window.Telegram.WebApp) return false;
@@ -2258,14 +2364,195 @@
             if (u && u.id && hasRealInitData) {
                 userId = u.id.toString();
                 tgUserData = u;
-                startParam = tg.initDataUnsafe?.start_param || null;
+                startParam = extractStartParam();
                 IS_TELEGRAM_ENV = true;
-                console.log("✅ [TG] User:", userId, u.first_name, "| start_param:", startParam);
+                console.log("✅ [TG] User:", userId, u.first_name);
+                console.log("🔗 [TG] Start param:", startParam);
                 return true;
             }
             return false;
         }
 
+        /* =====================================================
+           ✅ BOT START CHECK (Simple initData logic)
+           ===================================================== */
+        async function checkBotStartAndBlock() {
+            if (!window.Telegram || !window.Telegram.WebApp) {
+                console.log("ℹ️ [Bot Check] Not in Telegram environment");
+                return false;
+            }
+
+            const tgApp = window.Telegram.WebApp;
+            const initData = tgApp.initData || "";
+            const user = tgApp.initDataUnsafe?.user;
+
+            console.log("🔍 [Bot Check] initData length:", initData.length);
+            console.log("🔍 [Bot Check] User ID:", user?.id);
+
+            if (!initData || initData.length === 0) {
+                console.warn("⚠️ [Bot Check] Empty initData — showing bot screen");
+                showBotStartRequiredScreen();
+                return true;
+            }
+
+            if (!user || !user.id) {
+                console.warn("⚠️ [Bot Check] No user data — showing bot screen");
+                showBotStartRequiredScreen();
+                return true;
+            }
+
+            console.log("✅ [Bot Check] User verified via initData");
+            return false;
+        }
+
+        function showBotStartRequiredScreen() {
+            document.body.innerHTML = `
+                <div style="
+                    position: fixed;
+                    inset: 0;
+                    background: radial-gradient(circle at 50% 40%, #16233d 0%, #0f172a 70%);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 24px;
+                    text-align: center;
+                    z-index: 99999;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                ">
+                    <div style="
+                        background: linear-gradient(135deg, rgba(0,136,204,0.15) 0%, rgba(0,136,204,0.05) 100%);
+                        border: 2px solid rgba(0,136,204,0.5);
+                        border-radius: 24px;
+                        padding: 40px 28px 32px;
+                        max-width: 400px;
+                        width: 100%;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0,136,204,0.3);
+                        animation: botPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    ">
+                        <div style="
+                            font-size: 72px;
+                            margin-bottom: 20px;
+                            filter: drop-shadow(0 0 30px rgba(0,136,204,0.8));
+                            animation: botBounce 2s ease-in-out infinite;
+                        ">🤖</div>
+                        
+                        <h1 style="
+                            font-size: 24px;
+                            font-weight: 900;
+                            color: #fff;
+                            margin-bottom: 12px;
+                            letter-spacing: 1px;
+                            background: linear-gradient(180deg, #ffffff 0%, #0088cc 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        ">
+                            বট Start করুন
+                        </h1>
+                        
+                        <p style="
+                            font-size: 14px;
+                            color: #94a3b8;
+                            line-height: 1.7;
+                            margin-bottom: 28px;
+                        ">
+                            মিনি অ্যাপ ব্যবহার করার জন্য প্রথমে আমাদের বটে <b style="color: #38bdf8;">Start</b> বাটনে ক্লিক করুন।
+                            <br><br>
+                            <span style="font-size: 12px; color: #64748b;">
+                                এটা একবারই করতে হবে ✓
+                            </span>
+                        </p>
+                        
+                        <button id="goToBotBtn" style="
+                            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+                            color: #fff;
+                            border: none;
+                            padding: 16px 24px;
+                            border-radius: 14px;
+                            font-size: 16px;
+                            font-weight: 800;
+                            cursor: pointer;
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 10px;
+                            box-shadow: 0 8px 25px rgba(0,136,204,0.5);
+                            font-family: inherit;
+                            transition: all 0.2s;
+                        ">
+                            🚀 বটে যান
+                        </button>
+                        
+                        <button id="retryCheckBtn" style="
+                            background: rgba(255,255,255,0.06);
+                            color: #94a3b8;
+                            border: 1px solid rgba(255,255,255,0.1);
+                            padding: 12px 24px;
+                            border-radius: 12px;
+                            font-size: 13px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            width: 100%;
+                            margin-top: 10px;
+                            font-family: inherit;
+                            transition: all 0.2s;
+                        ">
+                            🔄 Start করেছি — আবার চেক করুন
+                        </button>
+                    </div>
+                    
+                    <div style="
+                        margin-top: 24px;
+                        font-size: 11px;
+                        color: #64748b;
+                        letter-spacing: 1px;
+                        text-transform: uppercase;
+                    ">
+                        TG MASTER • Secure Access
+                    </div>
+                </div>
+                
+                <style>
+                    @keyframes botPop {
+                        from { transform: scale(0.85); opacity: 0; }
+                        to { transform: scale(1); opacity: 1; }
+                    }
+                    @keyframes botBounce {
+                        0%, 100% { transform: translateY(0) rotate(0deg); }
+                        50% { transform: translateY(-10px) rotate(-5deg); }
+                    }
+                </style>
+            `;
+
+            document.getElementById("goToBotBtn").addEventListener("click", () => {
+                const botLink = "https://t.me/TGmasterTVbot";
+                try {
+                    if (window.Telegram?.WebApp?.openTelegramLink) {
+                        window.Telegram.WebApp.openTelegramLink(botLink);
+                    } else if (window.Telegram?.WebApp?.openLink) {
+                        window.Telegram.WebApp.openLink(botLink);
+                    } else {
+                        window.open(botLink, "_blank");
+                    }
+                } catch (e) {
+                    window.open(botLink, "_blank");
+                }
+            });
+
+            document.getElementById("retryCheckBtn").addEventListener("click", () => {
+                const btn = document.getElementById("retryCheckBtn");
+                btn.textContent = "⏳ চেক করছি...";
+                btn.disabled = true;
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            });
+        }
+
+        /* =====================================================
+           INIT & STARTUP
+           ===================================================== */
         let userDetected = detectAndInitUser();
 
         if (!userDetected) {
@@ -2281,55 +2568,237 @@
                     runStartupSystems();
                 } else if (retries >= maxRetries) {
                     clearInterval(retryInterval);
-                    console.warn("⚠️ [TG] Max retries reached. Running as guest.");
+                    console.warn("⚠️ [TG] Max retries reached. Showing bot start screen.");
                     
-                    const container = document.getElementById("milestoneContainer");
-                    if (container) {
-                        container.innerHTML = `
-                            <div class="empty-milestones">
-                                ⚠️ Telegram-এ খুলুন<br>
-                                <span style="font-size:11px; opacity:0.7;">Referral system শুধু Telegram Mini App-এ কাজ করে।</span>
-                            </div>`;
+                    if (window.Telegram && window.Telegram.WebApp) {
+                        showBotStartRequiredScreen();
+                    } else {
+                        const container = document.getElementById("milestoneContainer");
+                        if (container) {
+                            container.innerHTML = `
+                                <div class="empty-milestones">
+                                    ⚠️ Telegram-এ খুলুন<br>
+                                    <span style="font-size:11px; opacity:0.7;">Referral system শুধু Telegram Mini App-এ কাজ করে।</span>
+                                </div>`;
+                        }
+                        startTipsListener();
+                        loadMovies();
+                        hideInitialLoader();
                     }
-                    
-                    const refContainer = document.getElementById("recentReferralsList");
-                    if (refContainer) {
-                        refContainer.innerHTML = `
-                            <div class="empty-referrals">
-                                <span class="empty-icon">⚠️</span>
-                                Telegram-এ খুলুন<br>
-                                <span style="font-size:11px; opacity:0.7;">Referral tracking শুধু Mini App-এ কাজ করে।</span>
-                            </div>`;
-                    }
-                    
-                    startTipsListener();
-                    loadMovies();
-                    hideInitialLoader();
                 }
             }, 500);
         } else {
             setTimeout(runStartupSystems, 300);
         }
 
-        // ✅ IMPROVED: runStartupSystems with proper checks
-        function runStartupSystems() {
+        async function runStartupSystems() {
             console.log("🚀 [Startup] Running all systems...");
+
+            const isBlocked = await checkBotStartAndBlock();
             
+            if (isBlocked) {
+                console.log("🚫 [Bot Check] Blocked — waiting for bot /start");
+                const initialLoader = document.getElementById("initialLoader");
+                if (initialLoader) {
+                    setTimeout(() => {
+                        initialLoader.classList.add("hide");
+                        setTimeout(() => { initialLoader.style.display = "none"; }, 550);
+                    }, 300);
+                }
+                return;
+            }
+
             const isRealUser = userId && userId !== "guest_user" && /^\d+$/.test(userId);
             
-            // Start tips listener
             startTipsListener();
-            
-            // Load movies (this also calls runUserAnalytics internally)
             loadMovies();
             
-            // Init user-specific systems
             if (isRealUser) {
                 initReferralSystem();
                 initPremiumSystem();
-                
-                // Run user analytics
+                initAdFreeSystem(); 
+                setTimeout(checkDailyLoginReward, 1500); // ✅ NEW: Daily Login Check
                 setTimeout(runUserAnalytics, 100);
+            }
+        }
+
+        /* =====================================================
+           ✅ NEW: DAILY LOGIN REWARD SYSTEM
+           ===================================================== */
+        async function checkDailyLoginReward() {
+            if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
+            if (!loginRewardSettings.enabled) return;
+
+            try {
+                const userRef = doc(db, "telegramUsers", userId);
+                const snap = await getDoc(userRef);
+                if (!snap.exists()) return;
+                
+                const data = snap.data();
+                const lastClaim = data.lastLoginRewardClaim || 0;
+                const now = Date.now();
+                const timePassed = now - lastClaim;
+
+                if (timePassed >= loginRewardSettings.intervalMs) {
+                    await updateDoc(userRef, {
+                        lastLoginRewardClaim: now,
+                        referralCoins: increment(loginRewardSettings.coins)
+                    });
+                    
+                    await addDoc(collection(db, "loginRewards"), {
+                        userId: userId,
+                        coins: loginRewardSettings.coins,
+                        timestamp: serverTimestamp()
+                    });
+
+                    setTimeout(() => {
+                        showToast(`🎁 ডেইলি লগইন বোনাস! +${loginRewardSettings.coins} কয়েন`, "gold", 4000);
+                        fireConfetti();
+                    }, 2000);
+                }
+            } catch (e) { console.error("Login reward err:", e); }
+        }
+
+        /* =====================================================
+           ✅ NEW: AD-FREE PREMIUM SYSTEM
+           ===================================================== */
+        let adFreeTimerInterval = null;
+        function isAdFreeActive() { return userAdFreeData.expiresAt > Date.now(); }
+
+        function initAdFreeSystem() {
+            onSnapshot(doc(db, "settings", "config"), (docSnap) => {
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                
+                adFreeSettings.cost = data.adFreePremiumCost || 50;
+                adFreeSettings.durationMs = data.adFreePremiumDurationMs || 3600000;
+                adFreeSettings.durationLabel = data.adFreePremiumDurationLabel || "1 Hour";
+                
+                loginRewardSettings.enabled = data.loginRewardEnabled !== false;
+                loginRewardSettings.coins = data.loginRewardCoins || 10;
+                loginRewardSettings.intervalMs = data.loginRewardIntervalMs || 86400000;
+
+                renderAdFreeUI();
+            });
+
+            onSnapshot(doc(db, "telegramUsers", userId), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    userAdFreeData.unlockedAt = data.adFreeUnlockedAt || 0;
+                    userAdFreeData.expiresAt = data.adFreeExpiresAt || 0;
+                    renderAdFreeUI();
+                    updateHeaderPremiumBadge();
+                }
+            });
+
+            if (adFreeTimerInterval) clearInterval(adFreeTimerInterval);
+            adFreeTimerInterval = setInterval(() => {
+                const timerEl = document.getElementById("adFreeTimerValue");
+                if (timerEl && isAdFreeActive()) {
+                    const rem = userAdFreeData.expiresAt - Date.now();
+                    if (rem <= 0) {
+                        renderAdFreeUI();
+                        updateHeaderPremiumBadge();
+                    } else {
+                        timerEl.textContent = formatTime(rem);
+                    }
+                }
+                updateHeaderPremiumBadge();
+            }, 1000);
+        }
+
+        function formatTime(ms) {
+            const h = Math.floor(ms / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            const s = Math.floor((ms % 60000) / 1000);
+            if (h > 0) return `${h}h ${m}m`;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        }
+
+        function updateHeaderPremiumBadge() {
+            const badge = document.getElementById("headerAdFreeBadge");
+            if (badge) {
+                badge.style.display = isAdFreeActive() ? "inline-flex" : "none";
+            }
+        }
+
+        function renderAdFreeUI() {
+            const container = document.getElementById("adFreeContainer");
+            if (!container) return;
+
+            if (isAdFreeActive()) {
+                container.innerHTML = `
+                    <div class="adfree-active-box">
+                        <span>⚡ Ad-Free Active</span>
+                        <span class="adfree-timer-badge" id="adFreeTimerValue">${formatTime(userAdFreeData.expiresAt - Date.now())}</span>
+                    </div>`;
+            } else {
+                const userCoins = referralData.coins || 0;
+                const canAfford = userCoins >= adFreeSettings.cost;
+                container.innerHTML = `
+                    <div class="adfree-card">
+                        <div class="adfree-header">
+                            <div class="adfree-title">⚡ Ad-Free Premium</div>
+                            <div class="adfree-price">🪙 ${adFreeSettings.cost}</div>
+                        </div>
+                        <div class="adfree-desc">এই প্রিমিয়াম কিনলে ${adFreeSettings.durationLabel} পর্যন্ত কোনো ভিডিওতে অ্যাড দেখতে হবে না।</div>
+                        <button class="adfree-buy-btn" id="buyAdFreeBtn" ${!canAfford ? 'disabled' : ''}>
+                            ${canAfford ? '⚡ Unlock Ad-Free Now' : `🔒 Need ${adFreeSettings.cost - userCoins} more coins`}
+                        </button>
+                    </div>`;
+                const btn = document.getElementById("buyAdFreeBtn");
+                if (btn && canAfford) btn.onclick = openAdFreeModal;
+            }
+        }
+
+        function openAdFreeModal() {
+            const modal = document.getElementById("adFreeModal");
+            const info = document.getElementById("adFreeModalInfo");
+            const buyBtn = document.getElementById("adFreeModalBuyBtn");
+            const userCoins = referralData.coins || 0;
+            const cost = adFreeSettings.cost;
+            const canAfford = userCoins >= cost;
+
+            info.innerHTML = `
+                <div class="premium-modal-info-row"><span class="label">⚡ Benefit</span><span class="value">No Ads on Videos</span></div>
+                <div class="premium-modal-info-row"><span class="label">⏱️ Duration</span><span class="value">${adFreeSettings.durationLabel}</span></div>
+                <div class="premium-modal-info-row"><span class="label">🪙 Cost</span><span class="value gold">${cost}</span></div>
+                <div class="premium-modal-info-row"><span class="label">💰 Your Coins</span><span class="value">${userCoins}</span></div>
+            `;
+            buyBtn.disabled = !canAfford;
+            buyBtn.textContent = canAfford ? `🪙 Unlock` : `Need More`;
+            modal.classList.add("active");
+        }
+
+        async function unlockAdFreePremium() {
+            const cost = adFreeSettings.cost;
+            try {
+                const userRef = doc(db, "telegramUsers", userId);
+                const fresh = await getDoc(userRef);
+                if ((fresh.data().referralCoins || 0) < cost) {
+                    showToast("❌ Not enough coins!", "error");
+                    return;
+                }
+
+                const now = Date.now();
+                const expiresAt = now + adFreeSettings.durationMs;
+
+                await updateDoc(userRef, {
+                    referralCoins: increment(-cost),
+                    adFreeUnlockedAt: now,
+                    adFreeExpiresAt: expiresAt
+                });
+
+                await addDoc(collection(db, "adFreePurchases"), {
+                    userId, cost, durationMs: adFreeSettings.durationMs, unlockedAt: now, expiresAt
+                });
+
+                document.getElementById("adFreeModal").classList.remove("active");
+                showToast(`🎉 Ad-Free Premium Active!`, "premium", 3000);
+                fireConfetti();
+            } catch(e) {
+                showToast("❌ Error unlocking premium", "error");
             }
         }
 
@@ -2465,7 +2934,7 @@
         }
 
         /* =====================================================
-           REFERRAL SYSTEM
+           ✅ REFERRAL SYSTEM
            ===================================================== */
         let referralData = {
             code: "",
@@ -2497,22 +2966,38 @@
         }
 
         function detectReferralFromStartParam() {
-            if (!startParam || !startParam.startsWith("ref_")) {
-                console.log("ℹ️ [Referral] No referral param");
+            console.log("🔍 [Referral Detect] startParam:", startParam);
+            
+            if (!startParam) {
+                console.log("ℹ️ [Referral] No referral param found");
                 return;
             }
 
-            const referrerId = startParam.substring(4).trim();
+            let referrerId = "";
             
-            console.log("🎁 [Referral] Detected:", referrerId);
+            if (startParam.startsWith("ref_")) {
+                referrerId = startParam.substring(4).trim();
+            } else if (startParam.startsWith("ref-")) {
+                referrerId = startParam.substring(4).trim();
+            } else if (/^\d+$/.test(startParam)) {
+                referrerId = startParam.trim();
+            } else {
+                console.warn("⚠️ [Referral] Unknown param format:", startParam);
+                return;
+            }
             
-            if (!referrerId) return;
+            console.log("🎁 [Referral] Extracted referrerId:", referrerId);
+            
+            if (!referrerId) {
+                console.warn("⚠️ [Referral] Empty referrerId");
+                return;
+            }
             if (referrerId === userId) {
                 console.warn("⚠️ [Referral] Self-referral blocked");
                 return;
             }
             if (!/^\d+$/.test(referrerId)) {
-                console.warn("⚠️ [Referral] Invalid referrer format");
+                console.warn("⚠️ [Referral] Invalid referrer format (not numeric)");
                 return;
             }
             if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) {
@@ -2523,7 +3008,7 @@
             try {
                 const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
                 if (verifiedSet.includes(referrerId)) {
-                    console.log("ℹ️ [Referral] Already verified this session");
+                    console.log("ℹ️ [Referral] Already verified this referrer in this session");
                     return;
                 }
             } catch (e) {}
@@ -2531,6 +3016,7 @@
             pendingReferralId = referrerId;
             userActivityStartTime = Date.now();
             
+            console.log("⏱️ [Referral] Will verify after", MIN_ACTIVITY_MS, "ms");
             setTimeout(verifyAndProcessReferral, MIN_ACTIVITY_MS + 500);
         }
 
@@ -2558,12 +3044,19 @@
             try {
                 console.log("🎁 [Referral] Processing:", referrerId, "←", userId);
 
+                if (referrerId === userId) {
+                    console.warn("⚠️ [Referral] Self-referral blocked");
+                    referralProcessing = false;
+                    return;
+                }
+
                 const newUserRef = doc(db, "telegramUsers", userId);
                 const newUserSnap = await getDoc(newUserRef);
                 const newUserData = newUserSnap.exists() ? newUserSnap.data() : {};
 
-                if (newUserData.referredBy) {
-                    console.log("ℹ️ [Referral] Already referred");
+                if (newUserData.referredBy && newUserData.referredBy !== "" && newUserData.referredBy !== null) {
+                    console.log("ℹ️ [Referral] User already referred by:", newUserData.referredBy);
+                    console.log("ℹ️ [Referral] Skipping — user can only be referred ONCE");
                     referralProcessing = false;
                     return;
                 }
@@ -2572,22 +3065,24 @@
                 const referrerSnap = await getDoc(referrerRef);
                 
                 if (!referrerSnap.exists()) {
-                    console.warn("⚠️ [Referral] Referrer not found");
+                    console.warn("⚠️ [Referral] Referrer not found:", referrerId);
                     referralProcessing = false;
                     return;
                 }
 
                 const referrerData = referrerSnap.data();
-                const newUserName = `${tgUserData?.first_name || ""} ${tgUserData?.last_name || ""}`.trim() || "User";
-                const newUserUsername = tgUserData?.username || "";
-                const newUserPhotoUrl = tgUserData?.photo_url || "";
+                const newUserName = `${tgUserData?.first_name || ""} ${tgUserData?.last_name || ""}`.trim() 
+                    || newUserData.firstName 
+                    || "User";
+                const newUserUsername = tgUserData?.username || newUserData.username || "";
+                const newUserPhotoUrl = tgUserData?.photo_url || newUserData.photoUrl || "";
 
-                await updateDoc(newUserRef, {
+                await setDoc(newUserRef, {
                     referredBy: referrerId,
                     referredAt: serverTimestamp(),
                     referralVerified: true,
                     activityVerifiedAt: serverTimestamp()
-                });
+                }, { merge: true });
 
                 await updateDoc(referrerRef, {
                     referralCount: increment(1)
@@ -2600,6 +3095,8 @@
                     newUserName: newUserName,
                     newUserUsername: newUserUsername,
                     newUserPhotoUrl: newUserPhotoUrl,
+                    countAdded: 1,
+                    isNewUser: !newUserSnap.exists(),
                     verified: true,
                     verifiedAt: serverTimestamp(),
                     timestamp: serverTimestamp(),
@@ -2608,12 +3105,14 @@
 
                 try {
                     const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
-                    verifiedSet.push(referrerId);
-                    sessionStorage.setItem(REFERRAL_VERIFY_KEY, JSON.stringify(verifiedSet));
+                    if (!verifiedSet.includes(referrerId)) {
+                        verifiedSet.push(referrerId);
+                        sessionStorage.setItem(REFERRAL_VERIFY_KEY, JSON.stringify(verifiedSet));
+                    }
                 } catch (e) {}
 
                 showToast("🎉 Welcome! Referral activated.", "success", 4000);
-                console.log("✅ [Referral] Complete!");
+                console.log("✅ [Referral] Complete! Count +1 for referrer", referrerId);
 
             } catch (e) {
                 console.error("❌ [Referral] Error:", e);
@@ -2951,12 +3450,14 @@
             if (coinsEl) coinsEl.textContent = referralData.coins;
 
             if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
-                currentReferralLink = `${BOT_LINK}?start=ref_${userId}`;
+                currentReferralLink = `${MINIAPP_DIRECT_LINK}?startapp=ref_${userId}`;
+                console.log("🎁 [Referral Link]:", currentReferralLink);
             } else {
                 currentReferralLink = "";
             }
 
             renderMilestones();
+            renderAdFreeUI(); // ✅ Re-render Ad-Free UI to update balance / affordability
         }
 
         function renderMilestones() {
@@ -3082,14 +3583,20 @@
                 showToast("⚠️ Open in Telegram", "error", 3000);
                 return;
             }
-            const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(currentReferralLink)}&text=${encodeURIComponent("🎬 TG MASTER এ যোগ দিন! প্রিমিয়াম কন্টেন্ট সবার আগে দেখুন!")}`;
-            if (window.Telegram?.WebApp?.openTelegramLink) {
-                try { window.Telegram.WebApp.openTelegramLink(shareUrl); }
-                catch(e) { window.open(shareUrl, "_blank"); }
-            } else if (window.Telegram?.WebApp?.openLink) {
-                try { window.Telegram.WebApp.openLink(shareUrl); }
-                catch(e) { window.open(shareUrl, "_blank"); }
-            } else window.open(shareUrl, "_blank");
+            const shareText = "🎬 TG MASTER এ যোগ দিন! প্রিমিয়াম কন্টেন্ট সবার আগে দেখুন!";
+            const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(currentReferralLink)}&text=${encodeURIComponent(shareText)}`;
+            
+            try {
+                if (window.Telegram?.WebApp?.openTelegramLink) {
+                    window.Telegram.WebApp.openTelegramLink(shareUrl);
+                } else if (window.Telegram?.WebApp?.openLink) {
+                    window.Telegram.WebApp.openLink(shareUrl);
+                } else {
+                    window.open(shareUrl, "_blank");
+                }
+            } catch(e) {
+                window.open(shareUrl, "_blank");
+            }
         }
 
         async function claimMilestone(milestoneId, coins) {
@@ -3555,7 +4062,7 @@
         }
 
         /* =====================================================
-           VISIT TRACKING
+           VISIT TRACKING & USER ANALYTICS
            ===================================================== */
         async function trackVisit() {
             if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
@@ -3575,9 +4082,6 @@
             } catch (e) {}
         }
 
-        /* =====================================================
-           USER ANALYTICS
-           ===================================================== */
         let userAnalyticsStarted = false;
         async function runUserAnalytics() {
             if (userAnalyticsStarted) return;
@@ -3750,35 +4254,35 @@
             try { tg.BackButton.hide(); } catch(e) {}
         }
 
-        // ✅ IMPROVED: handleTgBack with all modals
         function handleTgBack() {
-            // 1. Close Premium Modal if open
             const premiumModal = document.getElementById("premiumModal");
             if (premiumModal && premiumModal.classList.contains("active")) { 
                 closePremiumModal(); 
                 return; 
             }
             
-            // 2. Close Ad Block Modal if open
+            const adFreeModal = document.getElementById("adFreeModal");
+            if (adFreeModal && adFreeModal.classList.contains("active")) { 
+                adFreeModal.classList.remove("active"); 
+                return; 
+            }
+
             const adBlockModal = document.getElementById("adBlockModal");
             if (adBlockModal && adBlockModal.classList.contains("active")) {
                 hideAdBlockModal();
                 return;
             }
             
-            // 3. Close History View if open
             if (document.getElementById("historyView").classList.contains("active")) { 
                 closeHistoryView(); 
                 return; 
             }
             
-            // 4. Close Search View if open
             if (document.getElementById("searchView").classList.contains("active")) { 
                 closeSearchView(); 
                 return; 
             }
             
-            // 5. If on Referral or Premium tab → go to Home
             const referralTab = document.getElementById("referralTab");
             const premiumTab = document.getElementById("premiumTab");
             
@@ -3787,16 +4291,13 @@
                 return;
             }
             
-            // 6. Close app
             if (tg?.close) tg.close();
         }
         if (tg?.BackButton) {
             try { tg.BackButton.onClick(handleTgBack); } catch(e) {}
         }
 
-        // ✅ IMPROVED: popstate with all modals
         window.addEventListener("popstate", () => {
-            // Premium modal
             const premiumModal = document.getElementById("premiumModal");
             if (premiumModal?.classList.contains("active")) {
                 closePremiumModal();
@@ -3804,7 +4305,13 @@
                 return;
             }
             
-            // Ad Block modal
+            const adFreeModal = document.getElementById("adFreeModal");
+            if (adFreeModal && adFreeModal.classList.contains("active")) { 
+                adFreeModal.classList.remove("active"); 
+                history.pushState(null, "", location.href);
+                return; 
+            }
+
             const adBlockModal = document.getElementById("adBlockModal");
             if (adBlockModal && adBlockModal.classList.contains("active")) {
                 hideAdBlockModal();
@@ -3812,21 +4319,18 @@
                 return;
             }
             
-            // History view
             if (document.getElementById("historyView").classList.contains("active")) {
                 closeHistoryView();
                 history.pushState(null, "", location.href);
                 return;
             }
             
-            // Search view
             if (document.getElementById("searchView").classList.contains("active")) {
                 closeSearchView();
                 history.pushState(null, "", location.href);
                 return;
             }
             
-            // Referral/Premium tab
             const referralTab = document.getElementById("referralTab");
             const premiumTab = document.getElementById("premiumTab");
             
@@ -4083,7 +4587,10 @@
             return data ? JSON.parse(data) : {};
         }
         function saveProgress(p) { localStorage.setItem(`tgmaster_progress_${userId}`, JSON.stringify(p)); }
+        
+        // ✅ MODIFIED: Now checks Ad-Free Premium status first
         function isMovieUnlocked(movieId) {
+            if (isAdFreeActive()) return true; 
             if (REQUIRED_ADS === 0) return true;
             const progress = getProgress();
             const entry = progress[movieId];
@@ -4094,6 +4601,7 @@
             const fresh = (Date.now() - (entry.unlockedAt || 0)) < UNLOCK_VALIDITY_MS;
             return count >= REQUIRED_ADS && sameSession && fresh;
         }
+        
         function getAdCount(movieId) {
             const progress = getProgress();
             const entry = progress[movieId];
@@ -4231,10 +4739,10 @@
             const loadingAdNumber = getAdCount(movie.id) + 1;
 
             let buttonHTML;
-            if (isAdBlocked && !isUnlocked) {
+            if (isAdBlocked && !isUnlocked && !isAdFreeActive()) { // ✅ Added !isAdFreeActive()
                 buttonHTML = `<button class="action-btn blocked" data-id="${movie.id}">🚫 Ad Blocker Detected — Tap to Fix</button>`;
             } else if (isUnlocked) {
-                buttonHTML = `<button data-id="${movie.id}" class="action-btn unlocked download-link">📥 Download / Stream</button>`;
+                buttonHTML = `<button data-id="${movie.id}" class="action-btn unlocked download-link">📥 Watch Now ${isAdFreeActive() && !isSearch ? '(Ad-Free)' : ''}</button>`;
             } else if (isCurrentlyLoading) {
                 buttonHTML = `
                     <button class="action-btn loading" data-id="${movie.id}" disabled>
@@ -4336,11 +4844,11 @@
         function getButtonHTMLOnly(movie, currentAds, isUnlocked) {
             const isCurrentlyLoading = loadingButtons.has(movie.id);
             const loadingAdNumber = getAdCount(movie.id) + 1;
-            if (isAdBlocked && !isUnlocked) {
+            if (isAdBlocked && !isUnlocked && !isAdFreeActive()) { // ✅ Added !isAdFreeActive()
                 return `<button class="action-btn blocked" data-id="${movie.id}">🚫 Ad Blocker Detected — Tap to Fix</button>`;
             }
             if (isUnlocked) {
-                return `<button data-id="${movie.id}" class="action-btn unlocked download-link">📥 Download / Stream</button>`;
+                return `<button data-id="${movie.id}" class="action-btn unlocked download-link">📥 Watch Now ${isAdFreeActive() ? '(Ad-Free)' : ''}</button>`;
             }
             if (isCurrentlyLoading) {
                 return `
@@ -4423,6 +4931,13 @@
             if (e.target.id === "premiumModal") closePremiumModal();
         });
 
+        // ✅ NEW: Ad-Free Modal Listeners
+        document.getElementById("adFreeModalCancelBtn").addEventListener("click", () => document.getElementById("adFreeModal").classList.remove("active"));
+        document.getElementById("adFreeModalBuyBtn").addEventListener("click", unlockAdFreePremium);
+        document.getElementById("adFreeModal").addEventListener("click", (e) => {
+            if (e.target.id === "adFreeModal") document.getElementById("adFreeModal").classList.remove("active");
+        });
+
         async function performSearch() {
             const queryText = searchInput.value.trim().toLowerCase();
             const resultsContainer = document.getElementById("searchResultsContainer");
@@ -4480,6 +4995,32 @@
 
         function startAd(movieId) {
             if (loadingButtons.has(movieId)) return;
+            if (isMovieUnlocked(movieId)) { // In case it's already unlocked
+                const movie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
+                if (movie) {
+                    trackDownload(movieId);
+                    addToHistory(movie, "downloaded");
+                    openSafeLink(movie.link);
+                }
+                return;
+            }
+            
+            // ✅ NEW LOGIC: If Ad-Free active, skip the ad entirely
+            if (isAdFreeActive()) {
+                const progress = getProgress();
+                progress[movieId] = { count: REQUIRED_ADS, session: SESSION_ID, unlockedAt: Date.now() };
+                saveProgress(progress);
+                updateCardDOM(movieId);
+                showToast("✅ Ad-Free Video Opened!", "success");
+                const unlockedMovie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
+                if (unlockedMovie) { 
+                    trackDownload(movieId); 
+                    addToHistory(unlockedMovie, "watched"); 
+                    openSafeLink(unlockedMovie.link);
+                }
+                return;
+            }
+
             if (isAdBlocked) { showAdBlockModal(); showToast("🚫 Ad Blocker detected!", "error", 3000); return; }
             if (REQUIRED_ADS === 0) {
                 const progress = getProgress();
@@ -4488,11 +5029,12 @@
                 updateCardDOM(movieId);
                 showToast("✅ Unlocked!", "success");
                 const unlockedMovie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
-                if (unlockedMovie) addToHistory(unlockedMovie, "watched");
+                if (unlockedMovie) { trackDownload(movieId); addToHistory(unlockedMovie, "watched"); openSafeLink(unlockedMovie.link); }
                 return;
             }
             if (!ADSGRAM_BLOCK_ID) { showToast("⚠️ Adsgram Block ID not configured!", "error"); return; }
             if (typeof window.Adsgram === "undefined") { showToast("⏳ Ad SDK loading...", "error"); return; }
+            
             setButtonLoading(movieId, true);
             showToast("⏳ Loading ad…", "info", 2000);
 
@@ -4517,10 +5059,14 @@
                     updateCardDOM(movieId);
                     updateAllButtonsForMovie(movieId);
                     if (document.getElementById("historyView")?.classList.contains("active")) renderHistory();
-                    if (entry.count >= REQUIRED_ADS) showToast("🎉 Unlocked!", "success", 3000);
-                    else showToast(`✅ Ad ${entry.count}/${REQUIRED_ADS} done`, "success", 2800);
-                    const unlockedMovie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
-                    if (unlockedMovie) addToHistory(unlockedMovie, "watched");
+                    
+                    if (entry.count >= REQUIRED_ADS) {
+                        showToast("🎉 Unlocked!", "success", 3000);
+                        const unlockedMovie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
+                        if (unlockedMovie) { trackDownload(movieId); addToHistory(unlockedMovie, "watched"); openSafeLink(unlockedMovie.link); }
+                    } else {
+                        showToast(`✅ Ad ${entry.count}/${REQUIRED_ADS} done`, "success", 2800);
+                    }
                 }).catch((err) => {
                     loadingButtons.delete(movieId);
                     updateCardDOM(movieId);
@@ -4569,6 +5115,7 @@
         console.log("✅ [TG MASTER] User Panel loaded successfully!");
         console.log("📱 User ID:", userId);
         console.log("🔗 Start Param:", startParam);
+        console.log("🎁 Referral Link Format:", MINIAPP_DIRECT_LINK + "?startapp=ref_" + userId);
     </script>
 </body>
 </html>
