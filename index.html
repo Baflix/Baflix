@@ -26,6 +26,8 @@
             --gold: #f59e0b;
             --premium: #a855f7;
             --premium-glow: rgba(168, 85, 247, 0.4);
+            --adfree: #06b6d4;
+            --adfree-glow: rgba(6, 182, 212, 0.4);
             --radius: 14px;
             --header-height: 64px;
             --bottom-nav-height: 68px;
@@ -304,7 +306,7 @@
             color: #38bdf8;
         }
 
-        /* ===== DAILY MISSION ===== */
+        /* ===== DAILY MISSION (only in mission tab) ===== */
         .daily-mission-section {
             display: none;
             margin-bottom: 18px;
@@ -1327,6 +1329,286 @@
             opacity: 0.6;
         }
 
+        /* ===== AD-FREE PREMIUM SECTION ===== */
+        .adfree-section {
+            margin-top: 28px;
+            margin-bottom: 20px;
+        }
+        .adfree-title {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .adfree-title .shield-icon {
+            font-size: 24px;
+            -webkit-text-fill-color: initial;
+            animation: shieldPulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(6,182,212,0.8));
+        }
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+        .adfree-status-card {
+            background: linear-gradient(135deg, rgba(6,182,212,0.2) 0%, rgba(34,211,238,0.08) 100%);
+            border: 2px solid rgba(6,182,212,0.6);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(6,182,212,0.3);
+            margin-bottom: 16px;
+        }
+        .adfree-status-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #06b6d4, #22d3ee, #06b6d4);
+            background-size: 200% 100%;
+            animation: premiumBorderFlow 2s linear infinite;
+        }
+        .adfree-status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .adfree-status-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .adfree-status-title .shield {
+            font-size: 18px;
+            filter: drop-shadow(0 0 8px rgba(6,182,212,0.8));
+        }
+        .adfree-status-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 12px rgba(34,197,94,0.5);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        .adfree-timer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+        .adfree-timer-icon {
+            font-size: 20px;
+            filter: drop-shadow(0 0 6px rgba(6,182,212,0.6));
+        }
+        .adfree-timer-info { flex-grow: 1; }
+        .adfree-timer-label {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .adfree-timer-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        .adfree-timer-value.ending {
+            color: #f59e0b;
+            animation: timerBlink 1s ease-in-out infinite;
+        }
+        .adfree-timer-value.critical {
+            color: #ef4444;
+            animation: timerBlink 0.6s ease-in-out infinite;
+        }
+        .adfree-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .adfree-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4, #22d3ee);
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+        .adfree-packages-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .adfree-package-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(6,182,212,0.35);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .adfree-package-card:hover {
+            border-color: rgba(6,182,212,0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(6,182,212,0.25);
+        }
+        .adfree-package-card.best-value {
+            border-color: rgba(245,158,11,0.6);
+            background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, var(--card-bg) 100%);
+            box-shadow: 0 0 20px rgba(245,158,11,0.25);
+        }
+        .adfree-package-card.best-value::before {
+            content: "⭐ BEST VALUE";
+            position: absolute;
+            top: 6px;
+            right: -26px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 3px 30px;
+            transform: rotate(35deg);
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(245,158,11,0.5);
+        }
+        .adfree-pkg-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(34,211,238,0.1));
+            border: 1px solid rgba(6,182,212,0.4);
+            box-shadow: 0 0 12px rgba(6,182,212,0.2);
+        }
+        .adfree-pkg-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .adfree-pkg-duration {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .adfree-pkg-desc {
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+        .adfree-pkg-buy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .adfree-pkg-price {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .adfree-buy-btn {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: #fff;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(6,182,212,0.4);
+        }
+        .adfree-buy-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(6,182,212,0.6);
+        }
+        .adfree-buy-btn:disabled {
+            background: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .adfree-buy-btn.extend {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            box-shadow: 0 2px 8px rgba(34,197,94,0.4);
+        }
+        .adfree-buy-btn.extend:hover:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(34,197,94,0.6);
+        }
+        .adfree-empty {
+            text-align: center;
+            padding: 26px 20px;
+            color: var(--muted);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px dashed rgba(6,182,212,0.3);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        .adfree-empty .empty-icon {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+        .adfree-note {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.5;
+            padding: 8px 12px;
+            background: rgba(6,182,212,0.06);
+            border-radius: 8px;
+            border: 1px solid rgba(6,182,212,0.15);
+        }
+        .adfree-note b { color: #22d3ee; }
+
         /* ===== REFERRAL TAB ===== */
         .referral-stats-grid {
             display: grid;
@@ -1968,6 +2250,9 @@
             justify-content: center;
         }
         .history-action-btn.unlocked-history { background: var(--success); }
+        .history-action-btn.adfree-unlocked {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+        }
         .history-action-btn.blocked {
             background: linear-gradient(90deg, #3b0f0f, #7f1d1d, #3b0f0f);
             color: #fca5a5;
@@ -2171,6 +2456,116 @@
             color: #fff;
         }
 
+        /* ===== AD-FREE CONFIRM MODAL ===== */
+        .adfree-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(10px);
+            z-index: 5500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: modalFadeIn 0.3s ease;
+        }
+        .adfree-modal-overlay.active { display: flex; }
+        .adfree-modal-box {
+            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid rgba(6, 182, 212, 0.5);
+            border-radius: 20px;
+            padding: 26px 22px 22px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(6,182,212,0.4);
+            text-align: center;
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .adfree-modal-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 20px rgba(6,182,212,0.8));
+            animation: shieldPulse 2s ease-in-out infinite;
+        }
+        .adfree-modal-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .adfree-modal-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .adfree-modal-info {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 18px;
+            text-align: left;
+            border-left: 3px solid #06b6d4;
+        }
+        .adfree-modal-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(6,182,212,0.15);
+        }
+        .adfree-modal-info-row:last-child { border-bottom: none; }
+        .adfree-modal-info-row .label { color: #94a3b8; }
+        .adfree-modal-info-row .value { color: #fff; font-weight: 700; }
+        .adfree-modal-info-row .value.gold { color: #f59e0b; }
+        .adfree-modal-info-row .value.green { color: #22c55e; }
+        .adfree-modal-info-row .value.red { color: #ef4444; }
+        .adfree-modal-info-row .value.cyan { color: #22d3ee; }
+        .adfree-modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .adfree-modal-btn {
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .adfree-modal-btn.buy {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(6,182,212,0.5);
+        }
+        .adfree-modal-btn.buy:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(6,182,212,0.7);
+        }
+        .adfree-modal-btn.buy:disabled {
+            background: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .adfree-modal-btn.cancel {
+            background: rgba(255,255,255,0.06);
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .adfree-modal-btn.cancel:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
         /* ===== TOAST ===== */
         .toast {
             position: fixed;
@@ -2204,6 +2599,7 @@
         .toast.info { border-color: rgba(0, 136, 204, 0.4); }
         .toast.gold { border-color: rgba(245,158,11,0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 30px rgba(245,158,11,0.3); }
         .toast.premium { border-color: rgba(168,85,247,0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 30px rgba(168,85,247,0.4); }
+        .toast.adfree { border-color: rgba(6,182,212,0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 30px rgba(6,182,212,0.4); }
 
         /* ===== CONFETTI ===== */
         .confetti-container {
@@ -2260,21 +2656,6 @@
     </header>
 
     <div id="homeTab" class="tab-view active">
-        <!-- Daily Mission Section -->
-        <div class="daily-mission-section" id="dailyMissionSection">
-            <div class="daily-mission-header">
-                <div class="daily-mission-title">
-                    <span class="mission-icon">🎯</span>
-                    <span>Daily Missions</span>
-                </div>
-                <div class="mission-streak-badge" id="missionStreakBadge">
-                    <span class="fire-icon">🔥</span>
-                    <span id="streakCount">0</span> Day Streak
-                </div>
-            </div>
-            <div class="mission-list" id="missionList"></div>
-        </div>
-
         <div class="admin-tips-container" id="adminTipsContainer">
             <div class="admin-tips-card">
                 <div class="admin-tips-header">
@@ -2306,7 +2687,7 @@
         </div>
     </div>
 
-    <!-- Mission Tab View -->
+    <!-- Mission Tab View (Only place missions are shown) -->
     <div id="missionTab" class="tab-view">
         <div class="section-title" style="margin-bottom:16px;">
             <span style="font-size:24px;">🎯</span>
@@ -2368,6 +2749,15 @@
             <span>PREMIUM</span>
         </div>
         <div id="premiumContentContainer"></div>
+
+        <!-- Ad-Free Premium Section -->
+        <div class="adfree-section" id="adfreeSection">
+            <div class="adfree-title">
+                <span class="shield-icon">🛡️</span>
+                <span>AD-FREE PREMIUM</span>
+            </div>
+            <div id="adfreeContainer"></div>
+        </div>
     </div>
 
     <nav class="bottom-nav" id="bottomNav">
@@ -2457,6 +2847,21 @@
             <div class="premium-modal-actions">
                 <button class="premium-modal-btn cancel" id="premiumModalCancelBtn">Cancel</button>
                 <button class="premium-modal-btn buy" id="premiumModalBuyBtn">Unlock Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="adfree-modal-overlay" id="adfreeModal">
+        <div class="adfree-modal-box">
+            <div class="adfree-modal-icon">🛡️</div>
+            <div class="adfree-modal-title">Unlock Ad-Free</div>
+            <div class="adfree-modal-subtitle">Ad-Free Premium Access</div>
+            
+            <div class="adfree-modal-info" id="adfreeModalInfo"></div>
+            
+            <div class="adfree-modal-actions">
+                <button class="adfree-modal-btn cancel" id="adfreeModalCancelBtn">Cancel</button>
+                <button class="adfree-modal-btn buy" id="adfreeModalBuyBtn">Buy Now</button>
             </div>
         </div>
     </div>
@@ -2838,6 +3243,7 @@
             if (isRealUser) {
                 initReferralSystem();
                 initPremiumSystem();
+                initAdFreeSystem();
                 initDailyMissionSystem();
                 setTimeout(runUserAnalytics, 100);
             }
@@ -2898,6 +3304,7 @@
                 document.getElementById("premiumTab").classList.add("active");
                 document.body.style.background = "linear-gradient(180deg, #1a0a2f 0%, var(--bg) 30%)";
                 renderPremiumSection();
+                renderAdFreeSection();
             }
 
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2909,7 +3316,7 @@
         document.getElementById("navPremiumBtn").addEventListener("click", () => switchBottomTab("premium"));
 
         /* =====================================================
-           DAILY MISSION SYSTEM
+           DAILY MISSION SYSTEM (only rendered in Mission tab)
            ===================================================== */
         let dailyMissions = [];
         let userMissionData = {
@@ -2928,10 +3335,7 @@
             if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
             missionInitialized = true;
 
-            console.log("🎯 [Mission] Init...");
-
             try {
-                // Listen to missions config
                 const missionsQuery = query(
                     collection(db, "dailyMissions"),
                     orderBy("days", "asc")
@@ -2941,25 +3345,20 @@
                 missionUnsubscribe = onSnapshot(missionsQuery, (snap) => {
                     dailyMissions = [];
                     snap.forEach(d => dailyMissions.push({ id: d.id, ...d.data() }));
-                    console.log("🎯 [Mission] Loaded:", dailyMissions.length, "missions");
-                    renderDailyMissions();
                     renderMissionTab();
                     updateMissionNavBadge();
                 }, (err) => {
-                    console.warn("⚠️ [Mission] Fallback query:", err.message);
                     const q2 = query(collection(db, "dailyMissions"));
                     if (missionUnsubscribe) missionUnsubscribe();
                     missionUnsubscribe = onSnapshot(q2, (snap) => {
                         dailyMissions = [];
                         snap.forEach(d => dailyMissions.push({ id: d.id, ...d.data() }));
                         dailyMissions.sort((a, b) => (a.days || 0) - (b.days || 0));
-                        renderDailyMissions();
                         renderMissionTab();
                         updateMissionNavBadge();
                     });
                 });
 
-                // Listen to user mission data
                 const userRef = doc(db, "telegramUsers", userId);
                 if (missionUserUnsubscribe) missionUserUnsubscribe();
                 missionUserUnsubscribe = onSnapshot(userRef, (docSnap) => {
@@ -2973,16 +3372,12 @@
                             missionStartDate: data.missionStartDate || null
                         };
                         
-                        // Check if we need to update login streak
                         checkAndUpdateLoginStreak();
-                        
-                        renderDailyMissions();
                         renderMissionTab();
                         updateMissionNavBadge();
                     }
                 });
 
-                // Initial login tracking
                 await trackDailyLogin();
 
             } catch (e) {
@@ -3014,12 +3409,10 @@
                 const currentStreak = data.loginStreak || 0;
 
                 if (lastLogin === today) {
-                    // Already logged in today
                     console.log("📅 [Mission] Already logged in today");
                     return;
                 }
 
-                // Check if consecutive
                 let newStreak = currentStreak;
                 if (lastLogin) {
                     const lastDate = new Date(lastLogin);
@@ -3029,7 +3422,7 @@
                     if (diffDays === 1) {
                         newStreak = currentStreak + 1;
                     } else if (diffDays > 1) {
-                        newStreak = 1; // Streak broken
+                        newStreak = 1;
                     }
                 } else {
                     newStreak = 1;
@@ -3042,9 +3435,6 @@
                     missionStartDate: data.missionStartDate || today
                 });
 
-                console.log("📅 [Mission] Login streak updated:", newStreak);
-
-                // Show toast for streak
                 if (newStreak > 1) {
                     showToast(`🔥 ${newStreak} day streak! Keep it up!`, "gold", 3000);
                 }
@@ -3054,113 +3444,12 @@
             }
         }
 
-        function checkAndUpdateLoginStreak() {
-            // This is handled by trackDailyLogin
-        }
-
-        function renderDailyMissions() {
-            const section = document.getElementById("dailyMissionSection");
-            const listContainer = document.getElementById("missionList");
-            const streakBadge = document.getElementById("missionStreakBadge");
-            const streakCount = document.getElementById("streakCount");
-
-            if (!section || !listContainer) return;
-
-            // Update streak badge
-            if (streakBadge && streakCount) {
-                streakCount.textContent = userMissionData.loginStreak || 0;
-                streakBadge.style.display = userMissionData.loginStreak > 0 ? "flex" : "none";
-            }
-
-            // If no missions configured, hide section
-            if (dailyMissions.length === 0) {
-                section.classList.remove("show");
-                return;
-            }
-
-            section.classList.add("show");
-
-            // Filter missions that are applicable
-            const applicableMissions = dailyMissions.filter(m => {
-                const targetDays = m.days || 1;
-                return userMissionData.totalLogins >= 1; // Show all missions if user has logged in at least once
-            });
-
-            if (applicableMissions.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="mission-empty">
-                        <span class="empty-icon">🎯</span>
-                        No missions available.<br>
-                        <span style="font-size:11px; opacity:0.7;">Check back later!</span>
-                    </div>
-                `;
-                return;
-            }
-
-            listContainer.innerHTML = "";
-
-            applicableMissions.forEach(mission => {
-                const targetDays = mission.days || 1;
-                const coins = mission.coins || 0;
-                const missionId = mission.id;
-                const currentStreak = userMissionData.loginStreak || 0;
-                const isClaimed = (userMissionData.claimedMissions || []).includes(missionId);
-                const isCompleted = currentStreak >= targetDays;
-                const progress = Math.min(100, (currentStreak / targetDays) * 100);
-
-                let cardClass = "mission-card";
-                if (isClaimed) cardClass += " claimed";
-                else if (isCompleted) cardClass += " claimable";
-
-                let actionHTML;
-                if (isClaimed) {
-                    actionHTML = `<div class="mission-claimed-badge">✅ Claimed</div>`;
-                } else if (isCompleted) {
-                    actionHTML = `<button class="mission-claim-btn" data-mission-id="${missionId}" data-coins="${coins}">🎁 Claim</button>`;
-                } else {
-                    actionHTML = `<div class="mission-locked-badge">🔒 Locked</div>`;
-                }
-
-                const card = document.createElement("div");
-                card.className = cardClass;
-                card.innerHTML = `
-                    <div class="mission-top-row">
-                        <div class="mission-icon-box">${isClaimed ? '✅' : isCompleted ? '🎁' : '🎯'}</div>
-                        <div class="mission-info">
-                            <div class="mission-title">Login ${targetDays} Day${targetDays > 1 ? 's' : ''}</div>
-                            <div class="mission-progress-text">
-                                <b>${Math.min(currentStreak, targetDays)}</b>/${targetDays} days
-                            </div>
-                            <div class="mission-progress-bar">
-                                <div class="mission-progress-fill" style="width: ${progress}%;"></div>
-                            </div>
-                        </div>
-                        <div class="mission-reward-box">
-                            <div class="mission-coins">🪙 ${coins}</div>
-                            ${actionHTML}
-                        </div>
-                    </div>
-                `;
-
-                listContainer.appendChild(card);
-            });
-
-            // Attach claim events
-            listContainer.querySelectorAll(".mission-claim-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    claimDailyMission(
-                        btn.dataset.missionId,
-                        parseInt(btn.dataset.coins, 10)
-                    );
-                });
-            });
-        }
+        function checkAndUpdateLoginStreak() {}
 
         function renderMissionTab() {
             const container = document.getElementById("missionTabList");
             if (!container) return;
 
-            // Update streak display in tab
             const streak = userMissionData.loginStreak || 0;
             
             if (dailyMissions.length === 0) {
@@ -3174,7 +3463,6 @@
                 return;
             }
 
-            // Create streak summary
             let html = `
                 <div class="referral-stats-grid" style="margin-bottom:18px;">
                     <div class="referral-stat-card coins">
@@ -3190,7 +3478,6 @@
                 </div>
             `;
 
-            // Add missions
             html += `<div class="mission-list">`;
 
             dailyMissions.forEach(mission => {
@@ -3239,7 +3526,6 @@
             html += `</div>`;
             container.innerHTML = html;
 
-            // Attach claim events
             container.querySelectorAll(".mission-claim-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     claimDailyMission(
@@ -3254,7 +3540,6 @@
             const badge = document.getElementById("missionNavBadge");
             if (!badge) return;
 
-            // Count claimable missions
             const claimableCount = dailyMissions.filter(m => {
                 const isClaimed = (userMissionData.claimedMissions || []).includes(m.id);
                 const isCompleted = (userMissionData.loginStreak || 0) >= (m.days || 1);
@@ -3303,7 +3588,6 @@
                     referralCoins: increment(coins)
                 });
 
-                // Log claim
                 await addDoc(collection(db, "missionClaims"), {
                     userId: userId,
                     userName: freshData.firstName || "",
@@ -3317,6 +3601,9 @@
 
                 showToast(`🎉 +${coins} coins claimed!`, "gold", 3000);
                 fireConfetti();
+
+                renderMissionTab();
+                updateMissionNavBadge();
 
             } catch (e) {
                 console.error("❌ [Mission Claim]", e);
@@ -3428,12 +3715,7 @@
         }
 
         function detectReferralFromStartParam() {
-            console.log("🔍 [Referral Detect] startParam:", startParam);
-            
-            if (!startParam) {
-                console.log("ℹ️ [Referral] No referral param found");
-                return;
-            }
+            if (!startParam) return;
 
             let referrerId = "";
             
@@ -3444,41 +3726,22 @@
             } else if (/^\d+$/.test(startParam)) {
                 referrerId = startParam.trim();
             } else {
-                console.warn("⚠️ [Referral] Unknown param format:", startParam);
                 return;
             }
             
-            console.log("🎁 [Referral] Extracted referrerId:", referrerId);
-            
-            if (!referrerId) {
-                console.warn("⚠️ [Referral] Empty referrerId");
-                return;
-            }
-            if (referrerId === userId) {
-                console.warn("⚠️ [Referral] Self-referral blocked");
-                return;
-            }
-            if (!/^\d+$/.test(referrerId)) {
-                console.warn("⚠️ [Referral] Invalid referrer format (not numeric)");
-                return;
-            }
-            if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) {
-                console.warn("⚠️ [Referral] Invalid user");
-                return;
-            }
+            if (!referrerId) return;
+            if (referrerId === userId) return;
+            if (!/^\d+$/.test(referrerId)) return;
+            if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
 
             try {
                 const verifiedSet = JSON.parse(sessionStorage.getItem(REFERRAL_VERIFY_KEY) || "[]");
-                if (verifiedSet.includes(referrerId)) {
-                    console.log("ℹ️ [Referral] Already verified this referrer in this session");
-                    return;
-                }
+                if (verifiedSet.includes(referrerId)) return;
             } catch (e) {}
 
             pendingReferralId = referrerId;
             userActivityStartTime = Date.now();
             
-            console.log("⏱️ [Referral] Will verify after", MIN_ACTIVITY_MS, "ms");
             setTimeout(verifyAndProcessReferral, MIN_ACTIVITY_MS + 500);
         }
 
@@ -3486,16 +3749,12 @@
             if (!pendingReferralId || referralProcessing) return;
 
             const timeSpent = Date.now() - userActivityStartTime;
-            console.log(`⏱️ [Activity] ${timeSpent}ms / ${MIN_ACTIVITY_MS}ms`);
-
             if (timeSpent < MIN_ACTIVITY_MS) {
                 setTimeout(verifyAndProcessReferral, MIN_ACTIVITY_MS - timeSpent + 500);
                 return;
             }
 
             activityVerified = true;
-            console.log("✅ [Activity] Verified!");
-            
             await processVerifiedReferral(pendingReferralId);
         }
 
@@ -3504,10 +3763,7 @@
             referralProcessing = true;
 
             try {
-                console.log("🎁 [Referral] Processing:", referrerId, "←", userId);
-
                 if (referrerId === userId) {
-                    console.warn("⚠️ [Referral] Self-referral blocked");
                     referralProcessing = false;
                     return;
                 }
@@ -3517,8 +3773,6 @@
                 const newUserData = newUserSnap.exists() ? newUserSnap.data() : {};
 
                 if (newUserData.referredBy && newUserData.referredBy !== "" && newUserData.referredBy !== null) {
-                    console.log("ℹ️ [Referral] User already referred by:", newUserData.referredBy);
-                    console.log("ℹ️ [Referral] Skipping — user can only be referred ONCE");
                     referralProcessing = false;
                     return;
                 }
@@ -3527,7 +3781,6 @@
                 const referrerSnap = await getDoc(referrerRef);
                 
                 if (!referrerSnap.exists()) {
-                    console.warn("⚠️ [Referral] Referrer not found:", referrerId);
                     referralProcessing = false;
                     return;
                 }
@@ -3574,7 +3827,6 @@
                 } catch (e) {}
 
                 showToast("🎉 Welcome! Referral activated.", "success", 4000);
-                console.log("✅ [Referral] Complete! Count +1 for referrer", referrerId);
 
             } catch (e) {
                 console.error("❌ [Referral] Error:", e);
@@ -3587,8 +3839,6 @@
             if (referralInitStarted) return;
             if (!userId || userId === "guest_user") return;
             referralInitStarted = true;
-
-            console.log("🎁 [Referral] Init...");
 
             try {
                 const userRef = doc(db, "telegramUsers", userId);
@@ -3644,9 +3894,9 @@
                             claimedMilestones: d.claimedMilestones || [],
                             referredBy: d.referredBy || null
                         };
-                        console.log("🔄 [Referral] Live:", referralData);
                         updateReferralUI();
                         updatePremiumModalIfOpen();
+                        updateAdFreeModalIfOpen();
                     }
                 }, (err) => {
                     console.error("❌ [Referral] Listener error:", err);
@@ -3689,8 +3939,6 @@
             if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) return;
             if (recentReferralsUnsub) recentReferralsUnsub();
 
-            console.log("📜 [Recent Referrals] Starting...");
-
             const q1 = query(
                 collection(db, "referralEvents"),
                 where("referrerId", "==", userId),
@@ -3701,7 +3949,6 @@
             recentReferralsUnsub = onSnapshot(q1, 
                 (snap) => handleReferralEventsSnapshot(snap),
                 (err) => {
-                    console.warn("⚠️ [Recent Referrals] Fallback:", err.message);
                     const q2 = query(
                         collection(db, "referralEvents"),
                         where("referrerId", "==", userId),
@@ -3729,12 +3976,9 @@
         }
 
         function handleReferralEvents(events) {
-            console.log(`📜 [Recent Referrals] ${events.length} referrals`);
-            
             if (!initialReferralLoad) {
                 events.forEach(event => {
                     if (!lastSeenReferralIds.has(event.id)) {
-                        console.log("🎉 [NEW Referral]:", event);
                         showReferralNotification(
                             event.newUserName || "New User",
                             event.newUserPhotoUrl || "",
@@ -3833,9 +4077,7 @@
             const notification = document.createElement("div");
             notification.className = "referral-notification";
             
-            const avatarLetter = (name || "U").charAt(0).toUpperCase();
             let avatarHTML;
-            
             if (photoUrl && photoUrl.startsWith("http")) {
                 avatarHTML = `<div class="referral-notification-avatar"><img src="${photoUrl}" alt="${name}" onerror="this.parentElement.innerHTML='🎉'"></div>`;
             } else {
@@ -3913,14 +4155,14 @@
 
             if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
                 currentReferralLink = `${MINIAPP_DIRECT_LINK}?startapp=ref_${userId}`;
-                console.log("🎁 [Referral Link]:", currentReferralLink);
             } else {
                 currentReferralLink = "";
             }
 
             renderMilestones();
-            renderDailyMissions();
             renderMissionTab();
+            renderPremiumSection();
+            renderAdFreeSection();
         }
 
         function renderMilestones() {
@@ -4115,7 +4357,7 @@
         }
 
         /* =====================================================
-           PREMIUM SYSTEM
+           PREMIUM SYSTEM (Content Unlock)
            ===================================================== */
         let premiumSettings = {
             enabled: false,
@@ -4525,6 +4767,405 @@
         }
 
         /* =====================================================
+           AD-FREE PREMIUM SYSTEM (Ad Remove for Non-Premium Content)
+           ===================================================== */
+        let adFreeSettings = {
+            enabled: false,
+            packages: [], // Array of { id, durationMs, durationLabel, coins }
+            purchasedAt: 0,
+            expiresAt: 0,
+            activePackageId: null
+        };
+        let adFreeUserDataUnsub = null;
+        let adFreeSettingsUnsub = null;
+        let adFreeTimerInterval = null;
+        let adFreeInitStarted = false;
+        let selectedAdFreePackage = null;
+
+        async function initAdFreeSystem() {
+            if (adFreeInitStarted) return;
+            if (!userId || userId === "guest_user") return;
+            adFreeInitStarted = true;
+
+            // Listen to ad-free settings from admin config
+            if (adFreeSettingsUnsub) adFreeSettingsUnsub();
+            adFreeSettingsUnsub = onSnapshot(doc(db, "settings", "config"), (docSnap) => {
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                adFreeSettings.enabled = data.adFreeEnabled === true;
+                
+                // Packages can be array or object
+                let pkgs = data.adFreePackages || [];
+                if (!Array.isArray(pkgs)) {
+                    pkgs = Object.values(pkgs).filter(Boolean);
+                }
+                
+                // Normalize packages
+                adFreeSettings.packages = pkgs.map((pkg, idx) => {
+                    const durationMs = pkg.durationMs 
+                        || (pkg.durationMinutes ? pkg.durationMinutes * 60 * 1000 : null)
+                        || (pkg.durationHours ? pkg.durationHours * 60 * 60 * 1000 : null)
+                        || (pkg.durationDays ? pkg.durationDays * 24 * 60 * 60 * 1000 : null)
+                        || (pkg.hours ? pkg.hours * 60 * 60 * 1000 : null)
+                        || (pkg.days ? pkg.days * 24 * 60 * 60 * 1000 : null)
+                        || (pkg.minutes ? pkg.minutes * 60 * 1000 : null)
+                        || 24 * 60 * 60 * 1000;
+                    
+                    let label = pkg.durationLabel 
+                        || pkg.label 
+                        || "";
+                    
+                    if (!label) {
+                        if (pkg.durationDays || pkg.days) {
+                            const d = pkg.durationDays || pkg.days;
+                            label = d === 1 ? "1 Day" : `${d} Days`;
+                        } else if (pkg.durationHours || pkg.hours) {
+                            const h = pkg.durationHours || pkg.hours;
+                            label = h === 1 ? "1 Hour" : `${h} Hours`;
+                        } else if (pkg.durationMinutes || pkg.minutes) {
+                            const m = pkg.durationMinutes || pkg.minutes;
+                            label = m === 1 ? "1 Minute" : `${m} Minutes`;
+                        } else {
+                            label = "24 Hours";
+                        }
+                    }
+                    
+                    return {
+                        id: pkg.id || `pkg_${idx}`,
+                        durationMs: durationMs,
+                        durationLabel: label,
+                        coins: pkg.coins || pkg.cost || pkg.price || 100,
+                        bestValue: pkg.bestValue === true || pkg.isBestValue === true
+                    };
+                }).sort((a, b) => a.durationMs - b.durationMs);
+                
+                renderAdFreeSection();
+            });
+
+            // Listen to user's ad-free data
+            if (adFreeUserDataUnsub) adFreeUserDataUnsub();
+            adFreeUserDataUnsub = onSnapshot(doc(db, "telegramUsers", userId), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    adFreeSettings.purchasedAt = data.adFreePurchasedAt || 0;
+                    adFreeSettings.expiresAt = data.adFreeExpiresAt || 0;
+                    adFreeSettings.activePackageId = data.adFreeActivePackageId || null;
+                    renderAdFreeSection();
+                    refreshAllCards();
+                }
+            });
+
+            startAdFreeTimer();
+        }
+
+        function isAdFreeActive() {
+            if (!adFreeSettings.expiresAt) return false;
+            return Date.now() < adFreeSettings.expiresAt;
+        }
+
+        function getAdFreeTimeRemaining() {
+            if (!adFreeSettings.expiresAt) return 0;
+            return Math.max(0, adFreeSettings.expiresAt - Date.now());
+        }
+
+        function startAdFreeTimer() {
+            if (adFreeTimerInterval) clearInterval(adFreeTimerInterval);
+            
+            adFreeTimerInterval = setInterval(() => {
+                const timerEl = document.getElementById("adfreeTimerValue");
+                if (timerEl) {
+                    const remaining = getAdFreeTimeRemaining();
+                    if (remaining <= 0) {
+                        timerEl.textContent = "Expired";
+                        timerEl.className = "adfree-timer-value critical";
+                        setTimeout(() => {
+                            renderAdFreeSection();
+                            if (adFreeSettings.purchasedAt) {
+                                showToast("⏰ Ad-Free expired! Renew to remove ads.", "error", 4000);
+                            }
+                            refreshAllCards();
+                        }, 500);
+                    } else {
+                        timerEl.textContent = formatTimeRemaining(remaining);
+                        if (remaining < 60 * 1000) timerEl.className = "adfree-timer-value critical";
+                        else if (remaining < 5 * 60 * 1000) timerEl.className = "adfree-timer-value ending";
+                        else timerEl.className = "adfree-timer-value";
+                        
+                        const progressEl = document.getElementById("adfreeProgressFill");
+                        if (progressEl && adFreeSettings.purchasedAt && adFreeSettings.expiresAt) {
+                            const total = adFreeSettings.expiresAt - adFreeSettings.purchasedAt;
+                            const elapsed = Date.now() - adFreeSettings.purchasedAt;
+                            const progress = Math.min(100, Math.max(0, (elapsed / total) * 100));
+                            progressEl.style.width = progress + "%";
+                        }
+                    }
+                }
+            }, 1000);
+        }
+
+        function renderAdFreeSection() {
+            const container = document.getElementById("adfreeContainer");
+            if (!container) return;
+
+            if (!adFreeSettings.enabled) {
+                container.innerHTML = `
+                    <div class="adfree-empty">
+                        <span class="empty-icon">🛡️</span>
+                        Ad-Free Premium শীঘ্রই আসছে!<br>
+                        <span style="font-size:11px; opacity:0.7;">Stay tuned...</span>
+                    </div>
+                `;
+                return;
+            }
+
+            if (adFreeSettings.packages.length === 0) {
+                container.innerHTML = `
+                    <div class="adfree-empty">
+                        <span class="empty-icon">📦</span>
+                        No packages available.<br>
+                        <span style="font-size:11px; opacity:0.7;">Check back later!</span>
+                    </div>
+                `;
+                return;
+            }
+
+            const active = isAdFreeActive();
+            let html = "";
+
+            if (active) {
+                const remaining = getAdFreeTimeRemaining();
+                let timerClass = "";
+                if (remaining < 60 * 1000) timerClass = "critical";
+                else if (remaining < 5 * 60 * 1000) timerClass = "ending";
+
+                // Find active package
+                const activePkg = adFreeSettings.packages.find(p => p.id === adFreeSettings.activePackageId) 
+                    || { durationLabel: "Ad-Free", durationMs: 0 };
+
+                html += `
+                    <div class="adfree-status-card">
+                        <div class="adfree-status-header">
+                            <div class="adfree-status-title">
+                                <span class="shield">🛡️</span>
+                                <span>Ad-Free Active</span>
+                            </div>
+                            <div class="adfree-status-badge">ACTIVE</div>
+                        </div>
+                        
+                        <div class="adfree-timer-row">
+                            <span class="adfree-timer-icon">⏱️</span>
+                            <div class="adfree-timer-info">
+                                <div class="adfree-timer-label">Time Remaining</div>
+                                <div class="adfree-timer-value ${timerClass}" id="adfreeTimerValue">
+                                    ${formatTimeRemaining(remaining)}
+                                </div>
+                                <div class="adfree-progress-bar">
+                                    <div class="adfree-progress-fill" id="adfreeProgressFill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Show packages
+            html += `<div class="adfree-packages-grid">`;
+            adFreeSettings.packages.forEach(pkg => {
+                const userCoins = referralData.coins || 0;
+                const canAfford = userCoins >= pkg.coins;
+                const isActive = active && adFreeSettings.activePackageId === pkg.id;
+                
+                let buyLabel = "Buy Now";
+                let btnClass = "";
+                let disabled = false;
+                
+                if (isActive) {
+                    buyLabel = "Extend";
+                    btnClass = "extend";
+                } else if (active) {
+                    buyLabel = "Extend";
+                    btnClass = "extend";
+                } else if (!canAfford) {
+                    buyLabel = `Need ${pkg.coins - userCoins}`;
+                    disabled = true;
+                } else {
+                    buyLabel = `Buy · ${pkg.coins}`;
+                }
+
+                html += `
+                    <div class="adfree-package-card ${pkg.bestValue ? 'best-value' : ''}">
+                        <div class="adfree-pkg-icon">🛡️</div>
+                        <div class="adfree-pkg-info">
+                            <div class="adfree-pkg-duration">${pkg.durationLabel}</div>
+                            <div class="adfree-pkg-desc">Ad-free access for ${pkg.durationLabel.toLowerCase()}</div>
+                        </div>
+                        <div class="adfree-pkg-buy">
+                            <div class="adfree-pkg-price">🪙 ${pkg.coins}</div>
+                            <button class="adfree-buy-btn ${btnClass}" 
+                                    data-package-id="${pkg.id}" 
+                                    ${disabled ? 'disabled' : ''}>
+                                ${buyLabel}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            if (!active) {
+                html += `
+                    <div class="adfree-note">
+                        💡 Ad-Free কিনলে <b>নন-প্রিমিয়াম কনটেন্টে</b> কোনো এড দেখাবে না।<br>
+                        Premium content আলাদা।
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+
+            // Attach buy handlers
+            container.querySelectorAll(".adfree-buy-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const pkgId = btn.dataset.packageId;
+                    const pkg = adFreeSettings.packages.find(p => p.id === pkgId);
+                    if (pkg) openAdFreeModal(pkg);
+                });
+            });
+        }
+
+        function openAdFreeModal(pkg) {
+            const modal = document.getElementById("adfreeModal");
+            if (!modal) return;
+            selectedAdFreePackage = pkg;
+            updateAdFreeModalInfo();
+            modal.classList.add("active");
+        }
+
+        function closeAdFreeModal() {
+            const modal = document.getElementById("adfreeModal");
+            if (modal) modal.classList.remove("active");
+            selectedAdFreePackage = null;
+        }
+
+        function updateAdFreeModalInfo() {
+            const infoEl = document.getElementById("adfreeModalInfo");
+            if (!infoEl || !selectedAdFreePackage) return;
+            
+            const userCoins = referralData.coins || 0;
+            const cost = selectedAdFreePackage.coins;
+            const canAfford = userCoins >= cost;
+            const remaining = userCoins - cost;
+            const isExtend = isAdFreeActive();
+            
+            infoEl.innerHTML = `
+                <div class="adfree-modal-info-row">
+                    <span class="label">📦 Package</span>
+                    <span class="value cyan">${selectedAdFreePackage.durationLabel}</span>
+                </div>
+                <div class="adfree-modal-info-row">
+                    <span class="label">🪙 Cost</span>
+                    <span class="value gold">${cost}</span>
+                </div>
+                <div class="adfree-modal-info-row">
+                    <span class="label">💰 Your Coins</span>
+                    <span class="value ${canAfford ? 'green' : 'red'}">${userCoins}</span>
+                </div>
+                <div class="adfree-modal-info-row">
+                    <span class="label">${canAfford ? (isExtend ? '✅ After Extend' : '✅ After Buy') : '❌ Need More'}</span>
+                    <span class="value ${canAfford ? 'green' : 'red'}">${canAfford ? remaining + ' coins' : (cost - userCoins) + ' more'}</span>
+                </div>
+            `;
+            
+            const buyBtn = document.getElementById("adfreeModalBuyBtn");
+            if (buyBtn) {
+                buyBtn.disabled = !canAfford;
+                if (canAfford) {
+                    buyBtn.textContent = isExtend ? `🛡️ Extend +${selectedAdFreePackage.durationLabel}` : `🛡️ Buy for ${cost}`;
+                } else {
+                    buyBtn.textContent = `Need ${cost - userCoins} more`;
+                }
+            }
+        }
+
+        function updateAdFreeModalIfOpen() {
+            const modal = document.getElementById("adfreeModal");
+            if (modal && modal.classList.contains("active")) updateAdFreeModalInfo();
+        }
+
+        async function purchaseAdFree() {
+            if (!userId || userId === "guest_user" || !/^\d+$/.test(userId)) {
+                showToast("❌ Please open in Telegram", "error");
+                return;
+            }
+
+            if (!selectedAdFreePackage) {
+                showToast("⚠️ No package selected", "error");
+                return;
+            }
+
+            const pkg = selectedAdFreePackage;
+            const cost = pkg.coins;
+            
+            try {
+                const userRef = doc(db, "telegramUsers", userId);
+                const freshSnap = await getDoc(userRef);
+                const freshData = freshSnap.data() || {};
+                const freshCoins = freshData.referralCoins || 0;
+
+                if (freshCoins < cost) {
+                    showToast(`❌ Need ${cost - freshCoins} more coins!`, "error", 3000);
+                    updateAdFreeModalInfo();
+                    return;
+                }
+
+                const now = Date.now();
+                const existingExpiry = freshData.adFreeExpiresAt || 0;
+                const isCurrentlyActive = existingExpiry > now;
+                
+                // If currently active, extend from existing expiry. Otherwise start from now.
+                const baseTime = isCurrentlyActive ? existingExpiry : now;
+                const newExpiresAt = baseTime + pkg.durationMs;
+
+                await updateDoc(userRef, {
+                    referralCoins: increment(-cost),
+                    adFreePurchasedAt: now,
+                    adFreeExpiresAt: newExpiresAt,
+                    adFreeActivePackageId: pkg.id,
+                    adFreeLastPurchase: serverTimestamp()
+                });
+
+                await addDoc(collection(db, "adFreePurchases"), {
+                    userId: userId,
+                    userName: freshData.firstName || "",
+                    username: freshData.username || "",
+                    packageId: pkg.id,
+                    packageDurationLabel: pkg.durationLabel,
+                    packageDurationMs: pkg.durationMs,
+                    coinsSpent: cost,
+                    purchasedAtMs: now,
+                    expiresAtMs: newExpiresAt,
+                    isExtension: isCurrentlyActive,
+                    purchasedAt: serverTimestamp()
+                });
+
+                closeAdFreeModal();
+                showToast(
+                    isCurrentlyActive 
+                        ? `🛡️ Extended by ${pkg.durationLabel}!` 
+                        : `🛡️ Ad-Free activated for ${pkg.durationLabel}!`,
+                    "adfree", 
+                    4000
+                );
+                fireConfetti();
+                refreshAllCards();
+
+            } catch (e) {
+                console.error("❌ [AdFree]", e);
+                showToast("❌ Purchase failed. Try again.", "error");
+            }
+        }
+
+        /* =====================================================
            VISIT TRACKING
            ===================================================== */
         async function trackVisit() {
@@ -4730,6 +5371,12 @@
                 return; 
             }
             
+            const adFreeModal = document.getElementById("adfreeModal");
+            if (adFreeModal && adFreeModal.classList.contains("active")) {
+                closeAdFreeModal();
+                return;
+            }
+            
             const adBlockModal = document.getElementById("adBlockModal");
             if (adBlockModal && adBlockModal.classList.contains("active")) {
                 hideAdBlockModal();
@@ -4765,6 +5412,13 @@
             const premiumModal = document.getElementById("premiumModal");
             if (premiumModal?.classList.contains("active")) {
                 closePremiumModal();
+                history.pushState(null, "", location.href);
+                return;
+            }
+            
+            const adFreeModal = document.getElementById("adfreeModal");
+            if (adFreeModal?.classList.contains("active")) {
+                closeAdFreeModal();
                 history.pushState(null, "", location.href);
                 return;
             }
@@ -4861,14 +5515,15 @@
                         ${overlayDesc ? `<div class="poster-overlay-desc">${overlayDesc}</div>` : ""}
                     </div>` : "";
                 const stillUnlocked = isMovieUnlocked(item.id);
+                const adFreeActive = isAdFreeActive();
                 const currentAds = getAdCount(item.id);
                 const isCurrentlyLoading = loadingButtons.has(item.id);
 
                 let btnHTML;
-                if (isAdBlocked && !stillUnlocked) {
+                if (isAdBlocked && !stillUnlocked && !adFreeActive) {
                     btnHTML = `<button class="history-action-btn blocked" data-id="${item.id}">🚫 Ad Blocker — Tap to Fix</button>`;
-                } else if (stillUnlocked) {
-                    btnHTML = `<button class="history-action-btn unlocked-history" data-id="${item.id}">📥 Download / Stream</button>`;
+                } else if (stillUnlocked || adFreeActive) {
+                    btnHTML = `<button class="history-action-btn ${adFreeActive && !stillUnlocked ? 'adfree-unlocked' : 'unlocked-history'}" data-id="${item.id}">📥 Download / Stream</button>`;
                 } else if (isCurrentlyLoading) {
                     btnHTML = `<button class="history-action-btn loading" data-id="${item.id}" disabled>⏳ Loading Ad…</button>`;
                 } else {
@@ -4907,17 +5562,31 @@
 
         function handleHistoryAction(movieId) {
             if (loadingButtons.has(movieId)) return;
-            if (isAdBlocked && !isMovieUnlocked(movieId)) {
+            
+            const adFreeActive = isAdFreeActive();
+            
+            if (isAdBlocked && !isMovieUnlocked(movieId) && !adFreeActive) {
                 showAdBlockModal();
                 showToast("🚫 Ad Blocker detected!", "error", 3000);
                 return;
             }
+            
             const history = getHistory();
             const histItem = history.find(h => h.id === movieId);
             const movie = moviesData.find(m => m.id === movieId)
                 || window._lastSearchResults?.find(m => m.id === movieId)
                 || histItem;
             if (!movie || !movie.link) { showToast("⚠️ Content not available!", "error"); return; }
+            
+            // Ad-Free active: bypass ads
+            if (adFreeActive && !isMovieUnlocked(movieId)) {
+                trackDownload(movieId);
+                addToHistory(movie, "downloaded");
+                openSafeLink(movie.link);
+                showToast("🛡️ Ad-free download!", "adfree", 2000);
+                return;
+            }
+            
             if (isMovieUnlocked(movieId)) {
                 trackDownload(movieId);
                 addToHistory(movie, "downloaded");
@@ -5191,9 +5860,13 @@
                 </div>` : "";
             const isCurrentlyLoading = loadingButtons.has(movie.id);
             const loadingAdNumber = getAdCount(movie.id) + 1;
+            const adFreeActive = isAdFreeActive();
+            const adFreeBypass = adFreeActive && !isUnlocked;
 
             let buttonHTML;
-            if (isAdBlocked && !isUnlocked) {
+            if (adFreeBypass) {
+                buttonHTML = `<button data-id="${movie.id}" class="action-btn adfree-unlocked download-link" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">🛡️ Download / Stream (Ad-Free)</button>`;
+            } else if (isAdBlocked && !isUnlocked) {
                 buttonHTML = `<button class="action-btn blocked" data-id="${movie.id}">🚫 Ad Blocker Detected — Tap to Fix</button>`;
             } else if (isUnlocked) {
                 buttonHTML = `<button data-id="${movie.id}" class="action-btn unlocked download-link">📥 Download / Stream</button>`;
@@ -5216,9 +5889,12 @@
                 buttonHTML = `<button class="action-btn ad-btn" data-id="${movie.id}">🔒 Unlock (${currentAds}/${REQUIRED_ADS})</button>`;
             }
 
+            const adFreeBadge = adFreeActive ? `<span class="movie-badge adfree-badge" style="top: 42px; background: linear-gradient(135deg, #06b6d4, #0891b2); box-shadow: 0 0 12px rgba(6,182,212,0.6);">🛡️ AD-FREE</span>` : "";
+
             return `
                 <div class="poster-container" style="height:${posterHeight};">
                     <span class="movie-badge">${movie.category || 'General'}</span>
+                    ${adFreeBadge}
                     <img src="${movie.poster}" alt="${movie.title}" loading="lazy">
                     ${overlayHTML}
                 </div>
@@ -5246,12 +5922,20 @@
                 dl.addEventListener("click", (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (!isMovieUnlocked(movieId)) { showToast("⚠️ Unlock first!", "error", 3000); return; }
                     const movie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
+                    const adFreeActive = isAdFreeActive();
+                    
+                    if (!isMovieUnlocked(movieId) && !adFreeActive) { 
+                        showToast("⚠️ Unlock first!", "error", 3000); 
+                        return; 
+                    }
                     if (movie) {
                         trackDownload(movieId);
                         addToHistory(movie, "downloaded");
                         openSafeLink(movie.link);
+                        if (adFreeActive && !isMovieUnlocked(movieId)) {
+                            showToast("🛡️ Ad-free download!", "adfree", 2000);
+                        }
                     }
                 });
             }
@@ -5298,6 +5982,12 @@
         function getButtonHTMLOnly(movie, currentAds, isUnlocked) {
             const isCurrentlyLoading = loadingButtons.has(movie.id);
             const loadingAdNumber = getAdCount(movie.id) + 1;
+            const adFreeActive = isAdFreeActive();
+            const adFreeBypass = adFreeActive && !isUnlocked;
+
+            if (adFreeBypass) {
+                return `<button data-id="${movie.id}" class="action-btn adfree-unlocked download-link" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">🛡️ Download / Stream (Ad-Free)</button>`;
+            }
             if (isAdBlocked && !isUnlocked) {
                 return `<button class="action-btn blocked" data-id="${movie.id}">🚫 Ad Blocker Detected — Tap to Fix</button>`;
             }
@@ -5386,6 +6076,12 @@
             if (e.target.id === "premiumModal") closePremiumModal();
         });
 
+        document.getElementById("adfreeModalCancelBtn").addEventListener("click", closeAdFreeModal);
+        document.getElementById("adfreeModalBuyBtn").addEventListener("click", purchaseAdFree);
+        document.getElementById("adfreeModal").addEventListener("click", (e) => {
+            if (e.target.id === "adfreeModal") closeAdFreeModal();
+        });
+
         async function performSearch() {
             const queryText = searchInput.value.trim().toLowerCase();
             const resultsContainer = document.getElementById("searchResultsContainer");
@@ -5443,6 +6139,19 @@
 
         function startAd(movieId) {
             if (loadingButtons.has(movieId)) return;
+            
+            // Ad-Free bypass
+            if (isAdFreeActive()) {
+                const progress = getProgress();
+                progress[movieId] = { count: REQUIRED_ADS, session: SESSION_ID, unlockedAt: Date.now() };
+                saveProgress(progress);
+                updateCardDOM(movieId);
+                showToast("🛡️ Ad-free unlock!", "adfree", 2500);
+                const unlockedMovie = moviesData.find(m => m.id === movieId) || window._lastSearchResults?.find(m => m.id === movieId);
+                if (unlockedMovie) addToHistory(unlockedMovie, "watched");
+                return;
+            }
+            
             if (isAdBlocked) { showAdBlockModal(); showToast("🚫 Ad Blocker detected!", "error", 3000); return; }
             if (REQUIRED_ADS === 0) {
                 const progress = getProgress();
@@ -5507,7 +6216,7 @@
            ===================================================== */
         function fireConfetti() {
             const container = document.getElementById("confettiContainer");
-            const colors = ["#f59e0b", "#fbbf24", "#22c55e", "#38bdf8", "#a855f7", "#ef4444"];
+            const colors = ["#f59e0b", "#fbbf24", "#22c55e", "#38bdf8", "#a855f7", "#ef4444", "#06b6d4", "#22d3ee"];
             for (let i = 0; i < 60; i++) {
                 const piece = document.createElement("div");
                 piece.className = "confetti-piece";
@@ -5533,7 +6242,8 @@
         console.log("📱 User ID:", userId);
         console.log("🔗 Start Param:", startParam);
         console.log("🎁 Referral Link Format:", MINIAPP_DIRECT_LINK + "?startapp=ref_" + userId);
-        console.log("🎯 Daily Mission System: Ready");
+        console.log("🎯 Daily Mission System: Only in Mission Tab");
+        console.log("🛡️ Ad-Free Premium: Enabled with multiple packages");
     </script>
 </body>
 </html>
