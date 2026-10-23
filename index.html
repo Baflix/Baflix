@@ -710,17 +710,17 @@
             transition: all 0.25s ease;
             font-family: inherit;
             position: relative;
-            padding: 6px 4px;
+            padding: 6px 2px;
             -webkit-tap-highlight-color: transparent;
         }
         .nav-tab .nav-icon {
-            font-size: 22px;
+            font-size: 20px;
             line-height: 1;
             transition: transform 0.25s ease;
             position: relative;
         }
         .nav-tab .nav-label {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: 0.3px;
             text-transform: uppercase;
@@ -749,17 +749,21 @@
         .nav-tab.premium-tab .nav-icon {
             filter: drop-shadow(0 0 6px rgba(168,85,247,0.5));
         }
-        .nav-tab.premium-tab::after {
-            content: "👑";
-            position: absolute;
-            top: 2px;
-            right: 20%;
-            font-size: 10px;
-            animation: crownFloat 2s ease-in-out infinite;
+        .nav-tab.leaderboard-tab.active { color: #f59e0b; }
+        .nav-tab.leaderboard-tab.active::before {
+            background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+            box-shadow: 0 0 12px rgba(245,158,11,0.5);
         }
-        @keyframes crownFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
+        .nav-tab.leaderboard-tab .nav-icon {
+            filter: drop-shadow(0 0 6px rgba(245,158,11,0.5));
+        }
+        .nav-tab.mission-tab.active { color: var(--gold); }
+        .nav-tab.mission-tab.active::before {
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            box-shadow: 0 0 12px rgba(245,158,11,0.5);
+        }
+        .nav-tab.mission-tab .nav-icon {
+            filter: drop-shadow(0 0 6px rgba(245,158,11,0.5));
         }
         .nav-badge {
             position: absolute;
@@ -775,14 +779,6 @@
             text-align: center;
             border: 1.5px solid var(--bg);
             line-height: 1.3;
-        }
-        .nav-tab.mission-tab .nav-icon {
-            filter: drop-shadow(0 0 6px rgba(245,158,11,0.5));
-        }
-        .nav-tab.mission-tab.active { color: var(--gold); }
-        .nav-tab.mission-tab.active::before {
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            box-shadow: 0 0 12px rgba(245,158,11,0.5);
         }
         .mission-nav-badge {
             position: absolute;
@@ -1044,6 +1040,381 @@
             cursor: not-allowed;
             border: 1px solid rgba(239,68,68,0.35);
         }
+
+        /* ===== LEADERBOARD ===== */
+        .leaderboard-podium {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr 1fr;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 10px;
+            padding: 20px 8px 0;
+            position: relative;
+        }
+        .podium-loading {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .podium-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 14px 8px 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: podiumFadeIn 0.6s ease both;
+            transition: transform 0.3s ease;
+        }
+        @keyframes podiumFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .podium-card:hover {
+            transform: translateY(-3px);
+        }
+        .podium-card.rank-1 {
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 30px rgba(245,158,11,0.4), 0 8px 20px rgba(0,0,0,0.5);
+            background: linear-gradient(180deg, rgba(245,158,11,0.2) 0%, var(--card-bg) 60%);
+            padding: 20px 10px 16px;
+            transform: translateY(-15px);
+        }
+        .podium-card.rank-1::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(245,158,11,0.25) 0%, transparent 60%);
+            animation: podiumGlow 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes podiumGlow {
+            0%, 100% { opacity: 0.4; transform: rotate(0deg); }
+            50% { opacity: 1; transform: rotate(180deg); }
+        }
+        .podium-card.rank-2 {
+            border: 2px solid #94a3b8;
+            box-shadow: 0 0 20px rgba(148,163,184,0.3), 0 4px 12px rgba(0,0,0,0.4);
+            background: linear-gradient(180deg, rgba(148,163,184,0.15) 0%, var(--card-bg) 60%);
+        }
+        .podium-card.rank-3 {
+            border: 2px solid #b45309;
+            box-shadow: 0 0 20px rgba(180,83,9,0.3), 0 4px 12px rgba(0,0,0,0.4);
+            background: linear-gradient(180deg, rgba(180,83,9,0.15) 0%, var(--card-bg) 60%);
+        }
+        .podium-card.border-gold { border-color: #f59e0b; box-shadow: 0 0 25px rgba(245,158,11,0.4); }
+        .podium-card.border-silver { border-color: #94a3b8; box-shadow: 0 0 20px rgba(148,163,184,0.3); }
+        .podium-card.border-bronze { border-color: #b45309; box-shadow: 0 0 20px rgba(180,83,9,0.3); }
+        .podium-card.border-purple { border-color: #a855f7; box-shadow: 0 0 25px rgba(168,85,247,0.4); }
+        .podium-card.border-cyan { border-color: #06b6d4; box-shadow: 0 0 25px rgba(6,182,212,0.4); }
+        .podium-card.border-pink { border-color: #ec4899; box-shadow: 0 0 25px rgba(236,72,153,0.4); }
+        .podium-rank-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            z-index: 2;
+        }
+        .podium-card.rank-1 .podium-rank-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 0 15px rgba(245,158,11,0.7);
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+            top: -14px;
+        }
+        .podium-card.rank-2 .podium-rank-badge {
+            background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+            box-shadow: 0 0 12px rgba(148,163,184,0.6);
+        }
+        .podium-card.rank-3 .podium-rank-badge {
+            background: linear-gradient(135deg, #d97706, #92400e);
+            box-shadow: 0 0 12px rgba(180,83,9,0.6);
+        }
+        .podium-avatar-wrap {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            margin: 8px auto 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid;
+        }
+        .podium-card.rank-1 .podium-avatar-wrap {
+            width: 76px;
+            height: 76px;
+            border-width: 4px;
+            border-color: #f59e0b;
+            box-shadow: 0 0 20px rgba(245,158,11,0.6);
+        }
+        .podium-card.rank-2 .podium-avatar-wrap {
+            border-color: #94a3b8;
+            box-shadow: 0 0 12px rgba(148,163,184,0.5);
+        }
+        .podium-card.rank-3 .podium-avatar-wrap {
+            border-color: #b45309;
+            box-shadow: 0 0 12px rgba(180,83,9,0.5);
+        }
+        .podium-avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .podium-avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
+            font-size: 26px;
+        }
+        .podium-card.rank-1 .podium-avatar-fallback {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            font-size: 30px;
+        }
+        .podium-card.rank-2 .podium-avatar-fallback {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+        }
+        .podium-card.rank-3 .podium-avatar-fallback {
+            background: linear-gradient(135deg, #b45309, #92400e);
+        }
+        .podium-crown {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            filter: drop-shadow(0 0 8px rgba(245,158,11,0.8));
+            animation: crownBounce 2s ease-in-out infinite;
+            z-index: 3;
+        }
+        @keyframes crownBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-4px); }
+        }
+        .podium-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+        }
+        .podium-card.rank-1 .podium-name {
+            font-size: 15px;
+            color: #fbbf24;
+        }
+        .podium-custom-title {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+        }
+        .podium-card.rank-1 .podium-custom-title {
+            color: #fbbf24;
+            font-size: 10px;
+        }
+        .podium-coins {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 900;
+            color: #fbbf24;
+        }
+        .podium-card.rank-1 .podium-coins {
+            font-size: 13px;
+            padding: 5px 14px;
+            background: rgba(245,158,11,0.2);
+            box-shadow: 0 0 10px rgba(245,158,11,0.3);
+        }
+        .leaderboard-full-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .leaderboard-loading {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .leaderboard-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            animation: listFadeIn 0.4s ease both;
+        }
+        @keyframes listFadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .leaderboard-item:hover {
+            border-color: rgba(245,158,11,0.4);
+            transform: translateX(3px);
+            box-shadow: 0 2px 10px rgba(245,158,11,0.15);
+        }
+        .leaderboard-item.rank-1-item { border-color: rgba(245,158,11,0.4); background: linear-gradient(90deg, rgba(245,158,11,0.08), var(--card-bg)); }
+        .leaderboard-item.rank-2-item { border-color: rgba(148,163,184,0.4); }
+        .leaderboard-item.rank-3-item { border-color: rgba(180,83,9,0.4); }
+        .leaderboard-rank {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 13px;
+            flex-shrink: 0;
+            background: rgba(0,136,204,0.1);
+            color: #38bdf8;
+            border: 1px solid rgba(0,136,204,0.3);
+        }
+        .leaderboard-rank.rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; box-shadow: 0 0 10px rgba(245,158,11,0.5); border: none; }
+        .leaderboard-rank.rank-2 { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #fff; box-shadow: 0 0 8px rgba(148,163,184,0.4); border: none; }
+        .leaderboard-rank.rank-3 { background: linear-gradient(135deg, #b45309, #92400e); color: #fff; box-shadow: 0 0 8px rgba(180,83,9,0.4); border: none; }
+        .leaderboard-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0088cc, #38bdf8);
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+        }
+        .leaderboard-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .leaderboard-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .leaderboard-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+        .leaderboard-id {
+            font-size: 10px;
+            color: var(--muted);
+            font-family: monospace;
+        }
+        .leaderboard-coins {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(251,191,36,0.1);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--gold);
+            border: 1px solid rgba(251,191,36,0.3);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .leaderboard-empty {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--muted);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px dashed rgba(245,158,11,0.3);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        .leaderboard-empty .empty-icon {
+            font-size: 42px;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+        .live-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            animation: liveDotPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes liveDotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+        }
+        .info-banner {
+            background: var(--card-bg);
+            padding: 12px 14px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 16px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--muted);
+        }
+        .info-banner.gold { border-left-color: var(--gold); background: rgba(245,158,11,0.05); }
+        .info-banner i { margin-right: 6px; }
 
         /* ===== PREMIUM SECTION ===== */
         .premium-title-large {
@@ -1960,35 +2331,6 @@
             margin-bottom: 10px;
             opacity: 0.6;
         }
-        .live-badge {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: auto;
-            animation: livePulse 2s ease-in-out infinite;
-        }
-        @keyframes livePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #fff;
-            animation: liveDotPulse 1.5s ease-in-out infinite;
-        }
-        @keyframes liveDotPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.4); }
-        }
 
         /* ===== FLOATING NOTIFICATION ===== */
         .referral-notification {
@@ -2456,7 +2798,6 @@
             color: #fff;
         }
 
-        /* ===== AD-FREE CONFIRM MODAL ===== */
         .adfree-modal-overlay {
             position: fixed;
             inset: 0;
@@ -2687,7 +3028,6 @@
         </div>
     </div>
 
-    <!-- Mission Tab View (Only place missions are shown) -->
     <div id="missionTab" class="tab-view">
         <div class="section-title" style="margin-bottom:16px;">
             <span style="font-size:24px;">🎯</span>
@@ -2743,6 +3083,38 @@
         </div>
     </div>
 
+    <!-- ========== LEADERBOARD TAB ========== -->
+    <div id="leaderboardTab" class="tab-view">
+        <div class="section-title" style="margin-bottom: 16px;">
+            <span style="font-size: 24px;">🏆</span>
+            Leaderboard
+            <span class="live-badge" style="margin-left: auto;">
+                <span class="live-dot"></span> LIVE
+            </span>
+        </div>
+
+        <div class="info-banner gold" style="margin-bottom: 20px;">
+            <i class="fas fa-crown"></i>
+            সবচেয়ে বেশি <b>coins</b> সংগ্রহকারী Top 50 ইউজার
+        </div>
+
+        <!-- Top 3 Podium -->
+        <div class="leaderboard-podium" id="leaderboardPodium">
+            <div class="podium-loading">
+                <div class="spinner-ring"></div>
+                <div>Loading top users...</div>
+            </div>
+        </div>
+
+        <!-- Full List -->
+        <div class="section-title" style="margin-top: 24px; margin-bottom: 12px;">
+            <span>📊 Full Rankings (Top 50)</span>
+        </div>
+        <div class="leaderboard-full-list" id="leaderboardFullList">
+            <div class="leaderboard-loading">Loading...</div>
+        </div>
+    </div>
+
     <div id="premiumTab" class="tab-view">
         <div class="premium-title-large">
             <span class="crown">👑</span>
@@ -2778,6 +3150,10 @@
                 <span class="nav-badge" id="navCoinBadge" style="display:none;">0</span>
             </span>
             <span class="nav-label">Refer</span>
+        </button>
+        <button class="nav-tab leaderboard-tab" data-tab="leaderboard" id="navLeaderboardBtn">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Rank</span>
         </button>
         <button class="nav-tab premium-tab" data-tab="premium" id="navPremiumBtn">
             <span class="nav-icon">👑</span>
@@ -2914,7 +3290,7 @@
         }
 
         /* =====================================================
-           ✅ TELEGRAM USER DETECTION - TRIPLE FALLBACK
+           ✅ TELEGRAM USER DETECTION
            ===================================================== */
         let userId = "guest_user";
         let tg = null;
@@ -2928,10 +3304,7 @@
             try {
                 param = tg?.initDataUnsafe?.start_param || null;
             } catch(e) {}
-            if (param) {
-                console.log("🎯 [Param] Found in initDataUnsafe.start_param:", param);
-                return param;
-            }
+            if (param) return param;
 
             try {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -2940,10 +3313,7 @@
                      || urlParams.get("start") 
                      || null;
             } catch(e) {}
-            if (param) {
-                console.log("🎯 [Param] Found in URL query:", param);
-                return param;
-            }
+            if (param) return param;
 
             try {
                 if (window.location.hash && window.location.hash.length > 1) {
@@ -2954,10 +3324,7 @@
                          || null;
                 }
             } catch(e) {}
-            if (param) {
-                console.log("🎯 [Param] Found in URL hash:", param);
-                return param;
-            }
+            if (param) return param;
 
             try {
                 if (tg?.initData) {
@@ -2967,10 +3334,7 @@
                          || null;
                 }
             } catch(e) {}
-            if (param) {
-                console.log("🎯 [Param] Found in raw initData:", param);
-                return param;
-            }
+            if (param) return param;
 
             return null;
         }
@@ -2993,8 +3357,6 @@
                 tgUserData = u;
                 startParam = extractStartParam();
                 IS_TELEGRAM_ENV = true;
-                console.log("✅ [TG] User:", userId, u.first_name);
-                console.log("🔗 [TG] Start param:", startParam);
                 return true;
             }
             return false;
@@ -3005,7 +3367,6 @@
            ===================================================== */
         async function checkBotStartAndBlock() {
             if (!window.Telegram || !window.Telegram.WebApp) {
-                console.log("ℹ️ [Bot Check] Not in Telegram environment");
                 return false;
             }
 
@@ -3013,22 +3374,16 @@
             const initData = tgApp.initData || "";
             const user = tgApp.initDataUnsafe?.user;
 
-            console.log("🔍 [Bot Check] initData length:", initData.length);
-            console.log("🔍 [Bot Check] User ID:", user?.id);
-
             if (!initData || initData.length === 0) {
-                console.warn("⚠️ [Bot Check] Empty initData — showing bot screen");
                 showBotStartRequiredScreen();
                 return true;
             }
 
             if (!user || !user.id) {
-                console.warn("⚠️ [Bot Check] No user data — showing bot screen");
                 showBotStartRequiredScreen();
                 return true;
             }
 
-            console.log("✅ [Bot Check] User verified via initData");
             return false;
         }
 
@@ -3191,11 +3546,9 @@
                 
                 if (detected) {
                     clearInterval(retryInterval);
-                    console.log("✅ [TG] User detected on retry", retries);
                     runStartupSystems();
                 } else if (retries >= maxRetries) {
                     clearInterval(retryInterval);
-                    console.warn("⚠️ [TG] Max retries reached. Showing bot start screen.");
                     
                     if (window.Telegram && window.Telegram.WebApp) {
                         showBotStartRequiredScreen();
@@ -3210,6 +3563,7 @@
                         }
                         startTipsListener();
                         loadMovies();
+                        initLeaderboardSystem();
                         hideInitialLoader();
                     }
                 }
@@ -3219,12 +3573,9 @@
         }
 
         async function runStartupSystems() {
-            console.log("🚀 [Startup] Running all systems...");
-
             const isBlocked = await checkBotStartAndBlock();
             
             if (isBlocked) {
-                console.log("🚫 [Bot Check] Blocked — waiting for bot /start");
                 const initialLoader = document.getElementById("initialLoader");
                 if (initialLoader) {
                     setTimeout(() => {
@@ -3245,7 +3596,10 @@
                 initPremiumSystem();
                 initAdFreeSystem();
                 initDailyMissionSystem();
+                initLeaderboardSystem();
                 setTimeout(runUserAnalytics, 100);
+            } else {
+                initLeaderboardSystem();
             }
         }
 
@@ -3270,8 +3624,6 @@
            BOTTOM NAVIGATION TABS
            ===================================================== */
         function switchBottomTab(tabName) {
-            console.log("🔄 [Tab]", tabName);
-
             document.querySelectorAll(".nav-tab").forEach(btn => {
                 btn.classList.toggle("active", btn.dataset.tab === tabName);
             });
@@ -3300,6 +3652,10 @@
                 if (userId && userId !== "guest_user" && /^\d+$/.test(userId)) {
                     if (!recentReferralsUnsub) startRecentReferralsListener();
                 }
+            } else if (tabName === "leaderboard") {
+                document.getElementById("leaderboardTab").classList.add("active");
+                document.body.style.background = "var(--bg)";
+                renderLeaderboardTab();
             } else if (tabName === "premium") {
                 document.getElementById("premiumTab").classList.add("active");
                 document.body.style.background = "linear-gradient(180deg, #1a0a2f 0%, var(--bg) 30%)";
@@ -3313,10 +3669,189 @@
         document.getElementById("navHomeBtn").addEventListener("click", () => switchBottomTab("home"));
         document.getElementById("navMissionBtn").addEventListener("click", () => switchBottomTab("mission"));
         document.getElementById("navReferralBtn").addEventListener("click", () => switchBottomTab("referral"));
+        document.getElementById("navLeaderboardBtn").addEventListener("click", () => switchBottomTab("leaderboard"));
         document.getElementById("navPremiumBtn").addEventListener("click", () => switchBottomTab("premium"));
 
         /* =====================================================
-           DAILY MISSION SYSTEM (only rendered in Mission tab)
+           LEADERBOARD SYSTEM
+           ===================================================== */
+        let leaderboardUsersList = [];
+        let leaderboardProfilesData = {
+            rank1: { imageUrl: "", title: "👑 King of Coins", borderColor: "gold" },
+            rank2: { imageUrl: "", title: "🥈 Coin Master", borderColor: "silver" },
+            rank3: { imageUrl: "", title: "🥉 Rising Star", borderColor: "bronze" }
+        };
+        let leaderboardInitStarted = false;
+        let leaderboardRefreshInterval = null;
+
+        async function initLeaderboardSystem() {
+            if (leaderboardInitStarted) return;
+            leaderboardInitStarted = true;
+            
+            onSnapshot(doc(db, "settings", "config"), (docSnap) => {
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                
+                if (data.leaderboardProfiles) {
+                    leaderboardProfilesData = {
+                        rank1: data.leaderboardProfiles.rank1 || leaderboardProfilesData.rank1,
+                        rank2: data.leaderboardProfiles.rank2 || leaderboardProfilesData.rank2,
+                        rank3: data.leaderboardProfiles.rank3 || leaderboardProfilesData.rank3
+                    };
+                    const tab = document.getElementById("leaderboardTab");
+                    if (tab && tab.classList.contains("active")) {
+                        renderLeaderboardTab();
+                    }
+                }
+            });
+            
+            onSnapshot(collection(db, "telegramUsers"), (snap) => {
+                leaderboardUsersList = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    const coins = data.referralCoins || 0;
+                    if (coins > 0) {
+                        leaderboardUsersList.push({
+                            id: d.id,
+                            name: `${data.firstName || ""} ${data.lastName || ""}`.trim() || data.username || "User",
+                            username: data.username || "",
+                            photoUrl: data.photoUrl || "",
+                            coins: coins
+                        });
+                    }
+                });
+                
+                leaderboardUsersList.sort((a, b) => b.coins - a.coins);
+                
+                const tab = document.getElementById("leaderboardTab");
+                if (tab && tab.classList.contains("active")) {
+                    renderLeaderboardTab();
+                }
+            });
+            
+            if (leaderboardRefreshInterval) clearInterval(leaderboardRefreshInterval);
+            leaderboardRefreshInterval = setInterval(() => {
+                const tab = document.getElementById("leaderboardTab");
+                if (tab && tab.classList.contains("active")) {
+                    renderLeaderboardTab();
+                }
+            }, 30000);
+        }
+
+        function getLeaderboardBorderColor(border) {
+            const colors = {
+                gold: "#f59e0b",
+                silver: "#94a3b8",
+                bronze: "#b45309",
+                purple: "#a855f7",
+                cyan: "#06b6d4",
+                pink: "#ec4899"
+            };
+            return colors[border] || "#f59e0b";
+        }
+
+        function renderLeaderboardTab() {
+            const podiumContainer = document.getElementById("leaderboardPodium");
+            const fullListContainer = document.getElementById("leaderboardFullList");
+            
+            if (!podiumContainer || !fullListContainer) return;
+            
+            const top50 = leaderboardUsersList.slice(0, 50);
+            
+            if (top50.length === 0) {
+                podiumContainer.innerHTML = `
+                    <div class="leaderboard-empty" style="grid-column: 1 / -1;">
+                        <span class="empty-icon">🏆</span>
+                        এখনো কোনো ইউজার coins collect করেনি<br>
+                        <span style="font-size: 11px; opacity: 0.7;">প্রথম হওয়ার সুযোগ আপনার!</span>
+                    </div>
+                `;
+                fullListContainer.innerHTML = "";
+                return;
+            }
+            
+            const top3 = top50.slice(0, 3);
+            const visualOrder = [
+                { user: top3[2], rank: 3 },
+                { user: top3[0], rank: 1 },
+                { user: top3[1], rank: 2 }
+            ].filter(item => item.user);
+            
+            let podiumHTML = "";
+            visualOrder.forEach(item => {
+                const { user, rank } = item;
+                const profile = leaderboardProfilesData[`rank${rank}`] || {};
+                const customImg = profile.imageUrl || "";
+                const customTitle = profile.title || "";
+                const borderColor = profile.borderColor || (rank === 1 ? "gold" : rank === 2 ? "silver" : "bronze");
+                
+                const displayImg = customImg || user.photoUrl || "";
+                const borderHex = getLeaderboardBorderColor(borderColor);
+                
+                let avatarHTML;
+                if (displayImg && displayImg.startsWith("http")) {
+                    avatarHTML = `<div class="podium-avatar-wrap border-${borderColor}" style="border-color: ${borderHex};"><img src="${displayImg}" alt="${escapeHTML(user.name)}" onerror="this.parentElement.innerHTML='<div class=\\'podium-avatar-fallback\\' style=\\'background: ${borderHex};\\'>${user.name.charAt(0).toUpperCase()}</div>'"></div>`;
+                } else {
+                    avatarHTML = `<div class="podium-avatar-wrap border-${borderColor}" style="border-color: ${borderHex};"><div class="podium-avatar-fallback" style="background: ${borderHex};">${user.name.charAt(0).toUpperCase()}</div></div>`;
+                }
+                
+                const rankEmoji = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
+                const crownHTML = rank === 1 ? '<div class="podium-crown">👑</div>' : "";
+                
+                podiumHTML += `
+                    <div class="podium-card rank-${rank} border-${borderColor}" style="border-color: ${borderHex};">
+                        <div class="podium-rank-badge">${rankEmoji}</div>
+                        ${crownHTML}
+                        ${avatarHTML}
+                        <div class="podium-name">${escapeHTML(user.name)}</div>
+                        ${customTitle ? `<div class="podium-custom-title">${escapeHTML(customTitle)}</div>` : ""}
+                        <div class="podium-coins">🪙 ${user.coins}</div>
+                    </div>
+                `;
+            });
+            
+            podiumContainer.innerHTML = podiumHTML;
+            
+            let listHTML = "";
+            top50.forEach((user, idx) => {
+                const rank = idx + 1;
+                let rankClass = "";
+                let itemClass = "";
+                if (rank === 1) { rankClass = "rank-1"; itemClass = "rank-1-item"; }
+                else if (rank === 2) { rankClass = "rank-2"; itemClass = "rank-2-item"; }
+                else if (rank === 3) { rankClass = "rank-3"; itemClass = "rank-3-item"; }
+                
+                let displayImg = user.photoUrl || "";
+                if (rank <= 3) {
+                    const profile = leaderboardProfilesData[`rank${rank}`] || {};
+                    if (profile.imageUrl) displayImg = profile.imageUrl;
+                }
+                
+                let avatarHTML;
+                if (displayImg && displayImg.startsWith("http")) {
+                    avatarHTML = `<div class="leaderboard-avatar"><img src="${displayImg}" alt="${escapeHTML(user.name)}" onerror="this.parentElement.innerHTML='${user.name.charAt(0).toUpperCase()}'"></div>`;
+                } else {
+                    avatarHTML = `<div class="leaderboard-avatar">${user.name.charAt(0).toUpperCase()}</div>`;
+                }
+                
+                listHTML += `
+                    <div class="leaderboard-item ${itemClass}">
+                        <div class="leaderboard-rank ${rankClass}">${rank}</div>
+                        ${avatarHTML}
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${escapeHTML(user.name)}</div>
+                            <div class="leaderboard-id">ID: ${user.id}</div>
+                        </div>
+                        <div class="leaderboard-coins">🪙 ${user.coins}</div>
+                    </div>
+                `;
+            });
+            
+            fullListContainer.innerHTML = listHTML;
+        }
+
+        /* =====================================================
+           DAILY MISSION SYSTEM
            ===================================================== */
         let dailyMissions = [];
         let userMissionData = {
@@ -3408,10 +3943,7 @@
                 const lastLogin = data.lastLoginDate || null;
                 const currentStreak = data.loginStreak || 0;
 
-                if (lastLogin === today) {
-                    console.log("📅 [Mission] Already logged in today");
-                    return;
-                }
+                if (lastLogin === today) return;
 
                 let newStreak = currentStreak;
                 if (lastLogin) {
@@ -4767,11 +5299,11 @@
         }
 
         /* =====================================================
-           AD-FREE PREMIUM SYSTEM (Ad Remove for Non-Premium Content)
+           AD-FREE PREMIUM SYSTEM
            ===================================================== */
         let adFreeSettings = {
             enabled: false,
-            packages: [], // Array of { id, durationMs, durationLabel, coins }
+            packages: [],
             purchasedAt: 0,
             expiresAt: 0,
             activePackageId: null
@@ -4787,20 +5319,17 @@
             if (!userId || userId === "guest_user") return;
             adFreeInitStarted = true;
 
-            // Listen to ad-free settings from admin config
             if (adFreeSettingsUnsub) adFreeSettingsUnsub();
             adFreeSettingsUnsub = onSnapshot(doc(db, "settings", "config"), (docSnap) => {
                 if (!docSnap.exists()) return;
                 const data = docSnap.data();
                 adFreeSettings.enabled = data.adFreeEnabled === true;
                 
-                // Packages can be array or object
                 let pkgs = data.adFreePackages || [];
                 if (!Array.isArray(pkgs)) {
                     pkgs = Object.values(pkgs).filter(Boolean);
                 }
                 
-                // Normalize packages
                 adFreeSettings.packages = pkgs.map((pkg, idx) => {
                     const durationMs = pkg.durationMs 
                         || (pkg.durationMinutes ? pkg.durationMinutes * 60 * 1000 : null)
@@ -4842,7 +5371,6 @@
                 renderAdFreeSection();
             });
 
-            // Listen to user's ad-free data
             if (adFreeUserDataUnsub) adFreeUserDataUnsub();
             adFreeUserDataUnsub = onSnapshot(doc(db, "telegramUsers", userId), (docSnap) => {
                 if (docSnap.exists()) {
@@ -4938,7 +5466,6 @@
                 if (remaining < 60 * 1000) timerClass = "critical";
                 else if (remaining < 5 * 60 * 1000) timerClass = "ending";
 
-                // Find active package
                 const activePkg = adFreeSettings.packages.find(p => p.id === adFreeSettings.activePackageId) 
                     || { durationLabel: "Ad-Free", durationMs: 0 };
 
@@ -4968,7 +5495,6 @@
                 `;
             }
 
-            // Show packages
             html += `<div class="adfree-packages-grid">`;
             adFreeSettings.packages.forEach(pkg => {
                 const userCoins = referralData.coins || 0;
@@ -5023,7 +5549,6 @@
 
             container.innerHTML = html;
 
-            // Attach buy handlers
             container.querySelectorAll(".adfree-buy-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     const pkgId = btn.dataset.packageId;
@@ -5122,7 +5647,6 @@
                 const existingExpiry = freshData.adFreeExpiresAt || 0;
                 const isCurrentlyActive = existingExpiry > now;
                 
-                // If currently active, extend from existing expiry. Otherwise start from now.
                 const baseTime = isCurrentlyActive ? existingExpiry : now;
                 const newExpiresAt = baseTime + pkg.durationMs;
 
@@ -5396,8 +5920,9 @@
             const referralTab = document.getElementById("referralTab");
             const premiumTab = document.getElementById("premiumTab");
             const missionTab = document.getElementById("missionTab");
+            const leaderboardTab = document.getElementById("leaderboardTab");
             
-            if (referralTab?.classList.contains("active") || premiumTab?.classList.contains("active") || missionTab?.classList.contains("active")) {
+            if (referralTab?.classList.contains("active") || premiumTab?.classList.contains("active") || missionTab?.classList.contains("active") || leaderboardTab?.classList.contains("active")) {
                 switchBottomTab("home");
                 return;
             }
@@ -5445,8 +5970,9 @@
             const referralTab = document.getElementById("referralTab");
             const premiumTab = document.getElementById("premiumTab");
             const missionTab = document.getElementById("missionTab");
+            const leaderboardTab = document.getElementById("leaderboardTab");
             
-            if (referralTab?.classList.contains("active") || premiumTab?.classList.contains("active") || missionTab?.classList.contains("active")) {
+            if (referralTab?.classList.contains("active") || premiumTab?.classList.contains("active") || missionTab?.classList.contains("active") || leaderboardTab?.classList.contains("active")) {
                 switchBottomTab("home");
                 history.pushState(null, "", location.href);
                 return;
@@ -5578,7 +6104,6 @@
                 || histItem;
             if (!movie || !movie.link) { showToast("⚠️ Content not available!", "error"); return; }
             
-            // Ad-Free active: bypass ads
             if (adFreeActive && !isMovieUnlocked(movieId)) {
                 trackDownload(movieId);
                 addToHistory(movie, "downloaded");
@@ -6019,6 +6544,7 @@
             if (document.getElementById("referralTab")?.classList.contains("active")) return;
             if (document.getElementById("premiumTab")?.classList.contains("active")) return;
             if (document.getElementById("missionTab")?.classList.contains("active")) return;
+            if (document.getElementById("leaderboardTab")?.classList.contains("active")) return;
             const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
             if (scrollTop + clientHeight >= scrollHeight - 300) loadMovies();
         });
@@ -6140,7 +6666,6 @@
         function startAd(movieId) {
             if (loadingButtons.has(movieId)) return;
             
-            // Ad-Free bypass
             if (isAdFreeActive()) {
                 const progress = getProgress();
                 progress[movieId] = { count: REQUIRED_ADS, session: SESSION_ID, unlockedAt: Date.now() };
@@ -6244,6 +6769,7 @@
         console.log("🎁 Referral Link Format:", MINIAPP_DIRECT_LINK + "?startapp=ref_" + userId);
         console.log("🎯 Daily Mission System: Only in Mission Tab");
         console.log("🛡️ Ad-Free Premium: Enabled with multiple packages");
+        console.log("🏆 Leaderboard: Top 3 podium + Full Top 50 list");
     </script>
 </body>
 </html>
